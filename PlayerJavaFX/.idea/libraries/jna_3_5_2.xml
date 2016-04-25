@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="jna-3.5.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jna-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/platform-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-jdk14-1.7.18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-3.8.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-3.8.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
