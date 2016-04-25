@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <link href="/css/bootstrap.css" rel="stylesheet">
+        <title>WebApp</title>
+    </head>
+    <body>
+        <div>
+
+            <ul class="nav nav-tabs">
+                <li><a href="/ListeUser">Liste Users</a></li>
+                <li><a href="/ListeFilm">Liste Films</a></li>
+                <li><a href="/ListeMusique">Liste Musiques</a></li>
+                <li><a href="/ListeAdmin">Liste Administrateurs</a></li>
+                <li><a href="/ListePlugin">Liste Plugins</a></li>
+            </ul>
+        </div>
+        <form method="post" action="/connection">
+           Login <input type="text" name="login">
+           Mot de passe <input type="password" name="password">
+           <input type="submit" value="valider">
+        </form>
+    </body>
+</html>

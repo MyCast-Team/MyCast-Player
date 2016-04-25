@@ -1,0 +1,51 @@
+<html>
+    <head>
+            <link href="/css/bootstrap.css" rel="stylesheet">
+            <script src="/js/jquery.min.js"></script>
+        <script src="/js/jquery.js"></script>
+        <title>WebApp</title>
+    </head>
+    <body>
+        <div>
+            
+            <ul class="nav nav-tabs">
+                <li><a href="/ListeUser">Liste User</a></li>
+                <li><a href="/ListeFilm">Liste Film</a></li>
+                <li><a href="/ListeMusique">Liste Musique</a></li>
+                  <li><a href="/ListeAdmin">Liste Administrateur</a></li>
+                   <li><a href="/ListePlugin">Liste Plugins</a></li>
+            </ul>
+        </div>
+           
+        Modifier un film : 
+          <form  id="formplugin" >
+            $val
+               <input id="updateplugin" type="button" value="valider">
+        </form>
+    </body>
+</html>
+<script type="text/javascript">
+    $('#updateplugin').on('click', function(e){
+ 
+    event.preventDefault();
+   var form=$("#formplugin");
+    // Pop up a confirmation dialog
+
+    
+    // Check and make sure the film confirmed
+ 
+        // If they did, do our delete
+        $.ajax({
+            method: 'PUT',
+            data:form.serialize(),
+            url: '/updateplugin'
+        }).done(function( response ) {
+             
+            // Check for a successful (blank) response
+          $(location).attr("href","/Listeplugin")
+        });
+
+   
+    });
+    
+</script>

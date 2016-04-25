@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <link href="/css/bootstrap.css" rel="stylesheet">
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/jquery.js"></script>
+        <title>WebApp</title>
+    </head>
+    <body>
+        <div>
+
+            <ul class="nav nav-tabs">
+                <li><a href="/ListeUser">Liste User</a></li>
+                <li><a href="/ListeFilm">Liste Film</a></li>
+                <li><a href="/ListeMusique">Liste Musique</a></li>
+                <li><a href="/ListeAdmin">Liste Administrateur</a></li>
+                 <li><a href="/ListePlugin">Liste Plugins</a></li>
+            </ul>
+        </div>
+        <ul id="list">
+            $val
+        </ul>
+        Ajouter une musique : 
+        <form action="/addmusique" method="post">
+
+            Chanteur :<input type="text" name="singer">
+            Producteur: <input type="text" name="producer">
+            Titre: <input type="text" name="title">
+            Type: <input type="text" name="type">
+            <input type="submit" value="valider">
+        </form>
+    </body>
+</html>
+
+<script type="text/javascript">
+
+    $('#list').on('click', 'li a#deletemusique', function (e) {
+
+        event.preventDefault();
+
+        // Pop up a confirmation dialog
+        var confirmation = confirm('Are you sure you want to delete this admin?');
+
+        // Check and make sure the film confirmed
+        if (confirmation === true) {
+
+            // If they did, do our delete
+            $.ajax({
+                method: 'DELETE',
+                url: '/deletemusique/' + $(this).attr('rel')
+            }).done(function (response) {
+
+                // Check for a successful (blank) response
+                location.reload();
+            });
+
+        }
+        else {
+
+            // If they said no to the confirm, do nothing
+            return false;
+
+        }
+    });
+
+
+</script>
+
