@@ -1,0 +1,12 @@
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<HBox spacing="5">
+    <Label>Enter client's IP adress : </Label>
+    <TextField prefWidth="50" maxWidth="50">127</TextField>
+    <TextField prefWidth="50" maxWidth="50">0</TextField>
+    <TextField prefWidth="50" maxWidth="50">0</TextField>
+    <TextField prefWidth="50" maxWidth="50">1</TextField>
+    <Label> : </Label>
+    <TextField prefWidth="75" maxWidth="75">12345</TextField>
+</HBox>
