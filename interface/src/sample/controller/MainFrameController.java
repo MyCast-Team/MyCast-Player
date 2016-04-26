@@ -2,6 +2,7 @@ package sample.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import sample.Main;
@@ -39,6 +40,8 @@ public class MainFrameController extends AnchorPane {
             plugin = loadComponent("view/plugin.fxml", 1, 1);
 
             player = loadComponent("view/player.fxml", 0, 0);
+            Button previous = (Button) player.lookup("#previous");
+            previous.setStyle("-fx-background-color:green");
             for(Node node : player.getChildren()){
                 if(node.getId().equals("playerContainer")){
                     box = (VBox) node;

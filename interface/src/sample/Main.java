@@ -47,7 +47,6 @@ public class Main extends Application {
             if(event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
             if(event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
         });
-
         primaryStage.setScene(scene);
         primaryStage.show();
     }
