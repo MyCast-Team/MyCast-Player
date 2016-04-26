@@ -2,12 +2,11 @@ package sample.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.util.Pair;
+import javafx.scene.control.*;
 import sample.Main;
-import sample.model.ResizablePlayer;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -39,16 +38,18 @@ public class MainFrameController extends AnchorPane {
             mediacase = loadComponent("view/mediacase.fxml", 1, 0);
             plugin = loadComponent("view/plugin.fxml", 1, 1);
 
-            player = loadComponent("view/player.fxml", 0, 0);
-            Button previous = (Button) player.lookup("#previous");
-            previous.setStyle("-fx-background-color:green");
-            for(Node node : player.getChildren()){
-                if(node.getId().equals("playerContainer")){
-                    box = (VBox) node;
-                    box.setStyle("-fx-background-color:red");
-                }
-            }
+            Dialog <Pair<String, Integer>> dialog = new Dialog<>();
+            dialog.setTitle("Connection to the client");
+            dialog.setHeaderText("Enter the IP address of the client");
 
+            ButtonType validateButton = new ButtonType("Connect", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(validateButton, ButtonType.CANCEL);
+
+            FXMLLoader dialogLoad = new FXMLLoader();
+            dialogLoad.setLocation(Main.class.getResource("view/connection.fxml"));
+            dialog.getDialogPane().setContent(dialogLoad.load());
+
+            dialog.showAndWait();
 
             grid.setGridLinesVisible(true);
 

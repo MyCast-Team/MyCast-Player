@@ -59,7 +59,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        new NativeDiscovery().discover();
+        //new NativeDiscovery().discover();
         launch(args);
     }
 }
