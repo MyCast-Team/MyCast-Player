@@ -5,6 +5,8 @@ import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import sample.Main;
+import sample.model.ResizablePlayer;
+import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -20,6 +22,7 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane suggestions;
     public AnchorPane mediacase;
     public AnchorPane plugin;
+    public AnchorPane player;
 
     public MainFrameController(String path) {
         try {
@@ -28,10 +31,21 @@ public class MainFrameController extends AnchorPane {
                 grid = (GridPane) node;
             });
 
-            playlist = loadComponent("view/playlist.fxml", 0, 0);
+            VBox box;
+
+            //playlist = loadComponent("view/playlist.fxml", 0, 0);
             suggestions = loadComponent("view/suggestions.fxml", 0, 1);
             mediacase = loadComponent("view/mediacase.fxml", 1, 0);
             plugin = loadComponent("view/plugin.fxml", 1, 1);
+
+            player = loadComponent("view/player.fxml", 0, 0);
+            for(Node node : player.getChildren()){
+                if(node.getId().equals("playerContainer")){
+                    box = (VBox) node;
+                    box.setStyle("-fx-background-color:red");
+                }
+            }
+
 
             grid.setGridLinesVisible(true);
 

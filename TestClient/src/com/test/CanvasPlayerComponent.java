@@ -1,4 +1,4 @@
-package com.test;
+package sample.model;
 
 import com.sun.jna.Memory;
 import javafx.application.Platform;

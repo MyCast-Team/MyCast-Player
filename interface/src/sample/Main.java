@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.model.MP3Music;
+import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 public class Main extends Application {
 
@@ -59,6 +60,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        new NativeDiscovery().discover();
         launch(args);
     }
 }
