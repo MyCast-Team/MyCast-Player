@@ -13,7 +13,7 @@
     <VBox fx:id="playerContainer" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <BorderPane fx:id="playerPane" VBox.vgrow="ALWAYS">
         </BorderPane>
-        <HBox fx:id="controlBar">
+        <HBox fx:id="controlBar" alignment="CENTER">
             <Button fx:id="previous">
                 <graphic>
                     <ImageView>
@@ -31,7 +31,7 @@
             <Button fx:id="play">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/play.png" />
+                        <Image url="@../../img/pause.png" />
                     </ImageView>
                 </graphic>
             </Button>

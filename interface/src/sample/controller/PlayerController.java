@@ -120,7 +120,7 @@ public class PlayerController implements MediaPlayerEventListener {
                     timeSlider.setValue(0.0);
                     timeLabel.setText(getStringTime(mediaPlayer));
                     setLastTimeDisplayed(0);
-                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                    play.setGraphic(new ImageView(new Image("./img/play.png")));
                     if(mediaPlayer.isPlaying())
                         mediaPlayer.pause();
                 }
@@ -134,10 +134,10 @@ public class PlayerController implements MediaPlayerEventListener {
             public void handle(ActionEvent event) {
                 if(mediaPlayer.isPlaying()) {
                     mediaPlayer.pause();
-                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                    play.setGraphic(new ImageView(new Image("./img/play.png")));
                 } else {
                     mediaPlayer.play();
-                    play.setGraphic(new ImageView(new Image("./img/play.png")));
+                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
                 }
             }
         });
