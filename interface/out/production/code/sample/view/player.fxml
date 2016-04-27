@@ -11,7 +11,7 @@
 <?import javafx.scene.image.Image?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1">
     <VBox fx:id="playerContainer" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-        <BorderPane fx:id="playerPane" VBox.vgrow="ALWAYS" style="-fx-background-color:blue">
+        <BorderPane fx:id="playerPane" VBox.vgrow="ALWAYS">
         </BorderPane>
         <HBox fx:id="controlBar">
             <Button fx:id="previous">
@@ -43,7 +43,7 @@
                 </graphic>
             </Button>
             <Slider fx:id="timeSlider" min="0" max="100" minWidth="50" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-            <Label fx:id="time" prefWidth="130" minWidth="50"/>
+            <Label fx:id="timeLabel" prefWidth="130" minWidth="50"/>
             <Button fx:id="repeat">
                 <graphic>
                     <ImageView>

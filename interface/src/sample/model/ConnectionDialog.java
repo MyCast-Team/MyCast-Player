@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 public class ConnectionDialog {
 
-    void ConnectionDialog() throws IOException {
+    public ConnectionDialog() throws IOException {
         Dialog <Pair<String, Integer>> dialog = new Dialog<>();
         dialog.setTitle("Connection to the client");
         dialog.setHeaderText("Enter the IP address of the client");

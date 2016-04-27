@@ -1,12 +1,15 @@
 package sample.controller;
 
+import javafx.stage.Stage;
+import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.util.Pair;
-import javafx.scene.control.*;
 import sample.Main;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
+import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -23,33 +26,37 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane mediacase;
     public AnchorPane plugin;
     public AnchorPane player;
+    public DirectMediaPlayerComponent mediaPlayerComponent;
 
-    public MainFrameController(String path) {
+    public MainFrameController(String path, Stage primaryStage) {
         try {
             this.rootPane = (AnchorPane) loadRoot(path);
             this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
                 grid = (GridPane) node;
             });
 
-            VBox box;
+            playlist = loadComponent("view/playlist.fxml");
+            suggestions = loadComponent("view/suggestions.fxml");
+            mediacase = loadComponent("view/mediacase.fxml");
+            plugin = loadComponent("view/plugin.fxml");
+            player = loadComponent("view/player.fxml");
 
-            //playlist = loadComponent("view/playlist.fxml", 0, 0);
-            suggestions = loadComponent("view/suggestions.fxml", 0, 1);
-            mediacase = loadComponent("view/mediacase.fxml", 1, 0);
-            plugin = loadComponent("view/plugin.fxml", 1, 1);
+            ResizablePlayer resizablePlayer = new ResizablePlayer(player);
 
-            Dialog <Pair<String, Integer>> dialog = new Dialog<>();
-            dialog.setTitle("Connection to the client");
-            dialog.setHeaderText("Enter the IP address of the client");
+            mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
 
-            ButtonType validateButton = new ButtonType("Connect", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(validateButton, ButtonType.CANCEL);
+            MediaPlayer mediaPlayer = mediaPlayerComponent.getMediaPlayer();
 
-            FXMLLoader dialogLoad = new FXMLLoader();
-            dialogLoad.setLocation(Main.class.getResource("view/connection.fxml"));
-            dialog.getDialogPane().setContent(dialogLoad.load());
+            PlayerController playerController = new PlayerController((DirectMediaPlayer) mediaPlayer, primaryStage, player);
+            mediaPlayer.addMediaPlayerEventListener(playerController);
 
-            dialog.showAndWait();
+            mediaPlayer.prepareMedia("C:\\Users\\Vincent\\Desktop\\video.mkv");
+            mediaPlayer.start();
+
+            grid.add(player, 0, 0);
+            grid.add(suggestions, 0, 1);
+            grid.add(mediacase, 1, 0);
+            grid.add(plugin, 1, 1);
 
             grid.setGridLinesVisible(true);
 
@@ -79,7 +86,7 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
-    public AnchorPane loadComponent(String path, int x, int y){
+    public AnchorPane loadComponent(String path){
         AnchorPane pane = null;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(path));
@@ -88,7 +95,6 @@ public class MainFrameController extends AnchorPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        grid.add(pane, x, y);
         initDragAndDrop(pane);
         return pane;
     }
@@ -167,5 +173,9 @@ public class MainFrameController extends AnchorPane {
 
     public AnchorPane getRootPane(){
         return rootPane;
+    }
+
+    public DirectMediaPlayerComponent getMediaPlayer(){
+        return mediaPlayerComponent;
     }
 }

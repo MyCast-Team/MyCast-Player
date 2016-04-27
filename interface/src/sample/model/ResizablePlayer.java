@@ -4,19 +4,14 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
-
-import java.io.PrintWriter;
 import java.nio.ByteBuffer;
-
+import sample.model.CanvasPlayerComponent;
 /**
- * Created by thomasfouan on 24/04/2016.
+ * Created by thomasfouan on 16/03/2016.
  */
 public class ResizablePlayer {
 
@@ -32,7 +27,7 @@ public class ResizablePlayer {
 
     private FloatProperty videoSourceRatioProperty;
 
-    public ResizablePlayer() {
+    public ResizablePlayer(AnchorPane playerContainer) {
 
         // Initialisation of the components
         playerHolder = new Pane();
@@ -42,6 +37,13 @@ public class ResizablePlayer {
         initializeImageView();
 
         mediaPlayerComponent = new CanvasPlayerComponent(writableImage, pixelFormat, videoSourceRatioProperty);
+
+        // Add the player pane in the playerContainer
+        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
+        BorderPane playerPane = new BorderPane(playerHolder);
+        playerPane.setStyle("-fx-background-color: black");
+        vBox.getChildren().add(0, playerPane);
+        VBox.setVgrow(playerPane, Priority.ALWAYS);
     }
 
     public DirectMediaPlayerComponent getMediaPlayerComponent() {
