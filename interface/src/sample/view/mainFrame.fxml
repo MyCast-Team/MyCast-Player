@@ -12,6 +12,8 @@
         </Menu>
         <Menu fx:id="menuConnection" text="Connection">
             <MenuItem fx:id="setConnection" text="Set a new connection"/>
+            <MenuItem fx:id="play" text="Play"/>
+            <MenuItem fx:id="pause" text="Pause"/>
         </Menu>
     </MenuBar>
     <GridPane fx:id="grid" xmlns="http://javafx.com/javafx/8.0.65" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">

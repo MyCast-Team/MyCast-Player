@@ -12,7 +12,6 @@ import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
 import sample.model.MP3Music;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 public class Main extends Application {
 

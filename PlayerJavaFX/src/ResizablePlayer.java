@@ -1,45 +1,12 @@
-import com.sun.jna.Memory;
-import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
-import javafx.util.Duration;
-import javafx.util.Pair;
-import sun.applet.Main;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
-import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.medialist.MediaList;
-import uk.co.caprica.vlcj.mrl.RtspMrl;
-import uk.co.caprica.vlcj.player.direct.BufferFormat;
-import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
-import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
-
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.Optional;
-import java.util.function.UnaryOperator;
 
 /**
  * Created by thomasfouan on 16/03/2016.

@@ -1,18 +1,13 @@
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.FloatProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import sun.applet.Main;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
@@ -23,9 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 
 /**
  * Created by thomasfouan on 26/04/2016.
@@ -380,8 +373,6 @@ public class MyApp extends Application {
                     status = CONNECTION_STATUS.DISCONNECTED;
                 } else {
                     ConnectionDialog connectionDialog = new ConnectionDialog();
-                    System.out.println(connectionDialog);
-                    System.out.println(connectionDialog.getDialog());
                     Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
                     if (result.isPresent()) {
                         String addr = result.get().getKey();

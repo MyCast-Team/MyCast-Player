@@ -27,6 +27,7 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane plugin;
     public AnchorPane player;
     public DirectMediaPlayerComponent mediaPlayerComponent;
+    private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
     public MainFrameController(String path, Stage primaryStage) {
         try {
@@ -50,7 +51,7 @@ public class MainFrameController extends AnchorPane {
             PlayerController playerController = new PlayerController((DirectMediaPlayer) mediaPlayer, primaryStage, player);
             mediaPlayer.addMediaPlayerEventListener(playerController);
 
-            mediaPlayer.prepareMedia("C:\\Users\\Vincent\\Desktop\\video.mkv");
+            mediaPlayer.prepareMedia(PATH_TO_MEDIA);
             mediaPlayer.start();
 
             grid.add(player, 0, 0);

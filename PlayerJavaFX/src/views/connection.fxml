@@ -1,7 +1,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<HBox spacing="5">
+<HBox spacing="5" xmlns:fx="coucou">
     <Label>Enter client's IP adress : </Label>
     <TextField fx:id="addr1" prefWidth="50" maxWidth="50">127</TextField>
     <TextField fx:id="addr2" prefWidth="50" maxWidth="50">0</TextField>

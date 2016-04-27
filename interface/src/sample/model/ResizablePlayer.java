@@ -9,7 +9,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import java.nio.ByteBuffer;
-import sample.model.CanvasPlayerComponent;
+
 /**
  * Created by thomasfouan on 16/03/2016.
  */

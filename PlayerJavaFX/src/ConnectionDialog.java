@@ -22,34 +22,30 @@ public class ConnectionDialog {
     private TextField port;
     private ButtonType validateButton;
 
-    void ConnectionDialog() {
+    public ConnectionDialog() {
         // Load the body of the Dialog box from fxml
         FXMLLoader dialogLoad = new FXMLLoader();
+        dialogLoad.setLocation(Main.class.getResource("/views/connection.fxml"));
         HBox content = null;
         try {
-            dialogLoad.setLocation(Main.class.getResource("/views/connection.fxml"));
-            content = dialogLoad.load();
-
+            content = (HBox) dialogLoad.load();
         } catch (IOException e) {
-            System.out.println("coucou");
             e.printStackTrace();
-        } finally {
-            System.out.println("bouhbouh");
         }
 
         UnaryOperator<TextFormatter.Change> textFilter = getTextFilter();
 
         // Get the textFields of the dialog box and add a textFormatter to each of them
-        this.addr1 = (TextField) content.lookup("addr1");
-        this.addr1.setTextFormatter(new TextFormatter<Object>(textFilter));
-        this.addr2 = (TextField) content.lookup("addr2");
-        this.addr2.setTextFormatter(new TextFormatter<Object>(textFilter));
-        this.addr3 = (TextField) content.lookup("addr3");
-        this.addr3.setTextFormatter(new TextFormatter<Object>(textFilter));
-        this.addr4 = (TextField) content.lookup("addr4");
-        this.addr4.setTextFormatter(new TextFormatter<Object>(textFilter));
-        this.port = (TextField) content.lookup("port");
-        this.port.setTextFormatter(new TextFormatter<Object>(getPortFilter()));
+        this.addr1 = (TextField) content.lookup("#addr1");
+        this.addr1.setTextFormatter(new TextFormatter<>(textFilter));
+        this.addr2 = (TextField) content.lookup("#addr2");
+        this.addr2.setTextFormatter(new TextFormatter<>(textFilter));
+        this.addr3 = (TextField) content.lookup("#addr3");
+        this.addr3.setTextFormatter(new TextFormatter<>(textFilter));
+        this.addr4 = (TextField) content.lookup("#addr4");
+        this.addr4.setTextFormatter(new TextFormatter<>(textFilter));
+        this.port = (TextField) content.lookup("#port");
+        this.port.setTextFormatter(new TextFormatter<>(getPortFilter()));
 
         this.dialog = new Dialog<Pair<String, Integer>>();
         this.dialog.setTitle("Connection to the client");
