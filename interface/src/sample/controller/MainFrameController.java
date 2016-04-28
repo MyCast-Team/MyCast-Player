@@ -27,7 +27,7 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane plugin;
     public AnchorPane player;
     public DirectMediaPlayerComponent mediaPlayerComponent;
-    private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
+    private final String PATH_TO_MEDIA = "C:\\Users\\Vincent\\Desktop\\video.mkv";//"/Users/thomasfouan/Desktop/video.avi";
 
     public MainFrameController(String path, Stage primaryStage) {
         try {
