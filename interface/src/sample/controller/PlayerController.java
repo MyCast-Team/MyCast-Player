@@ -48,12 +48,12 @@ public class PlayerController implements MediaPlayerEventListener {
         this.mediaListPlayer = mediaListPlayer;
         this.mediaPlayer = mediaPlayer;
         this.stage = stage;
-
+        /*
         VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
         BorderPane bp = (BorderPane) vBox.getChildren().get(0);
         Pane playerHolder = (Pane) bp.getChildren().get(0);
         image = (ImageView) playerHolder.getChildren().get(0);
-
+        */
         this.previous = (Button) playerContainer.lookup("#previous");
         this.stop = (Button) playerContainer.lookup("#stop");
         this.play = (Button) playerContainer.lookup("#play");

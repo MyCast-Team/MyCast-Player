@@ -1,5 +1,8 @@
 package sample.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -7,7 +10,7 @@ import java.util.ArrayList;
  * Created by Vincent on 28/04/2016.
  */
 public class Playlist implements Serializable {
-    private ArrayList<Media> playlist;
+    private ArrayList<Music> playlist;
     final String path = "./res/playlist.ser";
 
     public Playlist(){
@@ -20,6 +23,10 @@ public class Playlist implements Serializable {
         } catch (NullPointerException e){
             System.out.println("exception");
         }
+    }
+
+    public ArrayList<Music> getPlaylist(){
+        return playlist;
     }
 
     public void writePlaylist(){
@@ -42,7 +49,6 @@ public class Playlist implements Serializable {
             out.flush();
             out.close();
             fileOut.close();
-            System.out.println("I've writen the file");
         } catch(IOException i) {
             i.printStackTrace();
         }
@@ -53,7 +59,7 @@ public class Playlist implements Serializable {
         try {
             FileInputStream fichier = new FileInputStream(path);
             ois = new ObjectInputStream(fichier);
-            this.playlist = (ArrayList<Media>) ois.readObject();
+            this.playlist = (ArrayList<Music>) ois.readObject();
             System.out.println(this.playlist);
         } catch (IOException | ClassNotFoundException e) {
             writePlaylist();
