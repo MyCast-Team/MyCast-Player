@@ -27,7 +27,7 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane plugin;
     public AnchorPane player;
     public DirectMediaPlayerComponent mediaPlayerComponent;
-    private final String PATH_TO_MEDIA = "C:\\Users\\Vincent\\Desktop\\video.mkv";//"/Users/thomasfouan/Desktop/video.avi";
+    private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
     public MainFrameController(String path, Stage primaryStage) {
         try {
@@ -43,6 +43,7 @@ public class MainFrameController extends AnchorPane {
             player = loadComponent("view/player.fxml");
 
             ResizablePlayer resizablePlayer = new ResizablePlayer(primaryStage, player);
+            mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
 
             resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
             resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
