@@ -8,14 +8,14 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by Vincent on 07/03/2016.
  */
-public class MP3Music implements Media {
+public class Music implements Media {
     // Les commentaires représentent les infos ID3 (metadata mp3)
     StringProperty title; //Offset 3, longueur 30 octets
     StringProperty author; //Offset 33, longueur 30 octets
     StringProperty duration;
     // Il faut regarder les autres informations dans ID3v2 (pochette album, ...)
 
-    public MP3Music(String title, String author, String duration) {
+    public Music(String title, String author, String duration) {
         this.title = new SimpleStringProperty(title);
         this.author = new SimpleStringProperty(author);
         this.duration = new SimpleStringProperty(duration);

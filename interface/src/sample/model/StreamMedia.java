@@ -34,6 +34,9 @@ public class StreamMedia {
 
     private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
 
+    /**
+     * CONSTRUCTOR
+     */
     public StreamMedia() {
         factory = new MediaPlayerFactory();
         mediaListPlayer = factory.newMediaListPlayer();
@@ -46,6 +49,9 @@ public class StreamMedia {
         playList = factory.newMediaList();
     }
 
+    /**
+     * GETTERS
+     */
     public CONNECTION_STATUS getStatus() { return status; }
 
     public Socket getSocket() { return socket; }
@@ -56,6 +62,11 @@ public class StreamMedia {
 
     public MediaList getPlayList() { return playList; }
 
+    /**
+     * Prepare the player for streaming.
+     * @param addr address of the client
+     * @param port port to use for the streaming
+     */
     public void prepareStreamingMedia(String addr, int port) {
 
         String rtspStream = formatRtspStream(addr, PORT, "demo");
@@ -68,6 +79,9 @@ public class StreamMedia {
         mediaListPlayer.setMediaList(playList);
     }
 
+    /**
+     * Start the streaming at the address and port set with the prepareStreamingMedia function.
+     */
     public void startStreamingMedia() {
         mediaListPlayer.play();
         // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
