@@ -11,19 +11,24 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 /**
  * Control the player and bind the buttons of the player with functions
  */
 public class PlayerController implements MediaPlayerEventListener {
 
+    private MediaListPlayer mediaListPlayer;
     private MediaPlayer mediaPlayer;
     private Stage stage;
+    private ImageView image;
 
     private Button previous;
     private Button stop;
@@ -38,10 +43,16 @@ public class PlayerController implements MediaPlayerEventListener {
     private String fullTime;
 
     /* CONSTRUCTOR */
-    public PlayerController(MediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
+    public PlayerController(MediaListPlayer mediaListPlayer, MediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
 
+        this.mediaListPlayer = mediaListPlayer;
         this.mediaPlayer = mediaPlayer;
         this.stage = stage;
+
+        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
+        BorderPane bp = (BorderPane) vBox.getChildren().get(0);
+        Pane playerHolder = (Pane) bp.getChildren().get(0);
+        image = (ImageView) playerHolder.getChildren().get(0);
 
         this.previous = (Button) playerContainer.lookup("#previous");
         this.stop = (Button) playerContainer.lookup("#stop");
@@ -89,7 +100,13 @@ public class PlayerController implements MediaPlayerEventListener {
         previous.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mediaPlayer.previousChapter();
+                //image.setImage(new Image("/Users/thomasfouan/Desktop/image.png"));
+
+                mediaPlayer.setPosition(0.0f);
+                timeSlider.setValue(0.0);
+                timeLabel.setText(getStringTime(mediaPlayer));
+                setLastTimeDisplayed(0);
+                mediaListPlayer.playPrevious();
             }
         });
     }
@@ -131,7 +148,11 @@ public class PlayerController implements MediaPlayerEventListener {
         next.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mediaPlayer.nextChapter();
+                mediaPlayer.setPosition(0.0f);
+                timeSlider.setValue(0.0);
+                timeLabel.setText(getStringTime(mediaPlayer));
+                setLastTimeDisplayed(0);
+                mediaListPlayer.playNext();
             }
         });
     }

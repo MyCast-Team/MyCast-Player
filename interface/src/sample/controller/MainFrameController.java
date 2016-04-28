@@ -46,8 +46,7 @@ public class MainFrameController extends AnchorPane {
             mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
 
             resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
-            resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
-            resizablePlayer.getMediaPlayer().prepareMedia(PATH_TO_MEDIA);
+            resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
             resizablePlayer.getMediaListPlayer().play();
 
             grid.add(player, 0, 0);

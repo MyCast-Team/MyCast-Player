@@ -54,7 +54,7 @@ public class ResizablePlayer {
         mediaListPlayer.setMediaPlayer(mediaPlayer);
 
         // Add controller to the mediaPlayer
-        PlayerController playerController = new PlayerController(mediaPlayer, primaryStage, playerContainer);
+        PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
         mediaPlayer.addMediaPlayerEventListener(playerController);
 
         // Add the player pane in the playerContainer
