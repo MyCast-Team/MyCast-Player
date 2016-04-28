@@ -9,10 +9,8 @@ import sample.model.MP3Music;
 import sample.Main;
 
 /**
- * Created by Vincent on 14/03/2016.
+ * Class of control of the music.
  */
-
-
 public class MusicController {
     @FXML
     private TableView<MP3Music> musicTable;

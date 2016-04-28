@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 /**
- * Created by Vincent on 26/04/2016.
+ * Class of creation of the connection dialog box.
  */
 public class ConnectionDialog {
 

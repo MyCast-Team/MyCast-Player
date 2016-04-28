@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * Created by Vincent Rossignol on 21/04/2016.
  * Class to manage our main frame of the application
  */
 public class MainFrameController extends AnchorPane {

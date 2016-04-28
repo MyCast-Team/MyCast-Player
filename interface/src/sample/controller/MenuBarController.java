@@ -13,9 +13,10 @@ import sample.model.StreamMedia;
 import java.util.Optional;
 
 /**
- * Created by Vincent on 27/04/2016.
+ * Class of control of the menuBar.
  */
 public class MenuBarController {
+
     private MenuBar menuBar;
     private Menu mediacase;
     private MenuItem openMedia;

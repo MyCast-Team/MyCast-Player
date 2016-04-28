@@ -19,7 +19,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 
 /**
- * Created by thomasfouan on 17/03/2016.
+ * Control the player and bind the buttons of the player with functions
  */
 public class PlayerController implements MediaPlayerEventListener {
 
@@ -66,39 +66,23 @@ public class PlayerController implements MediaPlayerEventListener {
 
 
     /* GETTER */
-    public Slider getTimeSlider() {
-        return timeSlider;
-    }
+    public Slider getTimeSlider() { return timeSlider; }
 
-    public Label getTimeLabel() {
-        return timeLabel;
-    }
+    public Label getTimeLabel() { return timeLabel; }
 
-    public long getLastTimeDisplayed() {
-        return lastTimeDisplayed;
-    }
+    public long getLastTimeDisplayed() { return lastTimeDisplayed; }
 
-    public String getFullTime() {
-        return this.fullTime;
-    }
+    public String getFullTime() { return this.fullTime; }
 
 
     /* SETTER */
-    public void setFullTime(String fullTime) {
-        this.fullTime = fullTime;
-    }
+    public void setTimeSlider(Slider timeSlider) { this.timeSlider = timeSlider; }
 
-    public void setTimeSlider(Slider timeSlider) {
-        this.timeSlider = timeSlider;
-    }
+    public void setTimeLabel(Label timeLabel) { this.timeLabel = timeLabel; }
 
-    public void setTimeLabel(Label timeLabel) {
-        this.timeLabel = timeLabel;
-    }
+    public void setLastTimeDisplayed(long lastTimeDisplayed) { this.lastTimeDisplayed = lastTimeDisplayed; }
 
-    public void setLastTimeDisplayed(long lastTimeDisplayed) {
-        this.lastTimeDisplayed = lastTimeDisplayed;
-    }
+    public void setFullTime(String fullTime) { this.fullTime = fullTime; }
 
 
     /* BUTTON CONTROLLER */
@@ -121,8 +105,9 @@ public class PlayerController implements MediaPlayerEventListener {
                     timeLabel.setText(getStringTime(mediaPlayer));
                     setLastTimeDisplayed(0);
                     play.setGraphic(new ImageView(new Image("./img/play.png")));
-                    if(mediaPlayer.isPlaying())
+                    if(mediaPlayer.isPlaying()) {
                         mediaPlayer.pause();
+                    }
                 }
             }
         });
