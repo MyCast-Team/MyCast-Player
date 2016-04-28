@@ -6,33 +6,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-<<<<<<< HEAD
 import sample.model.Music;
-=======
->>>>>>> 0fb205fae293845fed3c27fbd00c477a46b3cc3e
 import sample.Main;
 
 /**
  * Class of control of the music.
  */
 public class MusicController {
-<<<<<<< HEAD
-    @FXML
-    private TableView<Music> musicTable;
-=======
     /*@FXML
     private TableView<MP3Music> musicTable;
->>>>>>> 0fb205fae293845fed3c27fbd00c477a46b3cc3e
     @FXML
     private TableColumn<Music, String> titleColumn;
     @FXML
     private TableColumn<Music, String> authorColumn;
     @FXML
-<<<<<<< HEAD
-    private TableColumn<Music, String> lengthColumn;
-=======
     private TableColumn<MP3Music, String> lengthColumn;*/
->>>>>>> 0fb205fae293845fed3c27fbd00c477a46b3cc3e
 
     // Reference to the main application.
     private Main main;
@@ -64,10 +52,6 @@ public class MusicController {
     public void setMain(Main main) {
         this.main = main;
         // Add observable list data to the table
-<<<<<<< HEAD
-        musicTable.setItems((ObservableList<Music>) main.getMusicData());
-=======
         /*musicTable.setItems(main.getMusicData());*/
->>>>>>> 0fb205fae293845fed3c27fbd00c477a46b3cc3e
     }
 }
