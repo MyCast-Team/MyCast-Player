@@ -9,9 +9,13 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
+import sample.controller.MusicController;
 import sample.model.Media;
+import sample.model.Music;
 import sample.model.Playlist;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -26,8 +30,7 @@ public class Main extends Application {
         this.primaryStage.setTitle("MyCast");
 
         playlist = new Playlist();
-        playlist.readPlaylist();
-
+        //playlist.readPlaylist();
         initRootLayout();
     }
 
@@ -36,8 +39,7 @@ public class Main extends Application {
      */
     public void initRootLayout() {
         // Load root layout from fxml file
-
-        mainFrameController = new MainFrameController("view/mainFrame.fxml", primaryStage);
+        mainFrameController = new MainFrameController("view/mainFrame.fxml", this.primaryStage, this.playlist);
         menuBarController = new MenuBarController(mainFrameController.getRootPane());
         AnchorPane rootLayout = mainFrameController.getRootPane();
 
@@ -66,7 +68,7 @@ public class Main extends Application {
         return primaryStage;
     }
 
-    public ObservableList<Media> getPlaylist() { return playlist.getPlaylist(); }
+    public ArrayList<Music> getPlaylist() { return playlist.getPlaylist(); }
 
     public static void main(String[] args) {
         new NativeDiscovery().discover();

@@ -1,6 +1,8 @@
 package sample.controller;
 
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import sample.model.Playlist;
 import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,37 +30,41 @@ public class MainFrameController extends AnchorPane {
     public DirectMediaPlayerComponent mediaPlayerComponent;
     private final String PATH_TO_MEDIA = "C:\\Users\\Vincent\\Desktop\\video.mkv";//"/Users/thomasfouan/Desktop/video.avi";
 
-    public MainFrameController(String path, Stage primaryStage) {
+    public MainFrameController(String path, Stage primaryStage, Playlist list) {
         try {
             this.rootPane = (AnchorPane) loadRoot(path);
             this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
-                grid = (GridPane) node;
+                this.grid = (GridPane) node;
             });
 
-            playlist = loadComponent("view/playlist.fxml");
-            suggestions = loadComponent("view/suggestions.fxml");
-            mediacase = loadComponent("view/mediacase.fxml");
-            plugin = loadComponent("view/plugin.fxml");
-            player = loadComponent("view/player.fxml");
+            this.suggestions = loadComponent("view/suggestions.fxml");
+            this.mediacase = loadComponent("view/mediacase.fxml");
+            this.plugin = loadComponent("view/plugin.fxml");
+            this.player = loadComponent("view/player.fxml");
+            this.playlist = loadComponent("view/playlist.fxml");
+            Pair<AnchorPane, MusicController> pairPlaylist = loadComponentAndController("view/playlist.fxml");
+            this.playlist = pairPlaylist.getKey();
+            MusicController musicController = pairPlaylist.getValue();
+            musicController.setPlaylist(list);
 
-            ResizablePlayer resizablePlayer = new ResizablePlayer(player);
+            ResizablePlayer resizablePlayer = new ResizablePlayer(this.player);
 
-            mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
+            this.mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
 
-            MediaPlayer mediaPlayer = mediaPlayerComponent.getMediaPlayer();
+            MediaPlayer mediaPlayer = this.mediaPlayerComponent.getMediaPlayer();
 
-            PlayerController playerController = new PlayerController((DirectMediaPlayer) mediaPlayer, primaryStage, player);
+            PlayerController playerController = new PlayerController((DirectMediaPlayer) mediaPlayer, primaryStage, this.player);
             mediaPlayer.addMediaPlayerEventListener(playerController);
 
-            mediaPlayer.prepareMedia(PATH_TO_MEDIA);
+            mediaPlayer.prepareMedia(this.PATH_TO_MEDIA);
             mediaPlayer.start();
 
-            grid.add(player, 0, 0);
-            grid.add(suggestions, 0, 1);
-            grid.add(mediacase, 1, 0);
-            grid.add(plugin, 1, 1);
+            this.grid.add(this.player, 0, 0);
+            this.grid.add(this.playlist, 0, 1);
+            this.grid.add(this.mediacase, 1, 0);
+            this.grid.add(this.plugin, 1, 1);
 
-            grid.setGridLinesVisible(true);
+            this.grid.setGridLinesVisible(true);
 
             setRowContraints();
             setColumnConstraints();
@@ -97,6 +103,21 @@ public class MainFrameController extends AnchorPane {
         }
         initDragAndDrop(pane);
         return pane;
+    }
+
+    public Pair loadComponentAndController(String path){
+        AnchorPane pane = null;
+        Object controller = null;
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(path));
+        try {
+            pane = loader.load();
+            controller = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        initDragAndDrop(pane);
+        return new Pair(pane, controller);
     }
 
     public Pane loadRoot(String path) throws IOException {

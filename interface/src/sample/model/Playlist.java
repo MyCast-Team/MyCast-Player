@@ -10,10 +10,11 @@ import java.util.ArrayList;
  * Created by Vincent on 28/04/2016.
  */
 public class Playlist implements Serializable {
-    private ObservableList<Media> playlist = FXCollections.observableArrayList();
+    private ArrayList<Music> playlist;
     final String path = "./res/playlist.ser";
 
     public Playlist(){
+        playlist = new ArrayList<>();
         Music m1 = new Music("Daft Punk", "Around the world", "3:30");
         Music m2 = new Music("Daft Punk", "Around the world", "3:30");
         try{
@@ -24,7 +25,7 @@ public class Playlist implements Serializable {
         }
     }
 
-    public ObservableList<Media> getPlaylist(){
+    public ArrayList<Music> getPlaylist(){
         return playlist;
     }
 
@@ -48,7 +49,6 @@ public class Playlist implements Serializable {
             out.flush();
             out.close();
             fileOut.close();
-            System.out.println("I've writen the file");
         } catch(IOException i) {
             i.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class Playlist implements Serializable {
         try {
             FileInputStream fichier = new FileInputStream(path);
             ois = new ObjectInputStream(fichier);
-            this.playlist = (ObservableList<Media>) ois.readObject();
+            this.playlist = (ArrayList<Music>) ois.readObject();
             System.out.println(this.playlist);
         } catch (IOException | ClassNotFoundException e) {
             writePlaylist();

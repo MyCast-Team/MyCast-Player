@@ -1,5 +1,8 @@
 package sample.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.io.Serializable;
 
 /**
@@ -25,6 +28,10 @@ public class Music extends Media implements Serializable {
         this.title = title;
     }
 
+    public StringProperty titleProperty() {
+        return new SimpleStringProperty(title);
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -33,9 +40,17 @@ public class Music extends Media implements Serializable {
         this.author = author;
     }
 
+    public StringProperty authorProperty() {
+        return new SimpleStringProperty(author);
+    }
+
     public String getDuration() { return duration; }
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public StringProperty durationProperty() {
+        return new SimpleStringProperty(duration);
     }
 }
