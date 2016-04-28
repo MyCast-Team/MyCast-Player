@@ -2,12 +2,14 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
+import sample.model.Media;
 import sample.model.Playlist;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
@@ -63,6 +65,8 @@ public class Main extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
+
+    public ObservableList<Media> getPlaylist() { return playlist.getPlaylist(); }
 
     public static void main(String[] args) {
         new NativeDiscovery().discover();
