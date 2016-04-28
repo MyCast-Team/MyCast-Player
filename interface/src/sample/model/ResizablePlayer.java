@@ -7,27 +7,34 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
+import sample.controller.PlayerController;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
+import uk.co.caprica.vlcj.medialist.MediaList;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
+
 import java.nio.ByteBuffer;
 
 /**
- * Created by thomasfouan on 16/03/2016.
+ * Class of creation and control of the vlcj player.
  */
 public class ResizablePlayer {
 
-    private ImageView imageView;
-
     private DirectMediaPlayerComponent mediaPlayerComponent;
+    private MediaListPlayer mediaListPlayer;
+    private MediaList playlist;
+    private MediaPlayer mediaPlayer;
 
+    private ImageView imageView;
     private WritableImage writableImage;
-
-    private Pane playerHolder;
-
     private WritablePixelFormat<ByteBuffer> pixelFormat;
 
+    private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
-    public ResizablePlayer(AnchorPane playerContainer) {
+    public ResizablePlayer(Stage primaryStage, AnchorPane playerContainer) {
 
         // Initialisation of the components
         playerHolder = new Pane();
@@ -36,7 +43,19 @@ public class ResizablePlayer {
 
         initializeImageView();
 
+        // Set the different component of the player (mediaListPlayer, mediaList, mediaPlayer)
         mediaPlayerComponent = new CanvasPlayerComponent(writableImage, pixelFormat, videoSourceRatioProperty);
+        mediaListPlayer = mediaPlayerComponent.getMediaPlayerFactory().newMediaListPlayer();
+
+        playlist = mediaPlayerComponent.getMediaPlayerFactory().newMediaList();
+        mediaListPlayer.setMediaList(playlist);
+
+        mediaPlayer = mediaPlayerComponent.getMediaPlayer();
+        mediaListPlayer.setMediaPlayer(mediaPlayer);
+
+        // Add controller to the mediaPlayer
+        PlayerController playerController = new PlayerController(mediaPlayer, primaryStage, playerContainer);
+        mediaPlayer.addMediaPlayerEventListener(playerController);
 
         // Add the player pane in the playerContainer
         VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
@@ -46,13 +65,15 @@ public class ResizablePlayer {
         VBox.setVgrow(playerPane, Priority.ALWAYS);
     }
 
-    public DirectMediaPlayerComponent getMediaPlayerComponent() {
-        return mediaPlayerComponent;
-    }
+    public DirectMediaPlayerComponent getMediaPlayerComponent() { return mediaPlayerComponent; }
 
-    public Pane getPlayerHolder() {
-        return playerHolder;
-    }
+    public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
+
+    public MediaList getPlaylist() { return playlist; }
+
+    public MediaPlayer getMediaPlayer() { return mediaPlayer; }
+
+    public Pane getPlayerHolder() { return playerHolder; }
 
     /**
      * initialize the type of image (size, ratio) to write in the player, accordingly with :

@@ -1,11 +1,12 @@
 package sample.controller;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import sample.model.MP3Music;
+import sample.model.Music;
 import sample.Main;
 
 /**
@@ -13,13 +14,13 @@ import sample.Main;
  */
 public class MusicController {
     @FXML
-    private TableView<MP3Music> musicTable;
+    private TableView<Music> musicTable;
     @FXML
-    private TableColumn<MP3Music, String> titleColumn;
+    private TableColumn<Music, String> titleColumn;
     @FXML
-    private TableColumn<MP3Music, String> authorColumn;
+    private TableColumn<Music, String> authorColumn;
     @FXML
-    private TableColumn<MP3Music, String> lengthColumn;
+    private TableColumn<Music, String> lengthColumn;
 
     // Reference to the main application.
     private Main main;
@@ -51,6 +52,6 @@ public class MusicController {
     public void setMain(Main main) {
         this.main = main;
         // Add observable list data to the table
-        musicTable.setItems(main.getMusicData());
+        musicTable.setItems((ObservableList<Music>) main.getMusicData());
     }
 }

@@ -10,6 +10,7 @@ import sample.Main;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -41,17 +42,12 @@ public class MainFrameController extends AnchorPane {
             plugin = loadComponent("view/plugin.fxml");
             player = loadComponent("view/player.fxml");
 
-            ResizablePlayer resizablePlayer = new ResizablePlayer(player);
+            ResizablePlayer resizablePlayer = new ResizablePlayer(primaryStage, player);
 
-            mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
-
-            MediaPlayer mediaPlayer = mediaPlayerComponent.getMediaPlayer();
-
-            PlayerController playerController = new PlayerController((DirectMediaPlayer) mediaPlayer, primaryStage, player);
-            mediaPlayer.addMediaPlayerEventListener(playerController);
-
-            mediaPlayer.prepareMedia(PATH_TO_MEDIA);
-            mediaPlayer.start();
+            resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
+            resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
+            resizablePlayer.getMediaPlayer().prepareMedia(PATH_TO_MEDIA);
+            resizablePlayer.getMediaListPlayer().play();
 
             grid.add(player, 0, 0);
             grid.add(suggestions, 0, 1);

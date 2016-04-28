@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
@@ -23,7 +22,7 @@ import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
  */
 public class PlayerController implements MediaPlayerEventListener {
 
-    private DirectMediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     private Stage stage;
 
     private Button previous;
@@ -39,7 +38,7 @@ public class PlayerController implements MediaPlayerEventListener {
     private String fullTime;
 
     /* CONSTRUCTOR */
-    public PlayerController(DirectMediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
+    public PlayerController(MediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
 
         this.mediaPlayer = mediaPlayer;
         this.stage = stage;

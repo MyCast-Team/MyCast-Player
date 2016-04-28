@@ -97,7 +97,7 @@ public class StreamMedia {
     }
 
     public void pauseStreamingMedia() {
-
+        mediaListPlayer.pause();
     }
 
     private String formatRtspStream(String serverAddress, int serverPort, String id) {

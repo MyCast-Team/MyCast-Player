@@ -95,7 +95,7 @@ public class MenuBarController {
             @Override
             public void handle(ActionEvent event) {
                 if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    streamMedia.getMediaListPlayer().pause();
+                    streamMedia.pauseStreamingMedia();
                 }
             }
         };
