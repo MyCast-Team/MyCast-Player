@@ -2,38 +2,31 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
-import sample.model.Music;
+import sample.model.Playlist;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-
-import java.util.List;
 
 public class Main extends Application {
 
     private Stage primaryStage;
     private MainFrameController mainFrameController;
     private MenuBarController menuBarController;
-    private List<Music> musicData = FXCollections.observableArrayList();
+    private Playlist playlist;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
 
-        musicData.add(new Music("Pigs out of wind", "Pink Floyd", "3:25"));
-        musicData.add(new Music("Space Oddity", "David Bowie", "4:45"));
+        playlist = new Playlist();
+        playlist.readPlaylist();
 
         initRootLayout();
-    }
-
-    public List<Music> getMusicData() {
-        return musicData;
     }
 
     /**
@@ -55,6 +48,7 @@ public class Main extends Application {
 
         primaryStage.setOnCloseRequest(event -> {
             mainFrameController.getMediaPlayer().release(true);
+            playlist.writePlaylist();
             Platform.exit();
             System.exit(0);
         });

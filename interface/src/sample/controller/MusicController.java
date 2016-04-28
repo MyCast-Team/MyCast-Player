@@ -5,21 +5,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import sample.model.MP3Music;
 import sample.Main;
 
 /**
  * Class of control of the music.
  */
 public class MusicController {
-    @FXML
+    /*@FXML
     private TableView<MP3Music> musicTable;
     @FXML
     private TableColumn<MP3Music, String> titleColumn;
     @FXML
     private TableColumn<MP3Music, String> authorColumn;
     @FXML
-    private TableColumn<MP3Music, String> lengthColumn;
+    private TableColumn<MP3Music, String> lengthColumn;*/
 
     // Reference to the main application.
     private Main main;
@@ -38,9 +37,9 @@ public class MusicController {
     @FXML
     private void initialize() {
         // Initialize the person table with the two columns.
-        titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
+        /*titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
-        lengthColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());
+        lengthColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());*/
     }
 
     /**
@@ -51,6 +50,6 @@ public class MusicController {
     public void setMain(Main main) {
         this.main = main;
         // Add observable list data to the table
-        musicTable.setItems(main.getMusicData());
+        /*musicTable.setItems(main.getMusicData());*/
     }
 }
