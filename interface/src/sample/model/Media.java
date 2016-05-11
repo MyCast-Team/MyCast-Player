@@ -1,7 +1,5 @@
 package sample.model;
 
-import javafx.beans.value.ObservableValue;
-
 import java.io.Serializable;
 
 /**
