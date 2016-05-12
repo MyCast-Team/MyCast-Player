@@ -37,7 +37,6 @@ public class Main extends Application {
     public void initRootLayout() {
         // Load root layout from fxml file
         mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage, this.playlist);
-        menuBarController = new MenuBarController(mainFrameController.getRootPane());
         AnchorPane rootLayout = mainFrameController.getRootPane();
 
         Scene scene = new Scene(rootLayout);
