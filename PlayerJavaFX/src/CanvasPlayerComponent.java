@@ -1,5 +1,3 @@
-package sample.model;
-
 import com.sun.jna.Memory;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
@@ -10,6 +8,8 @@ import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.direct.BufferFormat;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 
+import java.nio.Buffer;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 
 /**
@@ -49,6 +49,8 @@ public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
             try {
                 ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
                 getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+            } catch (BufferOverflowException e) {
+                System.exit(1);
             }
             finally {
                 mediaPlayer.unlock();

@@ -1,5 +1,3 @@
-package sample.model;
-
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.geometry.Rectangle2D;

@@ -1,34 +1,34 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
-import sample.model.MP3Music;
+import sample.controller.MenuBarController;
+import sample.model.Music;
+import sample.model.Playlist;
+import uk.co.caprica.vlcj.discovery.NativeDiscovery;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
 
     private Stage primaryStage;
     private MainFrameController mainFrameController;
-    private ObservableList<MP3Music> musicData = FXCollections.observableArrayList();
+    private MenuBarController menuBarController;
+    private Playlist playlist;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
 
-        musicData.add(new MP3Music("Pigs out of wind", "Pink Floyd", "3:25"));
-        musicData.add(new MP3Music("Space Oddity", "David Bowie", "4:45"));
-
+        playlist = new Playlist();
+        //playlist.readPlaylist();
         initRootLayout();
-    }
-
-    public ObservableList<MP3Music> getMusicData() {
-        return musicData;
     }
 
     /**
@@ -36,8 +36,8 @@ public class Main extends Application {
      */
     public void initRootLayout() {
         // Load root layout from fxml file
-
-        mainFrameController = new MainFrameController("view/mainFrame.fxml");
+        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage, this.playlist);
+        menuBarController = new MenuBarController(mainFrameController.getRootPane());
         AnchorPane rootLayout = mainFrameController.getRootPane();
 
         Scene scene = new Scene(rootLayout);
@@ -45,6 +45,13 @@ public class Main extends Application {
         scene.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
             if(event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
+        });
+
+        primaryStage.setOnCloseRequest(event -> {
+            mainFrameController.getMediaPlayer().release(true);
+            playlist.writePlaylist();
+            Platform.exit();
+            System.exit(0);
         });
 
         primaryStage.setScene(scene);
@@ -58,7 +65,10 @@ public class Main extends Application {
         return primaryStage;
     }
 
+    public ArrayList<Music> getPlaylist() { return playlist.getPlaylist(); }
+
     public static void main(String[] args) {
+        new NativeDiscovery().discover();
         launch(args);
     }
 }

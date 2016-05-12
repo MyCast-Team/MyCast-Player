@@ -1,3 +1,5 @@
+package sample.controller;
+
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -8,21 +10,27 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_type_e;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 /**
- * Created by thomasfouan on 17/03/2016.
+ * Control the player and bind the buttons of the player with functions
  */
 public class PlayerController implements MediaPlayerEventListener {
 
-    private DirectMediaPlayer mediaPlayer;
+    private MediaListPlayer mediaListPlayer;
+    private MediaPlayer mediaPlayer;
     private Stage stage;
+    private ImageView image;
 
     private Button previous;
     private Button stop;
@@ -37,10 +45,16 @@ public class PlayerController implements MediaPlayerEventListener {
     private String fullTime;
 
     /* CONSTRUCTOR */
-    public PlayerController(DirectMediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
+    public PlayerController(MediaListPlayer mediaListPlayer, MediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
 
+        this.mediaListPlayer = mediaListPlayer;
         this.mediaPlayer = mediaPlayer;
         this.stage = stage;
+
+        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
+        BorderPane bp = (BorderPane) vBox.getChildren().get(0);
+        Pane playerHolder = (Pane) bp.getChildren().get(0);
+        image = (ImageView) playerHolder.getChildren().get(0);
 
         this.previous = (Button) playerContainer.lookup("#previous");
         this.stop = (Button) playerContainer.lookup("#stop");
@@ -64,39 +78,23 @@ public class PlayerController implements MediaPlayerEventListener {
 
 
     /* GETTER */
-    public Slider getTimeSlider() {
-        return timeSlider;
-    }
+    public Slider getTimeSlider() { return timeSlider; }
 
-    public Label getTimeLabel() {
-        return timeLabel;
-    }
+    public Label getTimeLabel() { return timeLabel; }
 
-    public long getLastTimeDisplayed() {
-        return lastTimeDisplayed;
-    }
+    public long getLastTimeDisplayed() { return lastTimeDisplayed; }
 
-    public String getFullTime() {
-        return this.fullTime;
-    }
+    public String getFullTime() { return this.fullTime; }
 
 
     /* SETTER */
-    public void setFullTime(String fullTime) {
-        this.fullTime = fullTime;
-    }
+    public void setTimeSlider(Slider timeSlider) { this.timeSlider = timeSlider; }
 
-    public void setTimeSlider(Slider timeSlider) {
-        this.timeSlider = timeSlider;
-    }
+    public void setTimeLabel(Label timeLabel) { this.timeLabel = timeLabel; }
 
-    public void setTimeLabel(Label timeLabel) {
-        this.timeLabel = timeLabel;
-    }
+    public void setLastTimeDisplayed(long lastTimeDisplayed) { this.lastTimeDisplayed = lastTimeDisplayed; }
 
-    public void setLastTimeDisplayed(long lastTimeDisplayed) {
-        this.lastTimeDisplayed = lastTimeDisplayed;
-    }
+    public void setFullTime(String fullTime) { this.fullTime = fullTime; }
 
 
     /* BUTTON CONTROLLER */
@@ -104,7 +102,13 @@ public class PlayerController implements MediaPlayerEventListener {
         previous.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mediaPlayer.previousChapter();
+                //image.setImage(new Image("/Users/thomasfouan/Desktop/image.png"));
+
+                mediaPlayer.setPosition(0.0f);
+                timeSlider.setValue(0.0);
+                timeLabel.setText(getStringTime(mediaPlayer));
+                setLastTimeDisplayed(0);
+                mediaListPlayer.playPrevious();
             }
         });
     }
@@ -118,9 +122,10 @@ public class PlayerController implements MediaPlayerEventListener {
                     timeSlider.setValue(0.0);
                     timeLabel.setText(getStringTime(mediaPlayer));
                     setLastTimeDisplayed(0);
-                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
-                    if(mediaPlayer.isPlaying())
+                    play.setGraphic(new ImageView(new Image("./img/play.png")));
+                    if(mediaPlayer.isPlaying()) {
                         mediaPlayer.pause();
+                    }
                 }
             }
         });
@@ -132,10 +137,10 @@ public class PlayerController implements MediaPlayerEventListener {
             public void handle(ActionEvent event) {
                 if(mediaPlayer.isPlaying()) {
                     mediaPlayer.pause();
-                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                    play.setGraphic(new ImageView(new Image("./img/play.png")));
                 } else {
                     mediaPlayer.play();
-                    play.setGraphic(new ImageView(new Image("./img/play.png")));
+                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
                 }
             }
         });
@@ -145,7 +150,14 @@ public class PlayerController implements MediaPlayerEventListener {
         next.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mediaPlayer.nextChapter();
+                mediaPlayer.setPosition(0.0f);
+                timeSlider.setValue(0.0);
+                timeLabel.setText(getStringTime(mediaPlayer));
+                setLastTimeDisplayed(0);
+                mediaListPlayer.playNext();
+                //image.setImage(new Image("/img/resize.png"));
+                //WritableImage wi = (WritableImage) image.getImage();
+                //wi.getPixelWriter();
             }
         });
     }
