@@ -41,6 +41,13 @@ public class ResizablePlayer {
         pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
+        // Add the player pane in the playerContainer
+        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
+        BorderPane playerPane = new BorderPane(playerHolder);
+        playerPane.setStyle("-fx-background-color: black");
+        vBox.getChildren().add(0, playerPane);
+        VBox.setVgrow(playerPane, Priority.ALWAYS);
+
         initializeImageView();
 
         // Set the different component of the player (mediaListPlayer, mediaList, mediaPlayer)
@@ -56,13 +63,6 @@ public class ResizablePlayer {
         // Add controller to the mediaPlayer
         PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
         mediaPlayer.addMediaPlayerEventListener(playerController);
-
-        // Add the player pane in the playerContainer
-        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
-        BorderPane playerPane = new BorderPane(playerHolder);
-        playerPane.setStyle("-fx-background-color: black");
-        vBox.getChildren().add(0, playerPane);
-        VBox.setVgrow(playerPane, Priority.ALWAYS);
     }
 
     public DirectMediaPlayerComponent getMediaPlayerComponent() { return mediaPlayerComponent; }
@@ -80,7 +80,7 @@ public class ResizablePlayer {
      *      - the dimensions of the screen
      *      - and the ratio of the video source
      *
-     * Add listeners on the screen and on the ratio fo the current media.
+     * Add listeners on the screen and on the ratio for the current media.
      */
     private void initializeImageView() {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
