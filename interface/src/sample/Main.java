@@ -48,7 +48,7 @@ public class Main extends Application {
         });
 
         primaryStage.setOnCloseRequest(event -> {
-            mainFrameController.getMediaPlayer().release(true);
+            //mainFrameController.getMediaPlayer().release(true);
             playlist.writePlaylist();
             Platform.exit();
             System.exit(0);

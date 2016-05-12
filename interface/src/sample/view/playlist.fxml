@@ -36,7 +36,7 @@
                   <Insets bottom="10.0" top="10.0" />
                </padding>
             </HBox>
-            <TableView fx:id="musicTable" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="musicTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Title" />
                 <TableColumn fx:id="authorColumn" prefWidth="75.0" text="Author" />
