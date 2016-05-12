@@ -10,9 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_type_e;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
@@ -45,12 +50,12 @@ public class PlayerController implements MediaPlayerEventListener {
         this.mediaListPlayer = mediaListPlayer;
         this.mediaPlayer = mediaPlayer;
         this.stage = stage;
-        /*
+
         VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
         BorderPane bp = (BorderPane) vBox.getChildren().get(0);
         Pane playerHolder = (Pane) bp.getChildren().get(0);
         image = (ImageView) playerHolder.getChildren().get(0);
-        */
+
         this.previous = (Button) playerContainer.lookup("#previous");
         this.stop = (Button) playerContainer.lookup("#stop");
         this.play = (Button) playerContainer.lookup("#play");
@@ -150,6 +155,9 @@ public class PlayerController implements MediaPlayerEventListener {
                 timeLabel.setText(getStringTime(mediaPlayer));
                 setLastTimeDisplayed(0);
                 mediaListPlayer.playNext();
+                //image.setImage(new Image("/img/resize.png"));
+                //WritableImage wi = (WritableImage) image.getImage();
+                //wi.getPixelWriter();
             }
         });
     }
