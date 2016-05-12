@@ -2,15 +2,12 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
-import sample.controller.MusicController;
-import sample.model.Media;
 import sample.model.Music;
 import sample.model.Playlist;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
@@ -39,7 +36,7 @@ public class Main extends Application {
      */
     public void initRootLayout() {
         // Load root layout from fxml file
-        mainFrameController = new MainFrameController("view/mainFrame.fxml", this.primaryStage, this.playlist);
+        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage, this.playlist);
         menuBarController = new MenuBarController(mainFrameController.getRootPane());
         AnchorPane rootLayout = mainFrameController.getRootPane();
 

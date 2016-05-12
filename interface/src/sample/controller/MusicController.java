@@ -30,7 +30,7 @@ public class MusicController {
     }
 
     /**
-     * Initializes the controller class. This method is automatically called
+     * Initializes the sample.controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
     @FXML

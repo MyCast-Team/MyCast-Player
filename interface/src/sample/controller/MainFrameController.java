@@ -2,16 +2,24 @@ package sample.controller;
 
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import sample.Main;
 import sample.model.Playlist;
+import sample.model.Point;
 import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import sample.Main;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,12 +43,20 @@ public class MainFrameController extends AnchorPane {
                 this.grid = (GridPane) node;
             });
 
-            this.suggestions = loadComponent("view/suggestions.fxml");
-            this.mediacase = loadComponent("view/mediacase.fxml");
-            this.plugin = loadComponent("view/plugin.fxml");
-            this.player = loadComponent("view/player.fxml");
-            this.playlist = loadComponent("view/playlist.fxml");
-            Pair<AnchorPane, MusicController> pairPlaylist = loadComponentAndController("view/playlist.fxml");
+            HashMap<String, Point> componentToLoad = readComponent();
+
+            for(Map.Entry<String, Point> m : componentToLoad.entrySet()){
+                AnchorPane pane = loadComponent(m.getKey());
+                this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
+            }
+
+            this.suggestions = loadComponent("/sample/view/suggestions.fxml");
+            this.mediacase = loadComponent("/sample/view/mediacase.fxml");
+            this.plugin = loadComponent("/sample/view/plugin.fxml");
+            this.player = loadComponent("/sample/view/player.fxml");
+            this.playlist = loadComponent("/sample/view/playlist.fxml");
+            
+            Pair<AnchorPane, MusicController> pairPlaylist = loadComponentAndController("/sample/view/playlist.fxml");
             this.playlist = pairPlaylist.getKey();
             MusicController musicController = pairPlaylist.getValue();
             musicController.setPlaylist(list);
@@ -52,11 +68,6 @@ public class MainFrameController extends AnchorPane {
             resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
             resizablePlayer.getMediaListPlayer().play();
 
-            this.grid.add(this.player, 0, 0);
-            this.grid.add(this.playlist, 0, 1);
-            this.grid.add(this.mediacase, 1, 0);
-            this.grid.add(this.plugin, 1, 1);
-
             this.grid.setGridLinesVisible(true);
 
             setRowContraints();
@@ -65,6 +76,35 @@ public class MainFrameController extends AnchorPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private HashMap<String, Point> readComponent(){
+        HashMap<String, Point> list = new HashMap<>();
+        String csvFile = "./res/interface.csv";
+        BufferedReader br = null;
+        String line = "";
+        try {
+
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+
+                String array[] = line.split(";");
+
+                list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
     }
 
     private void setRowContraints() {
@@ -88,7 +128,7 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane loadComponent(String path){
         AnchorPane pane = null;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(path));
+        loader.setLocation(getClass().getResource(path));
         try {
             pane = loader.load();
         } catch (IOException e) {
@@ -102,7 +142,7 @@ public class MainFrameController extends AnchorPane {
         AnchorPane pane = null;
         Object controller = null;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(path));
+        loader.setLocation(getClass().getResource(path));
         try {
             pane = loader.load();
             controller = loader.getController();
@@ -115,7 +155,7 @@ public class MainFrameController extends AnchorPane {
 
     public Pane loadRoot(String path) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(path));
+        loader.setLocation(getClass().getResource(path));
         return loader.load();
     }
 

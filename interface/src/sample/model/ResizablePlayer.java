@@ -12,7 +12,6 @@ import sample.controller.PlayerController;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.nio.ByteBuffer;
@@ -60,7 +59,7 @@ public class ResizablePlayer {
         mediaPlayer = mediaPlayerComponent.getMediaPlayer();
         mediaListPlayer.setMediaPlayer(mediaPlayer);
 
-        // Add controller to the mediaPlayer
+        // Add sample.controller to the mediaPlayer
         PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
         mediaPlayer.addMediaPlayerEventListener(playerController);
     }
