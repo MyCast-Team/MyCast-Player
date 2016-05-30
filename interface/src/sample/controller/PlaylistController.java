@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Class of control of the music.
  */
-public class MusicController {
+public class PlaylistController {
     @FXML
     private TableView<Music> musicTable;
     @FXML
@@ -99,7 +99,7 @@ public class MusicController {
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public MusicController() {
+    public PlaylistController() {
     }
 
     /**
