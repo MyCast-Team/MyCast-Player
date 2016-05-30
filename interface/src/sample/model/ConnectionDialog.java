@@ -3,7 +3,6 @@ package sample.model;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.scene.control.*;
 import sample.Main;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 /**
- * Created by Vincent on 26/04/2016.
+ * Class of creation of the connection dialog box.
  */
 public class ConnectionDialog {
 
@@ -37,7 +36,7 @@ public class ConnectionDialog {
         dialog.getDialogPane().getButtonTypes().addAll(validateButton, ButtonType.CANCEL);
 
         FXMLLoader dialogLoad = new FXMLLoader();
-        dialogLoad.setLocation(Main.class.getResource("view/connection.fxml"));
+        dialogLoad.setLocation(Main.class.getResource("sample/view/connection.fxml"));
         try {
             content = dialogLoad.load();
         } catch (IOException e) {

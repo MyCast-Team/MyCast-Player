@@ -2,6 +2,7 @@ package sample.controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -13,30 +14,34 @@ import sample.model.StreamMedia;
 import java.util.Optional;
 
 /**
- * Created by Vincent on 27/04/2016.
+ * Class of control of the menuBar.
  */
 public class MenuBarController {
+
+    @FXML
     private MenuBar menuBar;
+    @FXML
     private Menu mediacase;
+    @FXML
     private MenuItem openMedia;
+    @FXML
     private MenuItem openMediaAndAdd;
+    @FXML
     private Menu connection;
+    @FXML
     private MenuItem setConnection;
+    @FXML
     private MenuItem play;
+    @FXML
     private MenuItem pause;
     private StreamMedia streamMedia;
     private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
 
-    public MenuBarController(AnchorPane root){
-        menuBar = (MenuBar) root.lookup("#menuBar");
-        mediacase = menuBar.getMenus().get(0);
-        openMedia = mediacase.getItems().get(0);
-        openMediaAndAdd = mediacase.getItems().get(1);
-        connection = menuBar.getMenus().get(1);
-        setConnection = connection.getItems().get(0);
-        play = connection.getItems().get(1);
-        pause = connection.getItems().get(2);
+    public MenuBarController(){
+    }
 
+    @FXML
+    public void initialize(){
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
         pause.setOnAction(getPauseEventHandler());
@@ -94,7 +99,7 @@ public class MenuBarController {
             @Override
             public void handle(ActionEvent event) {
                 if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    streamMedia.getMediaListPlayer().pause();
+                    streamMedia.pauseStreamingMedia();
                 }
             }
         };
