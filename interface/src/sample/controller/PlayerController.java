@@ -7,6 +7,7 @@ import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -22,6 +23,9 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * Control the player and bind the buttons of the player with functions
  */
@@ -31,6 +35,9 @@ public class PlayerController implements MediaPlayerEventListener {
     private MediaPlayer mediaPlayer;
     private Stage stage;
     private ImageView image;
+
+    @FXML
+    private VBox playerContainer;
 
     @FXML
     private Button previous;
@@ -66,44 +73,22 @@ public class PlayerController implements MediaPlayerEventListener {
 
 
     /* CONSTRUCTOR */
-    /*
-    public PlayerController(MediaListPlayer mediaListPlayer, MediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
-
-        this.mediaListPlayer = mediaListPlayer;
-        this.mediaPlayer = mediaPlayer;
-        this.stage = stage;
-
-        Pane playerHolder = (Pane) playerPane.getChildren().get(0);
-        image = (ImageView) playerHolder.getChildren().get(0);
-
-        this.lastTimeDisplayed = 0;
-
-        addPreviousListener();
-        addStopListener();
-        addPlayListener();
-        addNextListener();
-        addTimeSliderListner();
-        addRepeatListener();
-        addResizeListener();
-    }*/
     public PlayerController() {
-        //this.resizablePlayer = new ResizablePlayer(primaryStage, player);
-        //mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
 
-
-
-        //resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
-        resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
-        resizablePlayer.getMediaListPlayer().play();
     }
 
     @FXML
     public void initialize() {
-        this.mediaListPlayer = mediaListPlayer;
-        this.mediaPlayer = mediaPlayer;
-        this.stage = stage;
 
-        this.play.getScene().getWindow();
+        this.stage = null;
+        resizablePlayer = new ResizablePlayer(this.playerContainer);
+
+        //resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
+        resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
+        resizablePlayer.getMediaListPlayer().play();
+        this.mediaListPlayer = resizablePlayer.getMediaListPlayer();
+        this.mediaPlayer = resizablePlayer.getMediaPlayer();
+        this.mediaPlayer.addMediaPlayerEventListener(this);
 
         //Pane playerHolder = (Pane) playerPane.getChildren().get(0);
         //image = (ImageView) playerHolder.getChildren().get(0);
@@ -236,6 +221,9 @@ public class PlayerController implements MediaPlayerEventListener {
         resize.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if(stage == null) {
+                    stage = (Stage) play.getScene().getWindow();
+                }
                 if(stage.isFullScreen())
                     stage.setFullScreen(false);
                 else

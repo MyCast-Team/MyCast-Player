@@ -33,7 +33,7 @@ public class ResizablePlayer {
     private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
-    public ResizablePlayer(Stage primaryStage, AnchorPane playerContainer) {
+    public ResizablePlayer(VBox playerContainer) {
 
         // Initialisation of the components
         playerHolder = new Pane();
@@ -41,11 +41,10 @@ public class ResizablePlayer {
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
         // Add the player pane in the playerContainer
-        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
         BorderPane playerPane = new BorderPane(playerHolder);
         playerPane.setStyle("-fx-background-color: black");
-        vBox.getChildren().add(0, playerPane);
-        VBox.setVgrow(playerPane, Priority.ALWAYS);
+        playerContainer.getChildren().add(0, playerPane);
+        playerContainer.setVgrow(playerPane, Priority.ALWAYS);
 
         initializeImageView();
 
