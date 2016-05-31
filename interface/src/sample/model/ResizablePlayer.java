@@ -60,8 +60,8 @@ public class ResizablePlayer {
         mediaListPlayer.setMediaPlayer(mediaPlayer);
 
         // Add sample.controller to the mediaPlayer
-        PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
-        mediaPlayer.addMediaPlayerEventListener(playerController);
+        //PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
+        //mediaPlayer.addMediaPlayerEventListener(playerController);
     }
 
     public DirectMediaPlayerComponent getMediaPlayerComponent() { return mediaPlayerComponent; }

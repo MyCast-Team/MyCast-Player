@@ -9,7 +9,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="player">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="player" fx:controller="sample.controller.PlayerController">
     <VBox fx:id="playerContainer" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <BorderPane fx:id="playerPane" VBox.vgrow="ALWAYS">
         </BorderPane>

@@ -1,21 +1,21 @@
 package sample.controller;
 
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_type_e;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -32,38 +32,81 @@ public class PlayerController implements MediaPlayerEventListener {
     private Stage stage;
     private ImageView image;
 
+    @FXML
     private Button previous;
+
+    @FXML
     private Button stop;
+
+    @FXML
     private Button play;
+
+    @FXML
     private Button next;
+
+    @FXML
     private Slider timeSlider;
+
+    @FXML
     private Label timeLabel;
+
+    @FXML
     private Button repeat;
+
+    @FXML
     private Button resize;
+
+    @FXML
+    private BorderPane playerPane;
 
     private long lastTimeDisplayed;
     private String fullTime;
 
+    private ResizablePlayer resizablePlayer;
+
+
     /* CONSTRUCTOR */
+    /*
     public PlayerController(MediaListPlayer mediaListPlayer, MediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
 
         this.mediaListPlayer = mediaListPlayer;
         this.mediaPlayer = mediaPlayer;
         this.stage = stage;
 
-        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
-        BorderPane bp = (BorderPane) vBox.getChildren().get(0);
-        Pane playerHolder = (Pane) bp.getChildren().get(0);
+        Pane playerHolder = (Pane) playerPane.getChildren().get(0);
         image = (ImageView) playerHolder.getChildren().get(0);
 
-        this.previous = (Button) playerContainer.lookup("#previous");
-        this.stop = (Button) playerContainer.lookup("#stop");
-        this.play = (Button) playerContainer.lookup("#play");
-        this.next = (Button) playerContainer.lookup("#next");
-        this.timeSlider = (Slider) playerContainer.lookup("#timeSlider");
-        this.timeLabel = (Label) playerContainer.lookup("#timeLabel");
-        this.repeat = (Button) playerContainer.lookup("#repeat");
-        this.resize = (Button) playerContainer.lookup("#resize");
+        this.lastTimeDisplayed = 0;
+
+        addPreviousListener();
+        addStopListener();
+        addPlayListener();
+        addNextListener();
+        addTimeSliderListner();
+        addRepeatListener();
+        addResizeListener();
+    }*/
+    public PlayerController() {
+        //this.resizablePlayer = new ResizablePlayer(primaryStage, player);
+        //mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
+
+
+
+        //resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
+        resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
+        resizablePlayer.getMediaListPlayer().play();
+    }
+
+    @FXML
+    public void initialize() {
+        this.mediaListPlayer = mediaListPlayer;
+        this.mediaPlayer = mediaPlayer;
+        this.stage = stage;
+
+        this.play.getScene().getWindow();
+
+        //Pane playerHolder = (Pane) playerPane.getChildren().get(0);
+        //image = (ImageView) playerHolder.getChildren().get(0);
 
         this.lastTimeDisplayed = 0;
 
@@ -75,7 +118,6 @@ public class PlayerController implements MediaPlayerEventListener {
         addRepeatListener();
         addResizeListener();
     }
-
 
     /* GETTER */
     public Slider getTimeSlider() { return timeSlider; }
