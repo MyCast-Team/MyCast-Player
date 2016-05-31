@@ -35,8 +35,7 @@ public class MainFrameController extends AnchorPane {
     //public DirectMediaPlayerComponent mediaPlayerComponent;
     private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
-    public MainFrameController(String path, Stage primaryStage, Playlist list) {
-        this.playlist = list;
+    public MainFrameController(String path, Stage primaryStage) {
         this.components = new ArrayList<>();
         try {
             this.rootPane = (AnchorPane) loadRoot(path);

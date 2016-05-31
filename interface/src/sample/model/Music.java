@@ -11,10 +11,10 @@ import java.io.Serializable;
 public class Music extends Media implements Serializable {
     String title;
     String author;
-    String duration;
+    long duration;
     // Il faut regarder les autres informations dans ID3v2 (pochette album, ...)
 
-    public Music(String title, String author, String duration) {
+    public Music(String title, String author, long duration) {
         this.title = title;
         this.author = author;
         this.duration = duration;
@@ -44,13 +44,28 @@ public class Music extends Media implements Serializable {
         return new SimpleStringProperty(author);
     }
 
-    public String getDuration() { return duration; }
+    public long getDuration() { return duration; }
 
-    public void setDuration(String duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
     public StringProperty durationProperty() {
-        return new SimpleStringProperty(duration);
+        return new SimpleStringProperty(createStringFromLong(duration));
+    }
+
+    public String createStringFromLong(long time){
+        int hours, minutes;
+
+        // milliseconds to seconds
+        time /= 1000;
+
+        hours = (int) time/3600;
+        time -= hours*3600;
+
+        minutes = (int) time/60;
+        time -= minutes*60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, time);
     }
 }

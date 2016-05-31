@@ -19,15 +19,12 @@ public class Main extends Application {
     private Stage primaryStage;
     private MainFrameController mainFrameController;
     private MenuBarController menuBarController;
-    private Playlist playlist;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
 
-        playlist = new Playlist();
-        //playlist.readPlaylist();
         initRootLayout();
     }
 
@@ -36,8 +33,7 @@ public class Main extends Application {
      */
     public void initRootLayout() {
         // Load root layout from fxml file
-        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage, this.playlist);
-        menuBarController = new MenuBarController(mainFrameController.getRootPane());
+        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage);
         AnchorPane rootLayout = mainFrameController.getRootPane();
 
         Scene scene = new Scene(rootLayout);
@@ -49,7 +45,6 @@ public class Main extends Application {
 
         primaryStage.setOnCloseRequest(event -> {
             //mainFrameController.getMediaPlayer().release(true);
-            playlist.writePlaylist();
             Platform.exit();
             System.exit(0);
         });
@@ -64,8 +59,6 @@ public class Main extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
-
-    public ArrayList<Music> getPlaylist() { return playlist.getPlaylist(); }
 
     public static void main(String[] args) {
         new NativeDiscovery().discover();
