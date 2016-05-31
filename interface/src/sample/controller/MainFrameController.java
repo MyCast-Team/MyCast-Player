@@ -2,22 +2,16 @@ package sample.controller;
 
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import sample.Main;
 import sample.model.Playlist;
 import sample.model.Point;
-import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
