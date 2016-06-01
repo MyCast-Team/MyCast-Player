@@ -7,14 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import sample.model.Music;
+import sample.model.Media;
 import sample.model.Playlist;
+import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
 
@@ -23,17 +23,19 @@ import java.io.File;
  */
 public class PlaylistController {
     @FXML
-    private TableView<Music> musicTable;
+    private TableView<Media> musicTable;
     @FXML
-    private TableColumn<Music, String> titleColumn;
+    private TableColumn<Media, String> titleColumn;
     @FXML
-    private TableColumn<Music, String> authorColumn;
+    private TableColumn<Media, String> authorColumn;
     @FXML
-    private TableColumn<Music, String> durationColumn;
+    private TableColumn<Media, String> durationColumn;
     @FXML
     private Button reset;
 
     private Playlist playlist;
+
+    private MediaListPlayer mediaListPlayer;
 
     private static final String[] EXTENSIONS_AUDIO = {
             "3ga",
@@ -95,11 +97,93 @@ public class PlaylistController {
             "xm"
     };
 
+    private static final String[] EXTENSIONS_VIDEO = {
+            "3g2",
+            "3gp",
+            "3gp2",
+            "3gpp",
+            "amv",
+            "asf",
+            "avi",
+            "bik",
+            "bin",
+            "divx",
+            "drc",
+            "dv",
+            "evo",
+            "f4v",
+            "flv",
+            "gvi",
+            "gxf",
+            "iso",
+            "m1v",
+            "m2v",
+            "m2t",
+            "m2ts",
+            "m4v",
+            "mkv",
+            "mov",
+            "mp2",
+            "mp2v",
+            "mp4",
+            "mp4v",
+            "mpe",
+            "mpeg",
+            "mpeg1",
+            "mpeg2",
+            "mpeg4",
+            "mpg",
+            "mpv2",
+            "mts",
+            "mtv",
+            "mxf",
+            "mxg",
+            "nsv",
+            "nuv",
+            "ogg",
+            "ogm",
+            "ogv",
+            "ogx",
+            "ps",
+            "rec",
+            "rm",
+            "rmvb",
+            "rpl",
+            "thp",
+            "tod",
+            "ts",
+            "tts",
+            "txd",
+            "vob",
+            "vro",
+            "webm",
+            "wm",
+            "wmv",
+            "wtv",
+            "xesc"
+    };
+
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     public PlaylistController() {
+    }
+
+    public Playlist getPlaylist() {
+        return playlist;
+    }
+
+    public void setPlaylist(Playlist playlist) {
+        this.playlist = playlist;
+    }
+
+    public MediaListPlayer getMediaListPlayer() {
+        return mediaListPlayer;
+    }
+
+    public void setMediaListPlayer(MediaListPlayer mediaListPlayer) {
+        this.mediaListPlayer = mediaListPlayer;
     }
 
     /**
@@ -117,6 +201,8 @@ public class PlaylistController {
 
         reset.setOnAction(event -> {
             this.playlist.reset();
+            this.mediaListPlayer.stop();
+            this.mediaListPlayer.getMediaList().clear();
             refreshPlaylist();
         });
     }
@@ -136,7 +222,8 @@ public class PlaylistController {
                     if(extensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        this.playlist.addMedia(new Music(metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
+                        this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
+                        this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                     }
                 }
             }
@@ -163,11 +250,17 @@ public class PlaylistController {
                 return true;
             }
         }
+
+        for(String str: EXTENSIONS_VIDEO){
+            if(extension.compareTo(str) == 0){
+                return true;
+            }
+        }
         return false;
     }
 
     public void refreshPlaylist(){
-        ObservableList<Music> list = FXCollections.observableArrayList(playlist.getPlaylist());
+        ObservableList<Media> list = FXCollections.observableArrayList(playlist.getPlaylist());
         musicTable.setItems(list);
         this.playlist.writePlaylist();
     }

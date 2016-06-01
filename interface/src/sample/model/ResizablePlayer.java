@@ -7,8 +7,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import sample.controller.PlayerController;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -33,6 +31,7 @@ public class ResizablePlayer {
     private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
+    /* CONSTRUCTOR */
     public ResizablePlayer(VBox playerContainer) {
 
         // Initialisation of the components
@@ -57,12 +56,10 @@ public class ResizablePlayer {
 
         mediaPlayer = mediaPlayerComponent.getMediaPlayer();
         mediaListPlayer.setMediaPlayer(mediaPlayer);
-
-        // Add sample.controller to the mediaPlayer
-        //PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
-        //mediaPlayer.addMediaPlayerEventListener(playerController);
     }
 
+
+    /* GETTER */
     public DirectMediaPlayerComponent getMediaPlayerComponent() { return mediaPlayerComponent; }
 
     public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
@@ -72,6 +69,13 @@ public class ResizablePlayer {
     public MediaPlayer getMediaPlayer() { return mediaPlayer; }
 
     public Pane getPlayerHolder() { return playerHolder; }
+
+    /* SETTER */
+    public void setPlaylist(Playlist playlist) {
+        for(Media m : playlist.getPlaylist()) {
+            this.playlist.addMedia(m.getPath());
+        }
+    }
 
     /**
      * initialize the type of image (size, ratio) to write in the player, accordingly with :

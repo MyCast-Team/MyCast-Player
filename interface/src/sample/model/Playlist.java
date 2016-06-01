@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by Vincent on 28/04/2016.
  */
 public class Playlist implements Serializable {
-    private ArrayList<Music> playlist;
+    private ArrayList<Media> playlist;
     final String path = "./res/playlist.ser";
 
     public Playlist(){
@@ -15,12 +15,12 @@ public class Playlist implements Serializable {
         readPlaylist();
     }
 
-    public ArrayList<Music> getPlaylist(){
+    public ArrayList<Media> getPlaylist(){
         return playlist;
     }
 
-    public void addMedia(Music music){
-        playlist.add(music);
+    public void addMedia(Media media){
+        playlist.add(media);
     }
 
     public void writePlaylist(){
@@ -53,7 +53,7 @@ public class Playlist implements Serializable {
         try {
             FileInputStream fichier = new FileInputStream(path);
             ois = new ObjectInputStream(fichier);
-            this.playlist = (ArrayList<Music>) ois.readObject();
+            this.playlist = (ArrayList<Media>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             writePlaylist();
         } finally {

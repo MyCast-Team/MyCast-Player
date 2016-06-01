@@ -27,16 +27,25 @@ import java.util.Objects;
  * Class to manage our main frame of the application
  */
 public class MainFrameController extends AnchorPane {
+
     private AnchorPane rootPane;
+
     private GridPane grid;
-    //public AnchorPane player;
-    public Playlist playlist;
+
     private ArrayList<AnchorPane> components;
-    //public DirectMediaPlayerComponent mediaPlayerComponent;
+
     private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
+    private PlayerController playerController;
+
+    private PlaylistController playlistController;
+
     public MainFrameController(String path, Stage primaryStage) {
+
+        this.playerController = null;
+        this.playlistController = null;
         this.components = new ArrayList<>();
+
         try {
             this.rootPane = (AnchorPane) loadRoot(path);
             this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
@@ -53,12 +62,7 @@ public class MainFrameController extends AnchorPane {
 
             enableDragAndDrop();
 
-            /*ResizablePlayer resizablePlayer = new ResizablePlayer(primaryStage, player);
-            mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
-
-            resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
-            resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
-            resizablePlayer.getMediaListPlayer().play();*/
+            bindPlaylistToPlayer();
 
             setRowContraints();
             setColumnConstraints();
@@ -121,6 +125,12 @@ public class MainFrameController extends AnchorPane {
         loader.setLocation(getClass().getResource(path));
         try {
             pane = loader.load();
+
+            if(pane.getId().equals("player")) {
+                playerController = loader.getController();
+            } else if(pane.getId().equals("playlist")) {
+                playlistController = loader.getController();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,6 +198,13 @@ public class MainFrameController extends AnchorPane {
             }
         }
         return null;
+    }
+
+    private void bindPlaylistToPlayer() {
+        if(this.playlistController != null && this.playerController != null) {
+            this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
+            this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+        }
     }
 
     public AnchorPane getRootPane(){

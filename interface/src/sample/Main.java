@@ -8,11 +8,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
-import sample.model.Music;
-import sample.model.Playlist;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-
-import java.util.ArrayList;
 
 public class Main extends Application {
 

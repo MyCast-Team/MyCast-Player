@@ -1,13 +1,11 @@
 package sample.controller;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -18,7 +16,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
-import uk.co.caprica.vlcj.binding.internal.libvlc_media_type_e;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
@@ -67,6 +64,7 @@ public class PlayerController implements MediaPlayerEventListener {
     private BorderPane playerPane;
 
     private long lastTimeDisplayed;
+
     private String fullTime;
 
     private ResizablePlayer resizablePlayer;
@@ -81,17 +79,16 @@ public class PlayerController implements MediaPlayerEventListener {
     public void initialize() {
 
         this.stage = null;
-        resizablePlayer = new ResizablePlayer(this.playerContainer);
-
-        //resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
-        resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
-        resizablePlayer.getMediaListPlayer().play();
+        this.resizablePlayer = new ResizablePlayer(this.playerContainer);
         this.mediaListPlayer = resizablePlayer.getMediaListPlayer();
         this.mediaPlayer = resizablePlayer.getMediaPlayer();
         this.mediaPlayer.addMediaPlayerEventListener(this);
 
-        //Pane playerHolder = (Pane) playerPane.getChildren().get(0);
-        //image = (ImageView) playerHolder.getChildren().get(0);
+        //this.resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
+        //this.resizablePlayer.getMediaListPlayer().play();
+
+        Pane playerHolder = (Pane) playerPane.getChildren().get(0);
+        image = (ImageView) playerHolder.getChildren().get(0);
 
         this.lastTimeDisplayed = 0;
 
@@ -113,6 +110,8 @@ public class PlayerController implements MediaPlayerEventListener {
 
     public String getFullTime() { return this.fullTime; }
 
+    public ResizablePlayer getResizablePlayer() { return resizablePlayer; }
+
 
     /* SETTER */
     public void setTimeSlider(Slider timeSlider) { this.timeSlider = timeSlider; }
@@ -122,6 +121,8 @@ public class PlayerController implements MediaPlayerEventListener {
     public void setLastTimeDisplayed(long lastTimeDisplayed) { this.lastTimeDisplayed = lastTimeDisplayed; }
 
     public void setFullTime(String fullTime) { this.fullTime = fullTime; }
+
+    public void setResizablePlayer(ResizablePlayer resizablePlayer) { this.resizablePlayer = resizablePlayer; }
 
 
     /* BUTTON CONTROLLER */
@@ -163,10 +164,12 @@ public class PlayerController implements MediaPlayerEventListener {
             @Override
             public void handle(ActionEvent event) {
                 if(mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
+                    //mediaPlayer.pause();
+                    mediaListPlayer.pause();
                     play.setGraphic(new ImageView(new Image("./img/play.png")));
                 } else {
-                    mediaPlayer.play();
+                    mediaListPlayer.play();
+                    //mediaPlayer.play();
                     play.setGraphic(new ImageView(new Image("./img/pause.png")));
                 }
             }
@@ -250,7 +253,18 @@ public class PlayerController implements MediaPlayerEventListener {
     public void paused(MediaPlayer mediaPlayer) {}
 
     @Override
-    public void stopped(MediaPlayer mediaPlayer) {}
+    public void stopped(MediaPlayer mediaPlayer) {
+        Platform.runLater(() -> {
+            mediaPlayer.setPosition(0.0f);
+            timeSlider.setValue(0.0);
+            timeLabel.setText(getStringTime(mediaPlayer));
+            setLastTimeDisplayed(0);
+            play.setGraphic(new ImageView(new Image("./img/play.png")));
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            }
+        });
+    }
 
     @Override
     public void forward(MediaPlayer mediaPlayer) {}

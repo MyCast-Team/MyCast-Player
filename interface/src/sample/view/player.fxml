@@ -31,7 +31,7 @@
             <Button fx:id="play">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/pause.png" />
+                        <Image url="@../../img/play.png" />
                     </ImageView>
                 </graphic>
             </Button>
