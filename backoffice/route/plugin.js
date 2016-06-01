@@ -14,18 +14,25 @@ var storage = multer.diskStorage({
 var fs = require("fs");
 module.exports = function (app) {
     app.post("/plugin", multer({storage: storage}).single('plugin'), function (req, res, next) {
-
+		
         var plugin = utils.plugin;
 
         if (req.body.author) {
             console.log(req.body.author);
+			if(req.file){
             var u1 = new plugin(req.file.originalname, req.body.author);
+			}else{
+			var u1 = new plugin(req.body.originalname, req.body.author);
+			}
+			
+			
             u1.addplugin(u1, function (err, data) {
+			
                 res.redirect("/ListePlugin")
             });
 
         }
-
+		console.log("fin du game")
     });
 
     app.get("/Listeplugin", function (req, res, next) {
@@ -50,7 +57,8 @@ module.exports = function (app) {
              };
              }*/
             plugin.findAll().then(function (results) {
-                var str = "";
+                
+				var str = "";
                 for (var idx in results) {
                     str += "<li>" + results[idx].name + "    " + "<a id='deleteplugin' href='#' rel=" + results[idx].id + ">delete</a>/<a href='/updateplugin/" + results[idx].id + "'>update</a></li>"
                 }
@@ -72,6 +80,56 @@ module.exports = function (app) {
                 res.send(data.toString());
             })
         }
+
+    });
+	app.get("/Listepluginjava", function (req, res, next) {
+            var plugin = models.plugin;
+            plugin.findAll().then(function (results) {
+                 fs.truncate('plugin.json', 0, function(){console.log('done')})
+				/* var reqstat=[];
+				for (var t = 0; t < results.length; t++) {
+                    var rowplugin = results[t];
+					
+					reqstat.push(
+								{
+								
+                                "author": rowplugin.author,
+                                "name": rowplugin.name,
+								"date": rowplugin.created_at,
+								
+                            })
+                           
+                        }
+				fs.appendFile("plugin.json", JSON.stringify(reqstat) + "\n", function (err) {
+                                if (err) {
+                                    throw err;
+                                }
+
+                            })
+				var file= "plugin.json";
+				 var stat = fs.statSync(file);
+				 res.writeHead(200, {
+					'Content-Type': 'application/json',
+					'Content-Length': stat.size
+					
+				});
+
+
+				var readStream = fs.createReadStream(file);
+				
+				readStream.pipe(res);
+                */
+				res.send(results)
+				
+            }).catch(function (err) {
+				console.log(err)
+                res.json({
+                    "code": 2,
+                    "message": "Sequelize error",
+                    "error": err
+                })
+            })
+        
 
     });
     app.get("/updateplugin/:id", function (req, res, next) {
@@ -174,5 +232,6 @@ module.exports = function (app) {
 
 
     });
+	
 
 }

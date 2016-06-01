@@ -8,8 +8,13 @@
         <MenuItem fx:id="openMediaAndAdd" text="Open medias and add to playlist" accelerator="O,P"/>
     </Menu>
     <Menu fx:id="connection" text="Connection">
-        <MenuItem fx:id="setConnection" text="Set a new connection"/>
-        <MenuItem fx:id="play" text="Play"/>
-        <MenuItem fx:id="pause" text="Pause"/>
+    <MenuItem fx:id="setConnection" text="Set a new connection"/>
+    <MenuItem fx:id="play" text="Play"/>
+    <MenuItem fx:id="pause" text="Pause"/>
+</Menu>
+    <Menu fx:id="plugin" text="Plugin">
+        <MenuItem fx:id="add" text="Add Plugin"/>
+        <MenuItem fx:id="delete" text="Remove Plugin"/>
+        <MenuItem fx:id="download" text="Download Plugin"/>
     </Menu>
 </MenuBar>
