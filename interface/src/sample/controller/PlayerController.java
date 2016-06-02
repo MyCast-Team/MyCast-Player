@@ -6,22 +6,28 @@ import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
+import uk.co.caprica.vlcj.medialist.MediaListItem;
+import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
+import sample.model.Media;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * Control the player and bind the buttons of the player with functions
@@ -31,7 +37,6 @@ public class PlayerController implements MediaPlayerEventListener {
     private MediaListPlayer mediaListPlayer;
     private MediaPlayer mediaPlayer;
     private Stage stage;
-    private ImageView image;
 
     @FXML
     private VBox playerContainer;
@@ -61,7 +66,13 @@ public class PlayerController implements MediaPlayerEventListener {
     private Button resize;
 
     @FXML
-    private BorderPane playerPane;
+    private Pane playerHolder;
+
+    @FXML
+    private ImageView imageView;
+
+    @FXML
+    private ImageView artworkView;
 
     private long lastTimeDisplayed;
 
@@ -79,16 +90,14 @@ public class PlayerController implements MediaPlayerEventListener {
     public void initialize() {
 
         this.stage = null;
-        this.resizablePlayer = new ResizablePlayer(this.playerContainer);
+
+        this.resizablePlayer = new ResizablePlayer(this.playerHolder, this.imageView, this.artworkView);
         this.mediaListPlayer = resizablePlayer.getMediaListPlayer();
         this.mediaPlayer = resizablePlayer.getMediaPlayer();
         this.mediaPlayer.addMediaPlayerEventListener(this);
 
-        //this.resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
-        //this.resizablePlayer.getMediaListPlayer().play();
-
-        Pane playerHolder = (Pane) playerPane.getChildren().get(0);
-        image = (ImageView) playerHolder.getChildren().get(0);
+        this.artworkView.setPreserveRatio(true);
+        this.artworkView.setSmooth(true);
 
         this.lastTimeDisplayed = 0;
 
@@ -238,7 +247,33 @@ public class PlayerController implements MediaPlayerEventListener {
 
     /* OVERRIDE MediaPlayerEventListener methods */
     @Override
-    public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {}
+    public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+        String url = mrl.substring(mrl.indexOf("/"));
+
+        MediaMeta metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
+        String artworkUrl = metaInfo.getArtworkUrl();
+
+        boolean isMusic = false;
+        for(String ext : PlaylistController.EXTENSIONS_AUDIO) {
+            if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
+                isMusic = true;
+                break;
+            }
+        }
+
+        if(isMusic) {
+            if (artworkUrl != null) {
+                artworkView.setImage(new Image(artworkUrl));
+                artworkView.setX(playerHolder.getWidth()/2 - artworkView.getImage().getWidth()/2);
+                artworkView.setY(playerHolder.getHeight()/2 - artworkView.getImage().getHeight()/2);
+            }
+            imageView.setVisible(false);
+            artworkView.setVisible(true);
+        } else {
+            artworkView.setVisible(false);
+            imageView.setVisible(true);
+        }
+    }
 
     @Override
     public void opening(MediaPlayer mediaPlayer) {}

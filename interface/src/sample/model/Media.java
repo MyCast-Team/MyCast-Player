@@ -16,14 +16,17 @@ public class Media implements Serializable {
 
     private String author;
 
+    private String artwork;
+
     private long duration;
 
     // Il faut regarder les autres informations dans ID3v2 (pochette album, ...)
-    public Media(String path, String title, String author, long duration) {
+    public Media(String path, String title, String author, long duration, String artwork) {
         this.path = path;
         this.title = title;
         this.author = author;
         this.duration = duration;
+        this.artwork = artwork;
     }
 
     /* GETTER */
@@ -38,6 +41,8 @@ public class Media implements Serializable {
     }
 
     public long getDuration() { return duration; }
+
+    public String getArtwork() { return artwork; }
 
     /* SETTER */
     public void setPath(String path) {

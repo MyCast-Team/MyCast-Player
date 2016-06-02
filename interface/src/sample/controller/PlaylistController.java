@@ -37,7 +37,7 @@ public class PlaylistController {
 
     private MediaListPlayer mediaListPlayer;
 
-    private static final String[] EXTENSIONS_AUDIO = {
+    public static final String[] EXTENSIONS_AUDIO = {
             "3ga",
             "669",
             "a52",
@@ -97,7 +97,7 @@ public class PlaylistController {
             "xm"
     };
 
-    private static final String[] EXTENSIONS_VIDEO = {
+    public static final String[] EXTENSIONS_VIDEO = {
             "3g2",
             "3gp",
             "3gp2",
@@ -219,10 +219,14 @@ public class PlaylistController {
             if (db.hasFiles()) {
                 success = true;
                 for (File file:db.getFiles()) {
-                    if(extensionIsSupported(getExtension(file.getPath()))){
+                    int extensionType = extensionIsSupported(getExtension(file.getPath()));
+                    if(extensionType != 0){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
+                        if(extensionType == 1)
+                            this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getArtworkUrl()));
+                        else
+                            this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), null));
                         this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                     }
                 }
@@ -244,19 +248,19 @@ public class PlaylistController {
         return extension;
     }
 
-    public boolean extensionIsSupported(String extension){
+    public int extensionIsSupported(String extension){
         for(String str: EXTENSIONS_AUDIO){
             if(extension.compareTo(str) == 0){
-                return true;
+                return 1;
             }
         }
 
         for(String str: EXTENSIONS_VIDEO){
             if(extension.compareTo(str) == 0){
-                return true;
+                return 2;
             }
         }
-        return false;
+        return 0;
     }
 
     public void refreshPlaylist(){

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
@@ -24,6 +25,7 @@ public class ResizablePlayer {
     private MediaList playlist;
     private MediaPlayer mediaPlayer;
 
+    private ImageView artworkView;
     private ImageView imageView;
     private WritableImage writableImage;
     private WritablePixelFormat<ByteBuffer> pixelFormat;
@@ -31,19 +33,24 @@ public class ResizablePlayer {
     private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
+    private Playlist detailedPlaylist;
+
     /* CONSTRUCTOR */
-    public ResizablePlayer(VBox playerContainer) {
+    public ResizablePlayer(Pane playerHolder, ImageView imageView, ImageView artworkView) {
 
         // Initialisation of the components
-        playerHolder = new Pane();
         pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
         // Add the player pane in the playerContainer
-        BorderPane playerPane = new BorderPane(playerHolder);
-        playerPane.setStyle("-fx-background-color: black");
-        playerContainer.getChildren().add(0, playerPane);
-        playerContainer.setVgrow(playerPane, Priority.ALWAYS);
+        //BorderPane playerPane = new BorderPane(playerHolder);
+        //playerPane.setStyle("-fx-background-color: black");
+        //playerContainer.getChildren().add(0, playerPane);
+        //VBox.setVgrow(playerPane, Priority.ALWAYS);
+
+        this.playerHolder = playerHolder;
+        this.imageView = imageView;
+        this.artworkView = artworkView;
 
         initializeImageView();
 
@@ -70,8 +77,11 @@ public class ResizablePlayer {
 
     public Pane getPlayerHolder() { return playerHolder; }
 
+    public Playlist getDetailedPlaylist() { return detailedPlaylist; }
+
     /* SETTER */
     public void setPlaylist(Playlist playlist) {
+        this.detailedPlaylist = playlist;
         for(Media m : playlist.getPlaylist()) {
             this.playlist.addMedia(m.getPath());
         }
@@ -84,13 +94,12 @@ public class ResizablePlayer {
      *
      * Add listeners on the screen and on the ratio for the current media.
      */
-    private void initializeImageView() {
+    public void initializeImageView() {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
         writableImage = new WritableImage((int) visualBounds.getWidth(), (int) visualBounds.getHeight());
 
         // Add an imageView in the playerHolder to display each frame of the media
-        imageView = new ImageView(writableImage);
-        playerHolder.getChildren().add(imageView);
+        imageView.setImage(writableImage);
 
         playerHolder.widthProperty().addListener((observable, oldValue, newValue) -> {
             fitImageViewSize(newValue.floatValue(), (float) playerHolder.getHeight());
@@ -125,6 +134,11 @@ public class ResizablePlayer {
                 imageView.setFitHeight(fitHeight);
                 imageView.setY((height - fitHeight) / 2);
                 imageView.setX(0);
+            }
+
+            if(artworkView.getImage() != null) {
+                artworkView.setX(width/2 - artworkView.getImage().getWidth()/2);
+                artworkView.setY(height/2 - artworkView.getImage().getHeight()/2);
             }
         });
     }
