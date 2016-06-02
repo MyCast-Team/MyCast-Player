@@ -49,25 +49,22 @@ public class PluginController {
 
     @FXML
     public void initialize(){
+        getList();
+        ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+        pluginTable.setItems(list);
         nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         authorColumn1.setCellValueFactory(cellData -> cellData.getValue().AuthorProperty());
         dateColumn1.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
         refresh.setOnAction(getRefreshEventHandler());
-        this.pluginList= new ArrayList();
-        ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
-        pluginTable.setItems(list);
     }
+
     public EventHandler<ActionEvent> getRefreshEventHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+        return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 getList();
-
-
             }
         };
-
-        return handler;
     }
 
     public void getList(){
@@ -99,17 +96,25 @@ public class PluginController {
         }
         int inByte;
         try {
-            while((inByte = is.read()) != -1) {
-                try {
-                    fos.write(inByte);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (is != null) {
+                while((inByte = is.read()) != -1) {
+                    try {
+                        if (fos != null) {
+                            fos.write(inByte);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
-            is.close();
+            if (is != null) {
+                is.close();
+            }
 
-            fos.close();
+            if (fos != null) {
+                fos.close();
+            }
 
 
             EntityUtils.consume(entity1);
@@ -123,6 +128,7 @@ public class PluginController {
             e.printStackTrace();
         }
     }
+
     public void readPlugin() throws IOException {
         JSONParser parser = new JSONParser();
 
@@ -132,16 +138,15 @@ public class PluginController {
                     path));
 
             JSONArray jsonArray = (JSONArray) obj;
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject=(JSONObject) jsonArray.get(i);
-                pluginList.add(new Plugin(jsonObject.get("name").toString(),jsonObject.get("author").toString(),jsonObject.get("created_at").toString()));
-            }
-            for(int i =0;i<pluginList.size();i++){
 
-                System.out.println(pluginList.get(i).getName());
+            for (Object JsonItem : jsonArray) {
+                JSONObject jsonObject = (JSONObject) JsonItem;
+                pluginList.add(new Plugin(jsonObject.get("name").toString(), jsonObject.get("author").toString(), jsonObject.get("created_at").toString()));
             }
 
-
+            for (Plugin plugin : pluginList) {
+                System.out.println(plugin.getName());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
