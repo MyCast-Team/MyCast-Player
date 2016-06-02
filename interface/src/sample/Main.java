@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -8,12 +9,15 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
+import sample.controller.MenuBarController;
 import sample.model.MP3Music;
+import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 public class Main extends Application {
 
     private Stage primaryStage;
     private MainFrameController mainFrameController;
+    private MenuBarController menuBarController;
     private ObservableList<MP3Music> musicData = FXCollections.observableArrayList();
 
     @Override
@@ -37,7 +41,8 @@ public class Main extends Application {
     public void initRootLayout() {
         // Load root layout from fxml file
 
-        mainFrameController = new MainFrameController("view/mainFrame.fxml");
+        mainFrameController = new MainFrameController("view/mainFrame.fxml", primaryStage);
+        menuBarController = new MenuBarController(mainFrameController.getRootPane());
         AnchorPane rootLayout = mainFrameController.getRootPane();
 
         Scene scene = new Scene(rootLayout);
@@ -45,6 +50,12 @@ public class Main extends Application {
         scene.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
             if(event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
+        });
+
+        primaryStage.setOnCloseRequest(event -> {
+            mainFrameController.getMediaPlayer().release(true);
+            Platform.exit();
+            System.exit(0);
         });
 
         primaryStage.setScene(scene);
@@ -59,6 +70,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        new NativeDiscovery().discover();
         launch(args);
     }
 }

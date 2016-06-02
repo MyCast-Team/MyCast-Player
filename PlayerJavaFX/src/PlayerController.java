@@ -1,26 +1,65 @@
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
+import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
+import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 
 /**
  * Created by thomasfouan on 17/03/2016.
  */
 public class PlayerController implements MediaPlayerEventListener {
 
+    private DirectMediaPlayer mediaPlayer;
+    private Stage stage;
+
+    private Button previous;
+    private Button stop;
+    private Button play;
+    private Button next;
     private Slider timeSlider;
     private Label timeLabel;
+    private Button repeat;
+    private Button resize;
+
     private long lastTimeDisplayed;
     private String fullTime;
 
     /* CONSTRUCTOR */
-    public PlayerController(Slider timeSlider, Label timeLabel) {
+    public PlayerController(DirectMediaPlayer mediaPlayer, Stage stage, AnchorPane playerContainer) {
 
-        this.timeSlider = timeSlider;
-        this.timeLabel = timeLabel;
+        this.mediaPlayer = mediaPlayer;
+        this.stage = stage;
+
+        this.previous = (Button) playerContainer.lookup("#previous");
+        this.stop = (Button) playerContainer.lookup("#stop");
+        this.play = (Button) playerContainer.lookup("#play");
+        this.next = (Button) playerContainer.lookup("#next");
+        this.timeSlider = (Slider) playerContainer.lookup("#timeSlider");
+        this.timeLabel = (Label) playerContainer.lookup("#timeLabel");
+        this.repeat = (Button) playerContainer.lookup("#repeat");
+        this.resize = (Button) playerContainer.lookup("#resize");
+
         this.lastTimeDisplayed = 0;
+
+        addPreviousListener();
+        addStopListener();
+        addPlayListener();
+        addNextListener();
+        addTimeSliderListener();
+        addRepeatListener();
+        addResizeListener();
     }
 
 
@@ -57,6 +96,98 @@ public class PlayerController implements MediaPlayerEventListener {
 
     public void setLastTimeDisplayed(long lastTimeDisplayed) {
         this.lastTimeDisplayed = lastTimeDisplayed;
+    }
+
+
+    /* BUTTON CONTROLLER */
+    public void addPreviousListener() {
+        previous.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mediaPlayer.previousChapter();
+            }
+        });
+    }
+
+    public void addStopListener() {
+        stop.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(mediaPlayer.canPause()) {
+                    mediaPlayer.setPosition(0.0f);
+                    timeSlider.setValue(0.0);
+                    timeLabel.setText(getStringTime(mediaPlayer));
+                    setLastTimeDisplayed(0);
+                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                    if(mediaPlayer.isPlaying())
+                        mediaPlayer.pause();
+                }
+            }
+        });
+    }
+
+    public void addPlayListener() {
+        play.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                } else {
+                    mediaPlayer.play();
+                    play.setGraphic(new ImageView(new Image("./img/play.png")));
+                }
+            }
+        });
+    }
+
+    public void addNextListener() {
+        next.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mediaPlayer.nextChapter();
+            }
+        });
+    }
+
+    public void addTimeSliderListener() {
+        timeSlider.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (timeSlider.isValueChanging()) {
+                    // multiply duration by percentage calculated by slider position
+                    mediaPlayer.setPosition((float)(timeSlider.getValue()/100.0));
+                    timeLabel.setText(getStringTime(mediaPlayer));
+                    setLastTimeDisplayed(0);
+                }
+            }
+        });
+    }
+
+    public void addRepeatListener() {
+        repeat.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(mediaPlayer.getRepeat()) {
+                    mediaPlayer.setRepeat(false);
+                    repeat.setGraphic(new ImageView(new Image("./img/random.png")));
+                } else {
+                    mediaPlayer.setRepeat(true);
+                    repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));
+                }
+            }
+        });
+    }
+
+    public void addResizeListener() {
+        resize.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(stage.isFullScreen())
+                    stage.setFullScreen(false);
+                else
+                    stage.setFullScreen(true);
+            }
+        });
     }
 
 

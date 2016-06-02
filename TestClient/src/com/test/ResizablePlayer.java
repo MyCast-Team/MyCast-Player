@@ -1,4 +1,4 @@
-package com.test;
+package sample.model;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
