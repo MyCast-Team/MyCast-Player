@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" prefWidth="1000" prefHeight="600">
+    <fx:include source="menubar.fxml" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" minHeight="25" maxHeight="25">
+    </fx:include>
+    <GridPane fx:id="grid" xmlns="http://javafx.com/javafx/8.0.65" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+    </GridPane>
+</AnchorPane>
+
