@@ -49,6 +49,7 @@ public class PluginController {
 
     @FXML
     public void initialize(){
+        pluginList = new ArrayList<>();
         getList();
         ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
         pluginTable.setItems(list);
