@@ -6,7 +6,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 
 /**
- * Created by thomasfouan on 27/04/2016.
+ * Class of control of the connection dialog box.
  */
 public class ConnectionController {
 

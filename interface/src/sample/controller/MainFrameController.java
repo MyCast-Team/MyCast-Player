@@ -1,65 +1,65 @@
 package sample.controller;
 
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import sample.Main;
+import sample.model.Playlist;
+import sample.model.Point;
 import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import sample.Main;
-import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
- * Created by Vincent Rossignol on 21/04/2016.
  * Class to manage our main frame of the application
  */
 public class MainFrameController extends AnchorPane {
     private AnchorPane rootPane;
     private GridPane grid;
-    public AnchorPane playlist;
-    public AnchorPane suggestions;
-    public AnchorPane mediacase;
-    public AnchorPane plugin;
-    public AnchorPane player;
-    public DirectMediaPlayerComponent mediaPlayerComponent;
+    //public AnchorPane player;
+    public Playlist playlist;
+    private ArrayList<AnchorPane> components;
+    //public DirectMediaPlayerComponent mediaPlayerComponent;
     private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
-    public MainFrameController(String path, Stage primaryStage) {
+    public MainFrameController(String path, Stage primaryStage, Playlist list) {
+        this.playlist = list;
+        this.components = new ArrayList<>();
         try {
             this.rootPane = (AnchorPane) loadRoot(path);
             this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
-                grid = (GridPane) node;
+                this.grid = (GridPane) node;
             });
 
-            playlist = loadComponent("view/playlist.fxml");
-            suggestions = loadComponent("view/suggestions.fxml");
-            mediacase = loadComponent("view/mediacase.fxml");
-            plugin = loadComponent("view/plugin.fxml");
-            player = loadComponent("view/player.fxml");
+            HashMap<String, Point> componentToLoad = readComponent();
 
-            ResizablePlayer resizablePlayer = new ResizablePlayer(player);
+            for(Map.Entry<String, Point> m : componentToLoad.entrySet()){
+                AnchorPane pane = loadComponent(m.getKey());
+                this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                this.components.add(pane);
+            }
 
+            enableDragAndDrop();
+
+            /*ResizablePlayer resizablePlayer = new ResizablePlayer(primaryStage, player);
             mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
 
-            MediaPlayer mediaPlayer = mediaPlayerComponent.getMediaPlayer();
-
-            PlayerController playerController = new PlayerController((DirectMediaPlayer) mediaPlayer, primaryStage, player);
-            mediaPlayer.addMediaPlayerEventListener(playerController);
-
-            mediaPlayer.prepareMedia(PATH_TO_MEDIA);
-            mediaPlayer.start();
-
-            grid.add(player, 0, 0);
-            grid.add(suggestions, 0, 1);
-            grid.add(mediacase, 1, 0);
-            grid.add(plugin, 1, 1);
-
-            grid.setGridLinesVisible(true);
+            resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
+            resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
+            resizablePlayer.getMediaListPlayer().play();*/
 
             setRowContraints();
             setColumnConstraints();
@@ -67,6 +67,35 @@ public class MainFrameController extends AnchorPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private HashMap<String, Point> readComponent(){
+        HashMap<String, Point> list = new HashMap<>();
+        String csvFile = "./res/interface.csv";
+        BufferedReader br = null;
+        String line = "";
+        try {
+
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+
+                String array[] = line.split(";");
+
+                list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
     }
 
     private void setRowContraints() {
@@ -90,19 +119,18 @@ public class MainFrameController extends AnchorPane {
     public AnchorPane loadComponent(String path){
         AnchorPane pane = null;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(path));
+        loader.setLocation(getClass().getResource(path));
         try {
             pane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        initDragAndDrop(pane);
         return pane;
     }
 
     public Pane loadRoot(String path) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(path));
+        loader.setLocation(getClass().getResource(path));
         return loader.load();
     }
 
@@ -110,7 +138,7 @@ public class MainFrameController extends AnchorPane {
         pane.setOnDragDetected(event -> {
             Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
-            content.putString(pane.getId());
+            content.putString(GridPane.getRowIndex(pane)+";"+GridPane.getColumnIndex(pane));
             db.setContent(content);
             event.consume();
         });
@@ -124,17 +152,11 @@ public class MainFrameController extends AnchorPane {
     }
 
     public void enableDragAndDrop(){
-        initDragAndDrop(playlist);
-        initDragAndDrop(mediacase);
-        initDragAndDrop(suggestions);
-        initDragAndDrop(plugin);
+        components.forEach(this::initDragAndDrop);
     }
 
     public void disableDragAndDrop(){
-        disableDragAndDropPane(playlist);
-        disableDragAndDropPane(mediacase);
-        disableDragAndDropPane(suggestions);
-        disableDragAndDropPane(plugin);
+        components.forEach(this::disableDragAndDropPane);
     }
 
     public void disableDragAndDropPane(AnchorPane pane){
@@ -147,36 +169,29 @@ public class MainFrameController extends AnchorPane {
     }
 
     public void swap(String sourceStr, AnchorPane target){
-        Node source = null;
-        switch(sourceStr){
-            case "playlist":
-                source = playlist;
-                break;
-            case "suggestions":
-                source = suggestions;
-                break;
-            case "mediacase":
-                source = mediacase;
-                break;
-            case "plugin":
-                source = plugin;
-                break;
-        }
-        int sourceRow = GridPane.getRowIndex(source);
-        int sourceColumn = GridPane.getColumnIndex(source);
+        String[] sourcePosition = sourceStr.split(";");
+        int sourceRow = Integer.parseInt(sourcePosition[0]);
+        int sourceColumn = Integer.parseInt(sourcePosition[1]);
         int targetRow = GridPane.getRowIndex(target);
         int targetColumn = GridPane.getColumnIndex(target);
+        AnchorPane source = (AnchorPane) getNodeByRowColumnIndex(sourceRow, sourceColumn);
         grid.getChildren().remove(source);
         grid.getChildren().remove(target);
         grid.add(source, targetColumn, targetRow);
         grid.add(target, sourceColumn, sourceRow);
     }
 
-    public AnchorPane getRootPane(){
-        return rootPane;
+    public Node getNodeByRowColumnIndex(int row, int column) {
+        ObservableList<Node> childrens = grid.getChildren();
+        for(Node node : childrens) {
+            if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+                return node;
+            }
+        }
+        return null;
     }
 
-    public DirectMediaPlayerComponent getMediaPlayer(){
-        return mediaPlayerComponent;
+    public AnchorPane getRootPane(){
+        return rootPane;
     }
 }
