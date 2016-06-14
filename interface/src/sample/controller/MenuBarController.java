@@ -11,6 +11,7 @@ import javafx.util.Pair;
 import sample.model.ConnectionDialog;
 import sample.model.StreamMedia;
 
+import java.awt.*;
 import java.util.Optional;
 
 /**
@@ -33,7 +34,10 @@ public class MenuBarController {
     @FXML
     private MenuItem play;
     @FXML
-    private MenuItem pause;
+    private MenuItem previous;
+    @FXML
+    private MenuItem next;
+
     private StreamMedia streamMedia;
     private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
 
@@ -41,15 +45,28 @@ public class MenuBarController {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
+        streamMedia = new StreamMedia();
+        streamMedia.getPlayList().addMedia(PATH_TO_VIDEO);
+        streamMedia.getPlayList().addMedia("/Users/thomasfouan/Desktop/music.mp3");
+
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
-        pause.setOnAction(getPauseEventHandler());
-        streamMedia = new StreamMedia();
+        previous.setOnAction(getPreviousEventHandler());
+        next.setOnAction(getNextEventHandler());
+
+        play.setDisable(true);
+        previous.setDisable(true);
+        next.setDisable(true);
     }
 
+    /**
+     * Return an EventHandler for the connection button.
+     * Show a window to set the connection with a client or disconnect with client if already connected.
+     * @return EventHandler
+     */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+        return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
@@ -57,6 +74,9 @@ public class MenuBarController {
                         streamMedia.closeConnection();
                     }
                     setConnection.setText("Set a new connection");
+                    play.setDisable(true);
+                    previous.setDisable(true);
+                    next.setDisable(true);
                 } else {
                     ConnectionDialog connectionDialog = new ConnectionDialog();
                     Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
@@ -69,7 +89,9 @@ public class MenuBarController {
 
                         if(streamMedia.setClientConnection(addr, port)) {
                             setConnection.setText("Disconnect from connection");
-                            streamMedia.getPlayList().addMedia(PATH_TO_VIDEO);
+                            play.setDisable(false);
+                            previous.setDisable(false);
+                            next.setDisable(false);
                         }
                     } else {
                         System.out.println("Canceled");
@@ -77,33 +99,56 @@ public class MenuBarController {
                 }
             }
         };
-
-        return handler;
     }
 
+    /**
+     * Return an EventHandler for the play/pause button.
+     * @return EventHandler
+     */
     private EventHandler<ActionEvent> getPlayEventHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+        return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    streamMedia.startStreamingMedia();
+                    if(streamMedia.getMediaListPlayer().isPlaying()) {
+                        streamMedia.pauseStreamingMedia();
+                        play.setText("Play");
+                    } else {
+                        streamMedia.startStreamingMedia();
+                        play.setText("Pause");
+                    }
                 }
             }
         };
-
-        return handler;
     }
 
-    private EventHandler<ActionEvent> getPauseEventHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+    /**
+     * Return an EventHandler for the previous item button.
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getPreviousEventHandler() {
+        return new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    streamMedia.pauseStreamingMedia();
+                    streamMedia.getMediaListPlayer().playPrevious();
                 }
             }
         };
+    }
 
-        return handler;
+    /**
+     * Return an EventHandler for the next item button.
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getNextEventHandler() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                    streamMedia.getMediaListPlayer().playNext();
+                }
+            }
+        };
     }
 }

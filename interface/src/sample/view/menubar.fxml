@@ -10,6 +10,7 @@
     <Menu fx:id="connection" text="Connection">
         <MenuItem fx:id="setConnection" text="Set a new connection"/>
         <MenuItem fx:id="play" text="Play"/>
-        <MenuItem fx:id="pause" text="Pause"/>
+        <MenuItem fx:id="previous" text="Previous"/>
+        <MenuItem fx:id="next" text="Next"/>
     </Menu>
 </MenuBar>
