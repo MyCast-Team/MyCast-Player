@@ -261,7 +261,6 @@ public class MediacaseController {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         this.mediacase.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()), 1);
-
                     }
                 }
             }
@@ -271,8 +270,11 @@ public class MediacaseController {
         });
 
         videocaseTable.setOnDragDetected(event -> {
-            ObservableList<Media> list = musiccaseTable.getSelectionModel().getSelectedItems();
-            Dragboard db = musiccaseTable.startDragAndDrop(TransferMode.ANY);
+            ArrayList<Media> list = new ArrayList<>();
+            for(Media m: videocaseTable.getSelectionModel().getSelectedItems()){
+                list.add(m);
+            }
+            Dragboard db = videocaseTable.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
             content.put(dataFormat, list);
             db.setContent(content);
