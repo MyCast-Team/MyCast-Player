@@ -105,6 +105,10 @@ public class PluginController {
         }
     }
 
+    /**
+     * Load the main component of a fxml file with its URL.
+     * @param urlToFxml
+     */
     private void loadComponent(@NotNull URL urlToFxml) {
 
         FXMLLoader loader = new FXMLLoader();
