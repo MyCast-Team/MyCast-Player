@@ -87,9 +87,6 @@ public class PlayerController implements MediaPlayerEventListener {
         //this.resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
         //this.resizablePlayer.getMediaListPlayer().play();
 
-        Pane playerHolder = (Pane) playerPane.getChildren().get(0);
-        image = (ImageView) playerHolder.getChildren().get(0);
-
         this.lastTimeDisplayed = 0;
 
         addPreviousListener();

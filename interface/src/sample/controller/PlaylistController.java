@@ -1,14 +1,15 @@
 package sample.controller;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.util.Callback;
 import sample.model.Media;
 import sample.model.Playlist;
 import uk.co.caprica.vlcj.medialist.MediaList;
@@ -17,6 +18,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
+import java.util.Iterator;
 
 /**
  * Class of control of the music.
@@ -196,6 +198,11 @@ public class PlaylistController {
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());
+
+        titleColumn.prefWidthProperty().bind(musicTable.widthProperty().divide(2));
+        authorColumn.prefWidthProperty().bind(musicTable.widthProperty().divide(4));
+        durationColumn.prefWidthProperty().bind(musicTable.widthProperty().divide(4));
+
         refreshPlaylist();
         setDragAndDrop();
 
@@ -204,6 +211,43 @@ public class PlaylistController {
             this.mediaListPlayer.stop();
             this.mediaListPlayer.getMediaList().clear();
             refreshPlaylist();
+        });
+
+        musicTable.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
+
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem delete = new MenuItem("Delete from playlist");
+        delete.setOnAction(event1 -> {
+            ObservableList<Media> listToDelete = musicTable.getSelectionModel().getSelectedItems();
+            for(Media mToDelete : listToDelete){
+                Iterator<Media> iter = playlist.getPlaylist().iterator();
+
+                while (iter.hasNext()) {
+                    Media m = iter.next();
+
+                    if (m == mToDelete){
+                        iter.remove();
+                    }
+
+                }
+            }
+
+            this.refreshPlaylist();
+        });
+        contextMenu.getItems().addAll(delete);
+
+        musicTable.setOnMousePressed(event -> {
+            if (event.isSecondaryButtonDown()) {
+                contextMenu.show(musicTable, event.getScreenX(), event.getScreenY());
+            }
+        });
+
+        musicTable.setOnMousePressed(event -> {
+           if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
+               mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
+           }
         });
     }
 
