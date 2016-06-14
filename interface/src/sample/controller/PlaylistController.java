@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -18,7 +19,11 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Class of control of the music.
@@ -266,10 +271,23 @@ public class PlaylistController {
                     if(extensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
+                        this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                     }
                 }
+            } else {
+                DataFormat dataFormat = null;
+                for (DataFormat df : db.getContentTypes()) {
+                    dataFormat = df;
+                }
+                if(dataFormat != null){
+                    ArrayList<Media> list = (ArrayList<Media>) db.getContent(dataFormat);
+                    for (Media m: list){
+                        this.playlist.addMedia(m);
+                        this.mediaListPlayer.getMediaList().addMedia(m.getPath());
+                    }
+                }
+
             }
             refreshPlaylist();
             event.setDropCompleted(success);
