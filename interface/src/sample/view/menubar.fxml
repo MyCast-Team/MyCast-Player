@@ -13,4 +13,7 @@
         <MenuItem fx:id="previous" text="Previous"/>
         <MenuItem fx:id="next" text="Next"/>
     </Menu>
+    <Menu fx:id="interface" text="Interface">
+        <MenuItem fx:id="interfaceConf" text="Configure interface"/>
+    </Menu>
 </MenuBar>

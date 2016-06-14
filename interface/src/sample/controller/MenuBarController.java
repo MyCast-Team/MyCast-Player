@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import sample.model.ConnectionDialog;
+import sample.model.InterfaceDialog;
 import sample.model.StreamMedia;
 
 import java.awt.*;
@@ -20,15 +21,9 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu mediacase;
-    @FXML
     private MenuItem openMedia;
     @FXML
     private MenuItem openMediaAndAdd;
-    @FXML
-    private Menu connection;
     @FXML
     private MenuItem setConnection;
     @FXML
@@ -37,6 +32,8 @@ public class MenuBarController {
     private MenuItem previous;
     @FXML
     private MenuItem next;
+    @FXML
+    private MenuItem interfaceConf;
 
     private StreamMedia streamMedia;
     private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
@@ -54,6 +51,7 @@ public class MenuBarController {
         play.setOnAction(getPlayEventHandler());
         previous.setOnAction(getPreviousEventHandler());
         next.setOnAction(getNextEventHandler());
+        interfaceConf.setOnAction(getInterfaceConfEventHandler());
 
         play.setDisable(true);
         previous.setDisable(true);
@@ -148,6 +146,15 @@ public class MenuBarController {
                 if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
                     streamMedia.getMediaListPlayer().playNext();
                 }
+            }
+        };
+    }
+
+    private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                InterfaceDialog interfaceDialog = new InterfaceDialog();
             }
         };
     }

@@ -72,7 +72,7 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
-    private HashMap<String, Point> readComponent(){
+    public static HashMap<String, Point> readComponent(){
         HashMap<String, Point> list = new HashMap<>();
         String csvFile = "./res/interface.csv";
         BufferedReader br = null;

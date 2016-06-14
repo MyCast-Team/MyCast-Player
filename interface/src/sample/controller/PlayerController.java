@@ -6,6 +6,7 @@ import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -32,6 +33,7 @@ public class PlayerController implements MediaPlayerEventListener {
     private MediaPlayer mediaPlayer;
     private Stage stage;
     private ImageView image;
+    private Scene lastScene;
 
     @FXML
     private VBox playerContainer;
@@ -62,6 +64,9 @@ public class PlayerController implements MediaPlayerEventListener {
 
     @FXML
     private BorderPane playerPane;
+
+    @FXML
+    private AnchorPane player;
 
     private long lastTimeDisplayed;
 
@@ -227,10 +232,18 @@ public class PlayerController implements MediaPlayerEventListener {
                 if(stage == null) {
                     stage = (Stage) play.getScene().getWindow();
                 }
-                if(stage.isFullScreen())
+                if(stage.isFullScreen()) {
+                    player.getChildren().add(playerContainer);
+                    stage.setScene(lastScene);
+                    stage.show();
                     stage.setFullScreen(false);
-                else
+                } else {
+                    lastScene = stage.getScene();
+                    Scene scene = new Scene(new AnchorPane(playerContainer));
+                    stage.setScene(scene);
+                    stage.show();
                     stage.setFullScreen(true);
+                }
             }
         });
     }
