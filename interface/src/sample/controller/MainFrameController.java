@@ -54,10 +54,12 @@ public class MainFrameController extends AnchorPane {
 
             HashMap<String, Point> componentToLoad = readComponent();
 
-            for(Map.Entry<String, Point> m : componentToLoad.entrySet()){
-                AnchorPane pane = loadComponent(m.getKey());
-                this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
-                this.components.add(pane);
+            for(Map.Entry<String, Point> m : componentToLoad.entrySet()) {
+                if(m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
+                    AnchorPane pane = loadComponent(m.getKey());
+                    this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                    this.components.add(pane);
+                }
             }
 
             enableDragAndDrop();

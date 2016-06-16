@@ -10,15 +10,15 @@
    <content>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" percentWidth="70"/>
-          <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" percentWidth="30"/>
+          <ColumnConstraints hgrow="ALWAYS" minWidth="50.0" percentWidth="70"/>
+          <ColumnConstraints hgrow="ALWAYS" minWidth="50.0" percentWidth="30"/>
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Nom" />
-            <Label text="Emplacement" GridPane.columnIndex="1" />
+            <Label text="Nom" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label text="Emplacement" GridPane.columnIndex="1" GridPane.rowIndex="0" />
          </children>
       </GridPane>
    </content>
