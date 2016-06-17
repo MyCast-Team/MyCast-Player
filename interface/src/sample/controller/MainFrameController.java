@@ -2,22 +2,15 @@ package sample.controller;
 
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import sample.Main;
-import sample.model.Playlist;
 import sample.model.Point;
-import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +21,9 @@ import java.util.Objects;
  */
 public class MainFrameController extends AnchorPane {
 
-    private AnchorPane rootPane;
+    private VBox rootPane;
+
+    private AnchorPane rootContentPane;
 
     private GridPane grid;
 
@@ -47,8 +42,11 @@ public class MainFrameController extends AnchorPane {
         this.components = new ArrayList<>();
 
         try {
-            this.rootPane = (AnchorPane) loadRoot(path);
-            this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
+            this.rootPane = (VBox) loadRoot(path);
+            this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "rootContent")).forEach(node -> {
+                this.rootContentPane = (AnchorPane) node;
+            });
+            this.rootContentPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
                 this.grid = (GridPane) node;
             });
 
@@ -209,7 +207,7 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
-    public AnchorPane getRootPane(){
+    public VBox getRootPane(){
         return rootPane;
     }
 }

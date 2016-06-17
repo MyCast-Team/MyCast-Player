@@ -32,8 +32,10 @@ public class PlayerController implements MediaPlayerEventListener {
     private MediaListPlayer mediaListPlayer;
     private MediaPlayer mediaPlayer;
     private Stage stage;
-    private ImageView image;
     private Scene lastScene;
+    private long lastTimeDisplayed;
+    private String fullTime;
+    private ResizablePlayer resizablePlayer;
 
     @FXML
     private VBox playerContainer;
@@ -68,12 +70,6 @@ public class PlayerController implements MediaPlayerEventListener {
     @FXML
     private AnchorPane player;
 
-    private long lastTimeDisplayed;
-
-    private String fullTime;
-
-    private ResizablePlayer resizablePlayer;
-
 
     /* CONSTRUCTOR */
     public PlayerController() {
@@ -91,9 +87,6 @@ public class PlayerController implements MediaPlayerEventListener {
 
         //this.resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
         //this.resizablePlayer.getMediaListPlayer().play();
-
-        //Pane playerHolder = (Pane) playerPane.getChildren().get(0);
-        //image = (ImageView) playerHolder.getChildren().get(0);
 
         this.lastTimeDisplayed = 0;
 
@@ -132,118 +125,97 @@ public class PlayerController implements MediaPlayerEventListener {
 
     /* BUTTON CONTROLLER */
     public void addPreviousListener() {
-        previous.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //image.setImage(new Image("/Users/thomasfouan/Desktop/image.png"));
-
-                mediaPlayer.setPosition(0.0f);
-                timeSlider.setValue(0.0);
-                timeLabel.setText(getStringTime(mediaPlayer));
-                setLastTimeDisplayed(0);
-                mediaListPlayer.playPrevious();
-            }
+        previous.addEventHandler(ActionEvent.ACTION, (event) -> {
+            mediaPlayer.setPosition(0.0f);
+            timeSlider.setValue(0.0);
+            timeLabel.setText(getStringTime(mediaPlayer));
+            setLastTimeDisplayed(0);
+            mediaListPlayer.playPrevious();
         });
     }
 
     public void addStopListener() {
-        stop.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(mediaPlayer.canPause()) {
-                    mediaPlayer.setPosition(0.0f);
-                    timeSlider.setValue(0.0);
-                    timeLabel.setText(getStringTime(mediaPlayer));
-                    setLastTimeDisplayed(0);
-                    play.setGraphic(new ImageView(new Image("./img/play.png")));
-                    if(mediaPlayer.isPlaying()) {
-                        mediaPlayer.pause();
-                    }
+        stop.addEventHandler(ActionEvent.ACTION, (event) -> {
+            if(mediaPlayer.canPause()) {
+                mediaPlayer.setPosition(0.0f);
+                timeSlider.setValue(0.0);
+                timeLabel.setText(getStringTime(mediaPlayer));
+                setLastTimeDisplayed(0);
+                play.setGraphic(new ImageView(new Image("./img/play.png")));
+                if(mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
                 }
             }
         });
     }
 
     public void addPlayListener() {
-        play.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(mediaPlayer.isPlaying()) {
-                    //mediaPlayer.pause();
-                    mediaListPlayer.pause();
-                    play.setGraphic(new ImageView(new Image("./img/play.png")));
-                } else {
-                    mediaListPlayer.play();
-                    //mediaPlayer.play();
-                    play.setGraphic(new ImageView(new Image("./img/pause.png")));
-                }
+        play.addEventHandler(ActionEvent.ACTION, (event) -> {
+            if(mediaPlayer.isPlaying()) {
+                //mediaPlayer.pause();
+                mediaListPlayer.pause();
+                play.setGraphic(new ImageView(new Image("./img/play.png")));
+            } else {
+                mediaListPlayer.play();
+                //mediaPlayer.play();
+                play.setGraphic(new ImageView(new Image("./img/pause.png")));
             }
         });
     }
 
     public void addNextListener() {
-        next.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                mediaPlayer.setPosition(0.0f);
-                timeSlider.setValue(0.0);
-                timeLabel.setText(getStringTime(mediaPlayer));
-                setLastTimeDisplayed(0);
-                mediaListPlayer.playNext();
-                //image.setImage(new Image("/img/resize.png"));
-                //WritableImage wi = (WritableImage) image.getImage();
-                //wi.getPixelWriter();
-            }
+        next.addEventHandler(ActionEvent.ACTION, (event) -> {
+            mediaPlayer.setPosition(0.0f);
+            timeSlider.setValue(0.0);
+            timeLabel.setText(getStringTime(mediaPlayer));
+            setLastTimeDisplayed(0);
+            mediaListPlayer.playNext();
         });
     }
 
     public void addTimeSliderListener() {
-        timeSlider.valueProperty().addListener(new InvalidationListener() {
-            public void invalidated(Observable ov) {
-                if (timeSlider.isValueChanging()) {
-                    // multiply duration by percentage calculated by slider position
-                    mediaPlayer.setPosition((float)(timeSlider.getValue()/100.0));
-                    timeLabel.setText(getStringTime(mediaPlayer));
-                    setLastTimeDisplayed(0);
-                }
+        timeSlider.valueProperty().addListener((ov) -> {
+            if (timeSlider.isValueChanging()) {
+                // multiply duration by percentage calculated by slider position
+                mediaPlayer.setPosition((float)(timeSlider.getValue()/100.0));
+                timeLabel.setText(getStringTime(mediaPlayer));
+                setLastTimeDisplayed(0);
             }
         });
     }
 
     public void addRepeatListener() {
-        repeat.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(mediaPlayer.getRepeat()) {
-                    mediaPlayer.setRepeat(false);
-                    repeat.setGraphic(new ImageView(new Image("./img/random.png")));
-                } else {
-                    mediaPlayer.setRepeat(true);
-                    repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));
-                }
+        repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
+            if(mediaPlayer.getRepeat()) {
+                mediaPlayer.setRepeat(false);
+                repeat.setGraphic(new ImageView(new Image("./img/random.png")));
+            } else {
+                mediaPlayer.setRepeat(true);
+                repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));
             }
         });
     }
 
     public void addResizeListener() {
-        resize.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(stage == null) {
-                    stage = (Stage) play.getScene().getWindow();
-                }
-                if(stage.isFullScreen()) {
+        resize.addEventHandler(ActionEvent.ACTION, (event)-> {
+            if(stage == null) {
+                stage = (Stage) play.getScene().getWindow();
+            }
+            if(stage.isFullScreen()) {
+                if(player.getChildren().size() == 0) {
                     player.getChildren().add(playerContainer);
                     stage.setScene(lastScene);
                     stage.show();
-                    stage.setFullScreen(false);
-                } else {
-                    lastScene = stage.getScene();
-                    Scene scene = new Scene(new AnchorPane(playerContainer));
-                    stage.setScene(scene);
-                    stage.show();
-                    stage.setFullScreen(true);
                 }
+                stage.setFullScreen(false);
+            } else {
+                mediaListPlayer.play();
+                play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                lastScene = stage.getScene();
+                Scene scene = new Scene(new AnchorPane(playerContainer));
+                stage.setScene(scene);
+                stage.show();
+                stage.setFullScreen(true);
             }
         });
     }
@@ -392,10 +364,8 @@ public class PlayerController implements MediaPlayerEventListener {
 
         // milliseconds to seconds
         time /= 1000;
-
         hours = (int) time/3600;
         time -= hours*3600;
-
         minutes = (int) time/60;
         time -= minutes*60;
 

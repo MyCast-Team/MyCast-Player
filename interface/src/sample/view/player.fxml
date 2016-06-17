@@ -13,7 +13,7 @@
     <VBox fx:id="playerContainer" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <BorderPane fx:id="playerPane" VBox.vgrow="ALWAYS">
         </BorderPane>
-        <HBox fx:id="controlBar" alignment="CENTER">
+        <HBox fx:id="controlBar" alignment="CENTER" VBox.vgrow="NEVER">
             <Button fx:id="previous">
                 <graphic>
                     <ImageView>

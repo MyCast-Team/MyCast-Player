@@ -218,7 +218,6 @@ public class InterfaceDialog {
             bw = new BufferedWriter(new FileWriter(csvFile, false));
 
             for(Entry<String, Point> entry : currentInterface.entrySet()) {
-                System.out.println(entry.getKey()+" : "+entry.getValue().getX()+";"+entry.getValue().getY());
                 bw.write(entry.getKey()+";"+entry.getValue().getX()+";"+entry.getValue().getY());
                 bw.newLine();
             }
