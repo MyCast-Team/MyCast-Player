@@ -36,9 +36,10 @@ public class MenuBarController {
     private MenuItem interfaceConf;
 
     private StreamMedia streamMedia;
+
     private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
 
-    public MenuBarController(){
+    public MenuBarController() {
     }
 
     @FXML
@@ -64,38 +65,38 @@ public class MenuBarController {
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
-                    if(!streamMedia.getSocket().isClosed()) {
-                        streamMedia.closeConnection();
+        return (event) -> {
+            if(streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
+                if(!streamMedia.getSocket().isClosed()) {
+                    streamMedia.closeConnection();
+                }
+                setConnection.setText("Set a new connection");
+                play.setDisable(true);
+                previous.setDisable(true);
+                next.setDisable(true);
+            } else {
+                ConnectionDialog connectionDialog = new ConnectionDialog();
+                Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
+                if (result.isPresent()) {
+                    String addr = result.get().getKey();
+                    int port = result.get().getValue();
+
+                    if(streamMedia.setClientConnection(addr, port)) {
+                        setConnection.setText("Disconnect from connection");
+                        play.setDisable(false);
+                        previous.setDisable(false);
+                        next.setDisable(false);
                     }
-                    setConnection.setText("Set a new connection");
-                    play.setDisable(true);
-                    previous.setDisable(true);
-                    next.setDisable(true);
                 } else {
-                    ConnectionDialog connectionDialog = new ConnectionDialog();
-                    Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
-                    if (result.isPresent()) {
-                        String addr = result.get().getKey();
-                        int port = result.get().getValue();
-
-                        System.out.println("Adresse : " + addr);
-                        System.out.println("Port : " + port);
-
-                        if(streamMedia.setClientConnection(addr, port)) {
-                            setConnection.setText("Disconnect from connection");
-                            play.setDisable(false);
-                            previous.setDisable(false);
-                            next.setDisable(false);
-                        }
-                    } else {
-                        System.out.println("Canceled");
-                    }
+                    System.out.println("Canceled");
                 }
             }
+        };
+    }
+
+    private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
+        return (event) -> {
+            InterfaceDialog interfaceDialog = new InterfaceDialog();
         };
     }
 
@@ -104,17 +105,14 @@ public class MenuBarController {
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPlayEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    if(streamMedia.getMediaListPlayer().isPlaying()) {
-                        streamMedia.pauseStreamingMedia();
-                        play.setText("Play");
-                    } else {
-                        streamMedia.startStreamingMedia();
-                        play.setText("Pause");
-                    }
+        return (event) -> {
+            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                    streamMedia.pauseStreamingMedia();
+                    play.setText("Play");
+                } else {
+                    streamMedia.startStreamingMedia();
+                    play.setText("Pause");
                 }
             }
         };
@@ -125,12 +123,9 @@ public class MenuBarController {
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPreviousEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    streamMedia.getMediaListPlayer().playPrevious();
-                }
+        return (event) -> {
+            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                streamMedia.getMediaListPlayer().playPrevious();
             }
         };
     }
@@ -140,21 +135,9 @@ public class MenuBarController {
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getNextEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                    streamMedia.getMediaListPlayer().playNext();
-                }
-            }
-        };
-    }
-
-    private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                InterfaceDialog interfaceDialog = new InterfaceDialog();
+        return (event) -> {
+            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                streamMedia.getMediaListPlayer().playNext();
             }
         };
     }

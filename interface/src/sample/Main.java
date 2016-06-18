@@ -40,7 +40,9 @@ public class Main extends Application {
         });
 
         primaryStage.setOnCloseRequest(event -> {
-            //mainFrameController.getMediaPlayer().release(true);
+            if(mainFrameController.getPlayerController() != null) {
+                mainFrameController.getPlayerController().getResizablePlayer().release();
+            }
             Platform.exit();
             System.exit(0);
         });

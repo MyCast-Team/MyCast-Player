@@ -1,10 +1,7 @@
 package sample.controller;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.model.ResizablePlayer;
@@ -21,8 +17,6 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * Control the player and bind the buttons of the player with functions
@@ -36,6 +30,7 @@ public class PlayerController implements MediaPlayerEventListener {
     private long lastTimeDisplayed;
     private String fullTime;
     private ResizablePlayer resizablePlayer;
+    private boolean isFullscreenPlayer;
 
     @FXML
     private VBox playerContainer;
@@ -89,6 +84,7 @@ public class PlayerController implements MediaPlayerEventListener {
         //this.resizablePlayer.getMediaListPlayer().play();
 
         this.lastTimeDisplayed = 0;
+        this.isFullscreenPlayer = false;
 
         addPreviousListener();
         addStopListener();
@@ -201,21 +197,21 @@ public class PlayerController implements MediaPlayerEventListener {
             if(stage == null) {
                 stage = (Stage) play.getScene().getWindow();
             }
-            if(stage.isFullScreen()) {
-                if(player.getChildren().size() == 0) {
-                    player.getChildren().add(playerContainer);
-                    stage.setScene(lastScene);
-                    stage.show();
-                }
-                stage.setFullScreen(false);
+            boolean isFullscreenStage = stage.isFullScreen();
+            if(isFullscreenPlayer) {
+                player.getChildren().add(playerContainer);
+                stage.setScene(lastScene);
+                stage.show();
+                isFullscreenPlayer = false;
+                stage.setFullScreen(isFullscreenStage);
             } else {
                 mediaListPlayer.play();
                 play.setGraphic(new ImageView(new Image("./img/pause.png")));
                 lastScene = stage.getScene();
-                Scene scene = new Scene(new AnchorPane(playerContainer));
-                stage.setScene(scene);
+                stage.setScene(new Scene(new AnchorPane(playerContainer)));
                 stage.show();
-                stage.setFullScreen(true);
+                isFullscreenPlayer = true;
+                stage.setFullScreen(isFullscreenStage);
             }
         });
     }
@@ -341,7 +337,9 @@ public class PlayerController implements MediaPlayerEventListener {
     public void mediaSubItemTreeAdded(MediaPlayer mediaPlayer, libvlc_media_t item) {}
 
     @Override
-    public void newMedia(MediaPlayer mediaPlayer) {}
+    public void newMedia(MediaPlayer mediaPlayer) {
+
+    }
 
     @Override
     public void subItemPlayed(MediaPlayer mediaPlayer, int subItemIndex) {}

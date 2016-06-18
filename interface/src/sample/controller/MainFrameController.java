@@ -210,4 +210,8 @@ public class MainFrameController extends AnchorPane {
     public VBox getRootPane(){
         return rootPane;
     }
+
+    public PlayerController getPlayerController() {
+        return playerController;
+    }
 }
