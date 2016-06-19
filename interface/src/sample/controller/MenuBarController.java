@@ -79,21 +79,12 @@ public class MenuBarController {
                 next.setDisable(true);
                 statusLabel.setText("Not connected");
             } else {
-                ConnectionDialog connectionDialog = new ConnectionDialog();
-                Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
-                if (result.isPresent()) {
-                    String addr = result.get().getKey();
-                    int port = result.get().getValue();
-
-                    if(streamMedia.setClientConnection(addr, port)) {
-                        setConnection.setText("Disconnect from connection");
-                        play.setDisable(false);
-                        previous.setDisable(false);
-                        next.setDisable(false);
-                        statusLabel.setText("Connected with "+streamMedia.getSocket().getInetAddress().getCanonicalHostName());
-                    }
-                } else {
-                    System.out.println("Canceled");
+                if(streamMedia.setClientConnection()) {
+                    setConnection.setText("Disconnect from connection");
+                    play.setDisable(false);
+                    previous.setDisable(false);
+                    next.setDisable(false);
+                    statusLabel.setText("Connected with "+streamMedia.getSocket().getInetAddress().getCanonicalHostName());
                 }
             }
         };
