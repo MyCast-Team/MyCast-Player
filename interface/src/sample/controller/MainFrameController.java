@@ -1,6 +1,7 @@
 package sample.controller;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 import sample.model.Point;
 import javafx.fxml.FXMLLoader;
@@ -27,13 +28,16 @@ public class MainFrameController extends AnchorPane {
 
     private GridPane grid;
 
+    private HBox statusBar;
+
     private ArrayList<AnchorPane> components;
 
     private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
     private PlayerController playerController;
-
     private PlaylistController playlistController;
+    private MenuBarController menuBarController;
+    private StatusBarController statusBarController;
 
     public MainFrameController(String path, Stage primaryStage) {
 
@@ -43,9 +47,13 @@ public class MainFrameController extends AnchorPane {
 
         try {
             this.rootPane = (VBox) loadRoot(path);
+            rootPane.getChildren().add(0, loadMenuBar());
+            rootPane.getChildren().add(2, loadStatusBar());
+
             this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "rootContent")).forEach(node -> {
                 this.rootContentPane = (AnchorPane) node;
             });
+
             this.rootContentPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
                 this.grid = (GridPane) node;
             });
@@ -63,6 +71,7 @@ public class MainFrameController extends AnchorPane {
             enableDragAndDrop();
 
             bindPlaylistToPlayer();
+            bindStatusBarToControllers();
 
             setRowContraints();
             setColumnConstraints();
@@ -143,6 +152,22 @@ public class MainFrameController extends AnchorPane {
         return loader.load();
     }
 
+    private MenuBar loadMenuBar() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/sample/view/menubar.fxml"));
+        MenuBar menuBar = loader.load();
+        this.menuBarController = loader.getController();
+        return menuBar;
+    }
+
+    private HBox loadStatusBar() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/sample/view/statusBar.fxml"));
+        HBox pane = loader.load();
+        this.statusBarController = loader.getController();
+        return pane;
+    }
+
     public void initDragAndDrop(AnchorPane pane){
         pane.setOnDragDetected(event -> {
             Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
@@ -204,6 +229,17 @@ public class MainFrameController extends AnchorPane {
         if(this.playlistController != null && this.playerController != null) {
             this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
             this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+        }
+    }
+
+    private void bindStatusBarToControllers() {
+        if(statusBarController != null) {
+            if(playerController != null) {
+                playerController.setStatusLabel(statusBarController.getCenterContent());
+            }
+            if(menuBarController != null) {
+                menuBarController.setStatusLabel(statusBarController.getRightContent());
+            }
         }
     }
 

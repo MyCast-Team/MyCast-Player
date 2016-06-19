@@ -2,22 +2,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-    <fx:include source="menubar.fxml" prefHeight="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0">
-    </fx:include>
     <AnchorPane fx:id="rootContent" prefWidth="1000" prefHeight="600" VBox.vgrow="ALWAYS">
         <GridPane fx:id="grid" xmlns="http://javafx.com/javafx/8.0.65" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         </GridPane>
     </AnchorPane>
-    <HBox minHeight="25" prefHeight="25" maxHeight="25" prefWidth="1000" maxWidth="Infinity" VBox.vgrow="NEVER" style="-fx-border-color: #B0B0B0; -fx-border-width: 1 0 0 0; -fx-border-style: solid; -fx-background-color: #DBDBDB;" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
-        <padding>
-            <Insets top="0.0" bottom="0.0" left="5.0" right="5.0"></Insets>
-        </padding>
-        <Label fx:id="leftContent" text="A GAUCHE" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_LEFT"/>
-        <Label fx:id="centerContent" text="No playing item" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="ALWAYS" alignment="CENTER"/>
-        <Label fx:id="rightContent" text="Not connected" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_RIGHT"/>
-    </HBox>
 </VBox>

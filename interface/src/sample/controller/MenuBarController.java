@@ -3,16 +3,13 @@ package sample.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import sample.model.ConnectionDialog;
 import sample.model.InterfaceDialog;
 import sample.model.StreamMedia;
 
-import java.awt.*;
 import java.util.Optional;
 
 /**
@@ -37,6 +34,8 @@ public class MenuBarController {
 
     private StreamMedia streamMedia;
 
+    private Label statusLabel;
+
     private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
 
     public MenuBarController() {
@@ -59,6 +58,10 @@ public class MenuBarController {
         next.setDisable(true);
     }
 
+    public void setStatusLabel(Label statusLabel) {
+        this.statusLabel = statusLabel;
+    }
+
     /**
      * Return an EventHandler for the connection button.
      * Show a window to set the connection with a client or disconnect with client if already connected.
@@ -74,6 +77,7 @@ public class MenuBarController {
                 play.setDisable(true);
                 previous.setDisable(true);
                 next.setDisable(true);
+                statusLabel.setText("Not connected");
             } else {
                 ConnectionDialog connectionDialog = new ConnectionDialog();
                 Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
@@ -86,6 +90,7 @@ public class MenuBarController {
                         play.setDisable(false);
                         previous.setDisable(false);
                         next.setDisable(false);
+                        statusLabel.setText("Connected with "+streamMedia.getSocket().getInetAddress().getCanonicalHostName());
                     }
                 } else {
                     System.out.println("Canceled");

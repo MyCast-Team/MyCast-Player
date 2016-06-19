@@ -13,9 +13,14 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
+import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
+
+import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -65,6 +70,7 @@ public class PlayerController implements MediaPlayerEventListener {
     @FXML
     private AnchorPane player;
 
+    private Label statusLabel;
 
     /* CONSTRUCTOR */
     public PlayerController() {
@@ -118,53 +124,34 @@ public class PlayerController implements MediaPlayerEventListener {
 
     public void setResizablePlayer(ResizablePlayer resizablePlayer) { this.resizablePlayer = resizablePlayer; }
 
+    public void setStatusLabel(Label statusLabel) { this.statusLabel = statusLabel; }
+
 
     /* BUTTON CONTROLLER */
     public void addPreviousListener() {
         previous.addEventHandler(ActionEvent.ACTION, (event) -> {
-            mediaPlayer.setPosition(0.0f);
-            timeSlider.setValue(0.0);
-            timeLabel.setText(getStringTime(mediaPlayer));
-            setLastTimeDisplayed(0);
             mediaListPlayer.playPrevious();
         });
     }
 
     public void addStopListener() {
         stop.addEventHandler(ActionEvent.ACTION, (event) -> {
-            if(mediaPlayer.canPause()) {
-                mediaPlayer.setPosition(0.0f);
-                timeSlider.setValue(0.0);
-                timeLabel.setText(getStringTime(mediaPlayer));
-                setLastTimeDisplayed(0);
-                play.setGraphic(new ImageView(new Image("./img/play.png")));
-                if(mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                }
-            }
+            mediaListPlayer.stop();
         });
     }
 
     public void addPlayListener() {
         play.addEventHandler(ActionEvent.ACTION, (event) -> {
-            if(mediaPlayer.isPlaying()) {
-                //mediaPlayer.pause();
+            if(mediaListPlayer.isPlaying()) {
                 mediaListPlayer.pause();
-                play.setGraphic(new ImageView(new Image("./img/play.png")));
             } else {
                 mediaListPlayer.play();
-                //mediaPlayer.play();
-                play.setGraphic(new ImageView(new Image("./img/pause.png")));
             }
         });
     }
 
     public void addNextListener() {
         next.addEventHandler(ActionEvent.ACTION, (event) -> {
-            mediaPlayer.setPosition(0.0f);
-            timeSlider.setValue(0.0);
-            timeLabel.setText(getStringTime(mediaPlayer));
-            setLastTimeDisplayed(0);
             mediaListPlayer.playNext();
         });
     }
@@ -219,7 +206,18 @@ public class PlayerController implements MediaPlayerEventListener {
 
     /* OVERRIDE MediaPlayerEventListener methods */
     @Override
-    public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {}
+    public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+        Platform.runLater(() -> {
+            timeSlider.setValue(0.0);
+            timeLabel.setText(getStringTime(mediaPlayer));
+            setLastTimeDisplayed(0);
+
+            String path = new File(mrl).getPath();
+            MediaMeta meta = new MediaPlayerFactory().getMediaMeta(path.substring(path.indexOf(":")+1), true);
+            String text = ((meta.getArtist() != null) ? meta.getArtist() + " - " : "") + meta.getTitle();
+            statusLabel.setText(text);
+        });
+    }
 
     @Override
     public void opening(MediaPlayer mediaPlayer) {}
@@ -228,22 +226,28 @@ public class PlayerController implements MediaPlayerEventListener {
     public void buffering(MediaPlayer mediaPlayer, float newCache) {}
 
     @Override
-    public void playing(MediaPlayer mediaPlayer) {}
+    public void playing(MediaPlayer mediaPlayer) {
+        Platform.runLater(()-> {
+            play.setGraphic(new ImageView(new Image("./img/pause.png")));
+        });
+    }
 
     @Override
-    public void paused(MediaPlayer mediaPlayer) {}
+    public void paused(MediaPlayer mediaPlayer) {
+        Platform.runLater(()-> {
+            play.setGraphic(new ImageView(new Image("./img/play.png")));
+        });
+    }
 
     @Override
     public void stopped(MediaPlayer mediaPlayer) {
         Platform.runLater(() -> {
-            mediaPlayer.setPosition(0.0f);
             timeSlider.setValue(0.0);
             timeLabel.setText(getStringTime(mediaPlayer));
             setLastTimeDisplayed(0);
             play.setGraphic(new ImageView(new Image("./img/play.png")));
-            if(mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-            }
+
+            statusLabel.setText("No playing item");
         });
     }
 
@@ -258,24 +262,19 @@ public class PlayerController implements MediaPlayerEventListener {
 
     @Override
     public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-        if (timeLabel != null) {
+        Platform.runLater(() -> {
             long currentTime = mediaPlayer.getTime();
             // Refresh time to display each second
             if (currentTime >= lastTimeDisplayed + 1000) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        timeLabel.setText(getStringTime(mediaPlayer));
-                        lastTimeDisplayed = currentTime;
-                    }
-                });
+                timeLabel.setText(getStringTime(mediaPlayer));
+                lastTimeDisplayed = currentTime;
             }
-        }
+        });
     }
 
     @Override
     public void positionChanged(MediaPlayer mediaPlayer, float newPosition) {
-        if (timeSlider != null && !timeSlider.isValueChanging()) {
+        if (!timeSlider.isValueChanging()) {
             timeSlider.setValue(newPosition * 100.0);
         }
     }
@@ -337,9 +336,7 @@ public class PlayerController implements MediaPlayerEventListener {
     public void mediaSubItemTreeAdded(MediaPlayer mediaPlayer, libvlc_media_t item) {}
 
     @Override
-    public void newMedia(MediaPlayer mediaPlayer) {
-
-    }
+    public void newMedia(MediaPlayer mediaPlayer) {}
 
     @Override
     public void subItemPlayed(MediaPlayer mediaPlayer, int subItemIndex) {}
