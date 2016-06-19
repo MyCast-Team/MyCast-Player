@@ -12,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
-import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 
 /**
