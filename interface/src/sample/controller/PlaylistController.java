@@ -216,12 +216,14 @@ public class PlaylistController {
         musicTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
+            MediaPlayerFactory mpf = new MediaPlayerFactory();
+            MediaMeta metaInfo;
+
             if (db.hasFiles()) {
                 success = true;
                 for (File file:db.getFiles()) {
                     if(extensionIsSupported(getExtension(file.getPath()))){
-                        MediaPlayerFactory mpf = new MediaPlayerFactory();
-                        MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
+                        metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
                         this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                     }

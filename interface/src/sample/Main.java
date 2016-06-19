@@ -30,7 +30,7 @@ public class Main extends Application {
     public void initRootLayout() {
         // Load root layout from fxml file
         mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage);
-        AnchorPane rootLayout = mainFrameController.getRootPane();
+        VBox rootLayout = mainFrameController.getRootPane();
 
         Scene scene = new Scene(rootLayout);
 
@@ -40,7 +40,9 @@ public class Main extends Application {
         });
 
         primaryStage.setOnCloseRequest(event -> {
-            //mainFrameController.getMediaPlayer().release(true);
+            if(mainFrameController.getPlayerController() != null) {
+                mainFrameController.getPlayerController().getResizablePlayer().release();
+            }
             Platform.exit();
             System.exit(0);
         });
