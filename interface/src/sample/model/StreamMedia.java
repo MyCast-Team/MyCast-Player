@@ -166,6 +166,7 @@ public class StreamMedia {
 
         status = CONNECTION_STATUS.DISCONNECTED;
         mediaListPlayer.stop();
+        playList.clear();
     }
 
     public enum CONNECTION_STATUS {

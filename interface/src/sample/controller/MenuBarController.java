@@ -44,8 +44,6 @@ public class MenuBarController {
     @FXML
     public void initialize() {
         streamMedia = new StreamMedia();
-        streamMedia.getPlayList().addMedia(PATH_TO_VIDEO);
-        streamMedia.getPlayList().addMedia("/Users/thomasfouan/Desktop/music.mp3");
 
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
@@ -74,6 +72,7 @@ public class MenuBarController {
                     streamMedia.closeConnection();
                 }
                 setConnection.setText("Set a new connection");
+                play.setText("Play");
                 play.setDisable(true);
                 previous.setDisable(true);
                 next.setDisable(true);
@@ -85,6 +84,9 @@ public class MenuBarController {
                     previous.setDisable(false);
                     next.setDisable(false);
                     statusLabel.setText("Connected with "+streamMedia.getSocket().getInetAddress().getCanonicalHostName());
+
+                    streamMedia.getPlayList().addMedia(PATH_TO_VIDEO);
+                    streamMedia.getPlayList().addMedia("/Users/thomasfouan/Desktop/music.mp3");
                 }
             }
         };
