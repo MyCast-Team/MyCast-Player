@@ -8,6 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
 import sample.model.ConnectionDialog;
 import sample.model.InterfaceDialog;
+import sample.model.Playlist;
 import sample.model.StreamMedia;
 
 import java.util.Optional;
@@ -36,8 +37,6 @@ public class MenuBarController {
 
     private Label statusLabel;
 
-    private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
-
     public MenuBarController() {
     }
 
@@ -54,6 +53,10 @@ public class MenuBarController {
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
+    }
+
+    public StreamMedia getStreamMedia() {
+        return streamMedia;
     }
 
     public void setStatusLabel(Label statusLabel) {
@@ -79,19 +82,21 @@ public class MenuBarController {
                 statusLabel.setText("Not connected");
             } else {
                 if(streamMedia.setClientConnection()) {
-                    setConnection.setText("Disconnect from connection");
+                    String host = streamMedia.getSocket().getInetAddress().getCanonicalHostName();
+                    setConnection.setText("Disconnect with "+host);
                     play.setDisable(false);
                     previous.setDisable(false);
                     next.setDisable(false);
-                    statusLabel.setText("Connected with "+streamMedia.getSocket().getInetAddress().getCanonicalHostName());
-
-                    streamMedia.getPlayList().addMedia(PATH_TO_VIDEO);
-                    streamMedia.getPlayList().addMedia("/Users/thomasfouan/Desktop/music.mp3");
+                    statusLabel.setText("Connected with "+host);
                 }
             }
         };
     }
 
+    /**
+     * Return an EventHandler for the Interface Configuration button.
+     * @return EventHandler
+     */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
         return (event) -> {
             InterfaceDialog interfaceDialog = new InterfaceDialog();

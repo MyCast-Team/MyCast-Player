@@ -32,8 +32,6 @@ public class MainFrameController extends AnchorPane {
 
     private ArrayList<AnchorPane> components;
 
-    private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
-
     private PlayerController playerController;
     private PlaylistController playlistController;
     private MenuBarController menuBarController;
@@ -226,9 +224,14 @@ public class MainFrameController extends AnchorPane {
     }
 
     private void bindPlaylistToPlayer() {
-        if(this.playlistController != null && this.playerController != null) {
-            this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
-            this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+        if(this.playlistController != null) {
+            if (this.playerController != null) {
+                this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
+                this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+            }
+            if(this.menuBarController != null) {
+                this.menuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
+            }
         }
     }
 
