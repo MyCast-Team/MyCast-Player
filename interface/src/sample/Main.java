@@ -7,12 +7,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MenuBarController;
-<<<<<<< HEAD
-import sample.model.Music;
-import sample.model.Playlist;
+
 import sample.controller.MainFrameController;
-=======
->>>>>>> f1480a5ae66437a3e7ba8b3fb22a0d69e9e7bfaa
+
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 public class Main extends Application {

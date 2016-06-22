@@ -1,5 +1,7 @@
 package sample.model;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.http.HttpEntity;
@@ -29,13 +31,15 @@ public class Plugin {
     String Name;
     String Author;
     String Date;
+    String  Id;
 
 
 
-    public Plugin(String name, String author,String date){
+    public Plugin(String name, String author,String date,String Id){
         this.Name=name;
         this.Author=author;
         this.Date=date;
+        this.Id=Id;
     }
 
 
@@ -48,6 +52,7 @@ public class Plugin {
     public StringProperty DateProperty() {
         return new SimpleStringProperty(Date);
     }
+    public StringProperty IdProperty(){return new SimpleStringProperty(Id);}
     public String getAuthor() {
         return Author;
     }
@@ -57,5 +62,5 @@ public class Plugin {
     public String getDate() {
         return Date;
     }
-
+    public String getId(){return Id ;}
 }

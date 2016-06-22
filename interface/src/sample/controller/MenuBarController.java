@@ -6,12 +6,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-<<<<<<< HEAD
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-=======
->>>>>>> f1480a5ae66437a3e7ba8b3fb22a0d69e9e7bfaa
+
 import javafx.util.Pair;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.entity.ContentType;
@@ -50,25 +48,22 @@ public class MenuBarController {
     private MenuItem setConnection;
     @FXML
     private MenuItem play;
+
     @FXML
-<<<<<<< HEAD
-    private MenuItem pause;
-    @FXML
-    private Menu plugin;
+    private MenuItem plugin;
     @FXML
     private MenuItem add;
     @FXML
     private MenuItem remove;
     @FXML
     private MenuItem download;
-=======
+    @FXML
     private MenuItem previous;
     @FXML
     private MenuItem next;
     @FXML
     private MenuItem interfaceConf;
 
->>>>>>> f1480a5ae66437a3e7ba8b3fb22a0d69e9e7bfaa
     private StreamMedia streamMedia;
 
     private Label statusLabel;
@@ -86,11 +81,11 @@ public class MenuBarController {
 
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
-<<<<<<< HEAD
-        pause.setOnAction(getPauseEventHandler());
+
+
         add.setOnAction(getAddEventHandler());
         streamMedia = new StreamMedia();
-=======
+
         previous.setOnAction(getPreviousEventHandler());
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
@@ -102,7 +97,7 @@ public class MenuBarController {
 
     public void setStatusLabel(Label statusLabel) {
         this.statusLabel = statusLabel;
->>>>>>> f1480a5ae66437a3e7ba8b3fb22a0d69e9e7bfaa
+
     }
 
     /**
