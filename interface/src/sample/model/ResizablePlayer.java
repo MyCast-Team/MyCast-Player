@@ -7,8 +7,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import sample.controller.PlayerController;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -33,7 +31,8 @@ public class ResizablePlayer {
     private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
-    public ResizablePlayer(Stage primaryStage, AnchorPane playerContainer) {
+    /* CONSTRUCTOR */
+    public ResizablePlayer(VBox playerContainer) {
 
         // Initialisation of the components
         playerHolder = new Pane();
@@ -41,11 +40,10 @@ public class ResizablePlayer {
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
         // Add the player pane in the playerContainer
-        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
         BorderPane playerPane = new BorderPane(playerHolder);
         playerPane.setStyle("-fx-background-color: black");
-        vBox.getChildren().add(0, playerPane);
-        VBox.setVgrow(playerPane, Priority.ALWAYS);
+        playerContainer.getChildren().add(0, playerPane);
+        playerContainer.setVgrow(playerPane, Priority.ALWAYS);
 
         initializeImageView();
 
@@ -58,12 +56,10 @@ public class ResizablePlayer {
 
         mediaPlayer = mediaPlayerComponent.getMediaPlayer();
         mediaListPlayer.setMediaPlayer(mediaPlayer);
-
-        // Add sample.controller to the mediaPlayer
-        PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
-        mediaPlayer.addMediaPlayerEventListener(playerController);
     }
 
+
+    /* GETTER */
     public DirectMediaPlayerComponent getMediaPlayerComponent() { return mediaPlayerComponent; }
 
     public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
@@ -73,6 +69,19 @@ public class ResizablePlayer {
     public MediaPlayer getMediaPlayer() { return mediaPlayer; }
 
     public Pane getPlayerHolder() { return playerHolder; }
+
+    /* SETTER */
+    public void setPlaylist(Playlist playlist) {
+        for(Media m : playlist.getPlaylist()) {
+            this.playlist.addMedia(m.getPath());
+        }
+    }
+
+    public void release() {
+        this.mediaPlayerComponent.release(true);
+        this.mediaListPlayer.release();
+        this.mediaPlayer.release();
+    }
 
     /**
      * initialize the type of image (size, ratio) to write in the player, accordingly with :

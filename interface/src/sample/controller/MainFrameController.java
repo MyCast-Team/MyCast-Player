@@ -1,23 +1,17 @@
 package sample.controller;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import sample.Main;
-import sample.model.Playlist;
 import sample.model.Point;
-import sample.model.ResizablePlayer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,39 +21,57 @@ import java.util.Objects;
  * Class to manage our main frame of the application
  */
 public class MainFrameController extends AnchorPane {
-    private AnchorPane rootPane;
+
+    private VBox rootPane;
+
+    private AnchorPane rootContentPane;
+
     private GridPane grid;
-    //public AnchorPane player;
-    public Playlist playlist;
+
+    private HBox statusBar;
+
     private ArrayList<AnchorPane> components;
-    //public DirectMediaPlayerComponent mediaPlayerComponent;
+
     private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
 
-    public MainFrameController(String path, Stage primaryStage, Playlist list) {
-        this.playlist = list;
+    private PlayerController playerController;
+    private PlaylistController playlistController;
+    private MenuBarController menuBarController;
+    private StatusBarController statusBarController;
+
+    public MainFrameController(String path, Stage primaryStage) {
+
+        this.playerController = null;
+        this.playlistController = null;
         this.components = new ArrayList<>();
+
         try {
-            this.rootPane = (AnchorPane) loadRoot(path);
-            this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
+            this.rootPane = (VBox) loadRoot(path);
+            rootPane.getChildren().add(0, loadMenuBar());
+            rootPane.getChildren().add(2, loadStatusBar());
+
+            this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "rootContent")).forEach(node -> {
+                this.rootContentPane = (AnchorPane) node;
+            });
+
+            this.rootContentPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
                 this.grid = (GridPane) node;
             });
 
             HashMap<String, Point> componentToLoad = readComponent();
 
-            for(Map.Entry<String, Point> m : componentToLoad.entrySet()){
-                AnchorPane pane = loadComponent(m.getKey());
-                this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
-                this.components.add(pane);
+            for(Map.Entry<String, Point> m : componentToLoad.entrySet()) {
+                if(m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
+                    AnchorPane pane = loadComponent(m.getKey());
+                    this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                    this.components.add(pane);
+                }
             }
 
             enableDragAndDrop();
 
-            /*ResizablePlayer resizablePlayer = new ResizablePlayer(primaryStage, player);
-            mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
-
-            resizablePlayer.getPlaylist().addMedia(PATH_TO_MEDIA);
-            resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/music.mp3");
-            resizablePlayer.getMediaListPlayer().play();*/
+            bindPlaylistToPlayer();
+            bindStatusBarToControllers();
 
             setRowContraints();
             setColumnConstraints();
@@ -69,7 +81,7 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
-    private HashMap<String, Point> readComponent(){
+    public static HashMap<String, Point> readComponent(){
         HashMap<String, Point> list = new HashMap<>();
         String csvFile = "./res/interface.csv";
         BufferedReader br = null;
@@ -122,6 +134,12 @@ public class MainFrameController extends AnchorPane {
         loader.setLocation(getClass().getResource(path));
         try {
             pane = loader.load();
+
+            if(pane.getId().equals("player")) {
+                playerController = loader.getController();
+            } else if(pane.getId().equals("playlist")) {
+                playlistController = loader.getController();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,6 +150,22 @@ public class MainFrameController extends AnchorPane {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(path));
         return loader.load();
+    }
+
+    private MenuBar loadMenuBar() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/sample/view/menubar.fxml"));
+        MenuBar menuBar = loader.load();
+        this.menuBarController = loader.getController();
+        return menuBar;
+    }
+
+    private HBox loadStatusBar() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/sample/view/statusBar.fxml"));
+        HBox pane = loader.load();
+        this.statusBarController = loader.getController();
+        return pane;
     }
 
     public void initDragAndDrop(AnchorPane pane){
@@ -191,7 +225,29 @@ public class MainFrameController extends AnchorPane {
         return null;
     }
 
-    public AnchorPane getRootPane(){
+    private void bindPlaylistToPlayer() {
+        if(this.playlistController != null && this.playerController != null) {
+            this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
+            this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+        }
+    }
+
+    private void bindStatusBarToControllers() {
+        if(statusBarController != null) {
+            if(playerController != null) {
+                playerController.setStatusLabel(statusBarController.getCenterContent());
+            }
+            if(menuBarController != null) {
+                menuBarController.setStatusLabel(statusBarController.getRightContent());
+            }
+        }
+    }
+
+    public VBox getRootPane(){
         return rootPane;
+    }
+
+    public PlayerController getPlayerController() {
+        return playerController;
     }
 }

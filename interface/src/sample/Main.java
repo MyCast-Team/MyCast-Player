@@ -7,27 +7,25 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MenuBarController;
+<<<<<<< HEAD
 import sample.model.Music;
 import sample.model.Playlist;
 import sample.controller.MainFrameController;
+=======
+>>>>>>> f1480a5ae66437a3e7ba8b3fb22a0d69e9e7bfaa
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-
-import java.util.ArrayList;
 
 public class Main extends Application {
 
     private Stage primaryStage;
     private MainFrameController mainFrameController;
     private MenuBarController menuBarController;
-    private Playlist playlist;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
 
-        playlist = new Playlist();
-        //playlist.readPlaylist();
         initRootLayout();
     }
 
@@ -36,8 +34,8 @@ public class Main extends Application {
      */
     public void initRootLayout() {
         // Load root layout from fxml file
-        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage, this.playlist);
-        AnchorPane rootLayout = mainFrameController.getRootPane();
+        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage);
+        VBox rootLayout = mainFrameController.getRootPane();
 
         Scene scene = new Scene(rootLayout);
 
@@ -47,8 +45,9 @@ public class Main extends Application {
         });
 
         primaryStage.setOnCloseRequest(event -> {
-            //mainFrameController.getMediaPlayer().release(true);
-            playlist.writePlaylist();
+            if(mainFrameController.getPlayerController() != null) {
+                mainFrameController.getPlayerController().getResizablePlayer().release();
+            }
             Platform.exit();
             System.exit(0);
         });
@@ -63,8 +62,6 @@ public class Main extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
-
-    public ArrayList<Music> getPlaylist() { return playlist.getPlaylist(); }
 
     public static void main(String[] args) {
         new NativeDiscovery().discover();

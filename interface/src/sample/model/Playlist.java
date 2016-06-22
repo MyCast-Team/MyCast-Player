@@ -7,23 +7,20 @@ import java.util.ArrayList;
  * Created by Vincent on 28/04/2016.
  */
 public class Playlist implements Serializable {
-    private ArrayList<Music> playlist;
+    private ArrayList<Media> playlist;
     final String path = "./res/playlist.ser";
 
     public Playlist(){
         playlist = new ArrayList<>();
-        Music m1 = new Music("Daft Punk", "Around the world", "3:30");
-        Music m2 = new Music("Daft Punk", "Around the world", "3:30");
-        try{
-            this.playlist.add(m1);
-            this.playlist.add(m2);
-        } catch (NullPointerException e){
-            System.out.println("exception");
-        }
+        readPlaylist();
     }
 
-    public ArrayList<Music> getPlaylist(){
+    public ArrayList<Media> getPlaylist(){
         return playlist;
+    }
+
+    public void addMedia(Media media){
+        playlist.add(media);
     }
 
     public void writePlaylist(){
@@ -56,8 +53,7 @@ public class Playlist implements Serializable {
         try {
             FileInputStream fichier = new FileInputStream(path);
             ois = new ObjectInputStream(fichier);
-            this.playlist = (ArrayList<Music>) ois.readObject();
-            System.out.println(this.playlist);
+            this.playlist = (ArrayList<Media>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             writePlaylist();
         } finally {
@@ -69,5 +65,9 @@ public class Playlist implements Serializable {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public void reset(){
+        this.playlist.clear();
     }
 }
