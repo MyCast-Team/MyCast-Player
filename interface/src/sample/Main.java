@@ -6,10 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
 import sample.model.Music;
 import sample.model.Playlist;
+import sample.controller.MainFrameController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 import java.util.ArrayList;
