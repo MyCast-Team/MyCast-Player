@@ -77,6 +77,12 @@ public class ResizablePlayer {
         }
     }
 
+    public void release() {
+        this.mediaPlayerComponent.release(true);
+        this.mediaListPlayer.release();
+        this.mediaPlayer.release();
+    }
+
     /**
      * initialize the type of image (size, ratio) to write in the player, accordingly with :
      *      - the dimensions of the screen

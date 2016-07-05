@@ -3,10 +3,10 @@ package sample.model;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.scene.control.*;
 import sample.Main;
-import sample.controller.ConnectionController;
 
 import java.io.IOException;
 import java.util.function.UnaryOperator;
@@ -16,7 +16,6 @@ import java.util.function.UnaryOperator;
  */
 public class ConnectionDialog {
 
-    private ConnectionController connectionController;
     private Dialog<Pair<String, Integer>> dialog;
     private HBox content;
     private TextField addr1;
@@ -36,7 +35,7 @@ public class ConnectionDialog {
         dialog.getDialogPane().getButtonTypes().addAll(validateButton, ButtonType.CANCEL);
 
         FXMLLoader dialogLoad = new FXMLLoader();
-        dialogLoad.setLocation(Main.class.getResource("sample/view/connection.fxml"));
+        dialogLoad.setLocation(Main.class.getResource("/sample/view/connection.fxml"));
         try {
             content = dialogLoad.load();
         } catch (IOException e) {
@@ -56,11 +55,10 @@ public class ConnectionDialog {
 
         dialog.getDialogPane().setContent(content);
 
-        connectionController = new ConnectionController(addr1, addr2, addr3, addr4, port, validateButton);
-        dialog.setResultConverter(connectionController.getResultCallback());
+        dialog.setResultConverter(getResultCallback());
     }
 
-    public Dialog getDialog() {
+    public Dialog<Pair<String, Integer>> getDialog() {
         return dialog;
     }
 
@@ -114,5 +112,30 @@ public class ConnectionDialog {
         field.setTextFormatter(new TextFormatter<>(filter));
 
         return field;
+    }
+
+    private Callback<ButtonType, Pair<String, Integer>> getResultCallback() {
+        // Return the values of the fields on submitButton event
+        Callback<ButtonType, Pair<String, Integer>> callback = new Callback<ButtonType, Pair<String, Integer>>() {
+            @Override
+            public Pair<String, Integer> call(ButtonType param) {
+                // If the user clicked on the submit button
+                if(param == validateButton) {
+                    String address = addr1.getText()+"."+addr2.getText()+"."+addr3.getText()+"."+addr4.getText();
+                    int portNb = -1;
+                    try {
+                        portNb = Integer.parseInt(port.getText());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+
+                    return new Pair<String, Integer>(address, portNb);
+                }
+
+                return null;
+            }
+        };
+
+        return callback;
     }
 }
