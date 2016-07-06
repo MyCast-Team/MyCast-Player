@@ -31,7 +31,7 @@ public class InterfaceDialog {
     private GridPane table;
     private ButtonType validateButton;
     private final String pathToPlugin = "/plugin";
-    private final String[] staticInterfaces = {"/sample/view/suggestions", "/sample/view/playlist", "/sample/view/player", "/sample/view/plugin"};
+    private final String[] staticInterfaces = {"/sample/view/suggestions.fxml", "/sample/view/playlist.fxml", "/sample/view/player.fxml", "/sample/view/plugin.fxml", "/sample/view/mediacase.fxml"};
     private HashMap<String, Point> currentInterface;
 
     /**
@@ -54,6 +54,12 @@ public class InterfaceDialog {
 
             // Get the interface stored in interface.csv
             currentInterface = MainFrameController.readComponent();
+            // Make sure staticInterfaces are in the HashMap. Else, put in it.
+            for(String inter : staticInterfaces) {
+                if(currentInterface.get(inter) == null) {
+                    currentInterface.put(inter, new Point(-1, -1));
+                }
+            }
             getNewPlugins();
 
             // Create a new line in the GridPane for each interface/plugin in the interface HashMap
@@ -120,12 +126,6 @@ public class InterfaceDialog {
                     // Add the plugin in the interface HashMap if the plugin is not in it.
                     if(filename.endsWith(".jar") && currentInterface.get(filename) == null) {
                         currentInterface.put(filename, new Point(-1, -1));
-                    }
-                }
-                // Make sure staticInterfaces are in the HashMap. Else, put in it.
-                for(String inter : staticInterfaces) {
-                    if(currentInterface.get(inter) == null) {
-                        currentInterface.put(inter, new Point(-1, -1));
                     }
                 }
             } catch (IOException e) {
