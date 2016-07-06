@@ -24,12 +24,26 @@ public class Media implements Serializable {
     private String release;
 
     public Media(String path, String title, String author, long duration, String release, String genre) {
-        this.path = path;
-        this.title = title;
-        this.author = author;
+        if(path != null)
+            this.path = path;
+
+        if(title != null)
+            this.title = title;
+        else this.title = "";
+
+        if(author != null)
+            this.author = author;
+        else this.author = "";
+
         this.duration = duration;
-        this.release = release;
-        this.genre = genre;
+
+        if(release != null)
+            this.release = release;
+        else this.release = "";
+
+        if(genre != null)
+            this.genre = genre;
+        else this.genre = "";
     }
 
     /* GETTER */
@@ -111,7 +125,6 @@ public class Media implements Serializable {
 
     @Override
     public boolean equals(Object obj){
-        System.out.println("in equals");
 
         if(!(obj instanceof Media))
             return false;

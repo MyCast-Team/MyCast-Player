@@ -232,21 +232,22 @@ public class MediacaseController {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
+                        boolean found = false;
                         for(Media m : this.mediacase.getMusiccase()){
                             if(m.equals(media))
-                                System.out.println("equals !");
-                            else
-                                System.out.println("not equals !");
+                                found = true;
                         }
-                        this.mediacase.addMedia(media, 0);
-                        JSONObject object = new JSONObject();
-                        object.put("type", "audio");
-                        object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
-                        object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
-                        object.put("length", PlayerController.formatTime(metaInfo.getLength()));
-                        object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
-                        object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
-                        jsonList.add(object);
+                        if(!found){
+                            this.mediacase.addMedia(media, 0);
+                            JSONObject object = new JSONObject();
+                            object.put("type", "audio");
+                            object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
+                            object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
+                            object.put("length", PlayerController.formatTime(metaInfo.getLength()));
+                            object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
+                            object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
+                            jsonList.add(object);
+                        }
                     }
                 }
                 if(!jsonList.isEmpty()){
