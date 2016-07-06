@@ -109,4 +109,26 @@ public class Media implements Serializable {
         return String.format("%02d:%02d:%02d", hours, minutes, time);
     }
 
+    @Override
+    public boolean equals(Object obj){
+        System.out.println("in equals");
+
+        if(!(obj instanceof Media))
+            return false;
+
+        Media m = (Media) obj;
+
+        if(!this.title.equals(m.title))
+            return false;
+        if(!this.author.equals(m.author))
+            return false;
+        if(this.duration != m.duration)
+            return false;
+        if(!this.genre.equals(m.genre))
+            return false;
+        if(!this.release.equals(m.release))
+            return false;
+
+        return true;
+    }
 }
