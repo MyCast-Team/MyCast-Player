@@ -11,7 +11,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import sample.model.Media;
 import sample.model.Playlist;
-import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
@@ -216,17 +215,20 @@ public class PlaylistController {
         musicTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
+            MediaPlayerFactory mpf = new MediaPlayerFactory();
+            MediaMeta metaInfo;
+
             if (db.hasFiles()) {
                 success = true;
                 for (File file:db.getFiles()) {
                     int extensionType = extensionIsSupported(getExtension(file.getPath()));
                     if(extensionType != 0){
-                        MediaPlayerFactory mpf = new MediaPlayerFactory();
-                        MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
+                        metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         if(extensionType == 1)
                             this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getArtworkUrl()));
                         else
                             this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), null));
+
                         this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                     }
                 }
