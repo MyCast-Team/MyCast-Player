@@ -11,7 +11,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import sample.model.Media;
 import sample.model.Playlist;
-import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
@@ -36,6 +35,8 @@ public class PlaylistController {
     private Playlist playlist;
 
     private MediaListPlayer mediaListPlayer;
+
+    private MediaListPlayer streamingPlayer;
 
     private static final String[] EXTENSIONS_AUDIO = {
             "3ga",
@@ -186,6 +187,10 @@ public class PlaylistController {
         this.mediaListPlayer = mediaListPlayer;
     }
 
+    public void setStreamingPlayer(MediaListPlayer streamingPlayer) {
+        this.streamingPlayer = streamingPlayer;
+    }
+
     /**
      * Initializes the sample.controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -201,8 +206,14 @@ public class PlaylistController {
 
         reset.setOnAction(event -> {
             this.playlist.reset();
-            this.mediaListPlayer.stop();
-            this.mediaListPlayer.getMediaList().clear();
+            if(this.mediaListPlayer != null) {
+                this.mediaListPlayer.stop();
+                this.mediaListPlayer.getMediaList().clear();
+            }
+            if(this.streamingPlayer != null) {
+                this.streamingPlayer.stop();
+                this.streamingPlayer.getMediaList().clear();
+            }
             refreshPlaylist();
         });
     }
@@ -225,7 +236,12 @@ public class PlaylistController {
                     if(extensionIsSupported(getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
-                        this.mediaListPlayer.getMediaList().addMedia(file.getPath());
+                        if(this.mediaListPlayer != null) {
+                            this.mediaListPlayer.getMediaList().addMedia(file.getPath());
+                        }
+                        if(this.streamingPlayer != null) {
+                            this.streamingPlayer.getMediaList().addMedia(file.getPath());
+                        }
                     }
                 }
             }

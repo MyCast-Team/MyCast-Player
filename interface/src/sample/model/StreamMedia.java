@@ -4,9 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.util.Pair;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
-import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
-import uk.co.caprica.vlcj.player.direct.DefaultDirectMediaPlayer;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 import uk.co.caprica.vlcj.player.list.MediaListPlayerEventAdapter;
 
@@ -23,7 +21,7 @@ public class StreamMedia {
 
     private MediaPlayerFactory factory;
     private MediaListPlayer mediaListPlayer;
-    private MediaList playList;
+    private MediaList playlist;
     private Playlist interfacePlaylist;
 
     private Socket socket;
@@ -31,7 +29,7 @@ public class StreamMedia {
 
     private boolean isAlreadyStarted;
 
-    private CONNECTION_STATUS status = CONNECTION_STATUS.DISCONNECTED;
+    private CONNECTION_STATUS status;
 
     private final int PORT = 2016;
 
@@ -39,9 +37,17 @@ public class StreamMedia {
      * CONSTRUCTOR
      */
     public StreamMedia() {
-        factory = null;
-        mediaListPlayer = null;
-        playList = null;
+        factory = new MediaPlayerFactory("--rtsp-host=127.0.0.1", "--rtsp-caching=200");
+        mediaListPlayer = factory.newMediaListPlayer();
+        mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
+            @Override
+            public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
+                System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
+            }
+        });
+        playlist = factory.newMediaList();
+
+        status = CONNECTION_STATUS.DISCONNECTED;
         interfacePlaylist = null;
         socket = null;
         sendData = null;
@@ -56,13 +62,11 @@ public class StreamMedia {
 
     public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
 
-    public MediaList getPlayList() { return playList; }
-
     /**
      * SETTERS
      */
-    public void setInterfacePlaylist(Playlist interfacePlaylist) {
-        this.interfacePlaylist = interfacePlaylist;
+    public void setInterfacePlaylist(Playlist playlist) {
+        this.interfacePlaylist = playlist;
     }
 
 
@@ -72,25 +76,32 @@ public class StreamMedia {
      */
     public void prepareStreamingMedia(String addr) {
 
-        factory = new MediaPlayerFactory();
-        mediaListPlayer = factory.newMediaListPlayer();
-        mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
-            @Override
-            public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
-                System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
-            }
-        });
-        playList = factory.newMediaList();
-
-        String rtspStream = formatRtspStream(addr, PORT, "demo");
+        String rtspStream = formatRtspStream("127.0.0.1", PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
-        playList.setStandardMediaOptions(rtspStream,
+        playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
                 ":sout-keep");
-        mediaListPlayer.setMediaList(playList);
-        addMediaInStreamingPlaylist();
+        /*playlist.setStandardMediaOptions("dshow://",
+                rtspStream,
+                ":no-sout-rtp-sap",
+                ":no-sout-standard-sap",
+                ":sout-all",
+                ":rtsp-caching=100",
+                ":sout-keep");*/
+
+        /*playlist.setStandardMediaOptions("--rtsp-host=127.0.0.1", rtspStream);*/
+
+        //String[] options = {":dshow-vdev=127.0.0.1 :dshow-adev=  :dshow-caching=200",
+        //      ":sout = #transcode{vcodec=theo,vb=800,scale=0.25,acodec=vorb,ab=128,channels=2,samplerate=44100}:display :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep"};
+
+        //playlist.setStandardMediaOptions(rtspStream, ":rtsp-host=127.0.0.1");
+
+        mediaListPlayer.setMediaList(playlist);
+        for(Media m : interfacePlaylist.getPlaylist()) {
+            this.playlist.addMedia(m.getPath());
+        }
         isAlreadyStarted = false;
     }
 
@@ -113,12 +124,6 @@ public class StreamMedia {
         return sb.toString();
     }
 
-    private void addMediaInStreamingPlaylist() {
-        for (Media media : interfacePlaylist.getPlaylist()) {
-            playList.addMedia(media.getPath());
-        }
-    }
-
     /**
      * Start the streaming at the address and port set with the prepareStreamingMedia function.
      */
@@ -127,7 +132,6 @@ public class StreamMedia {
             mediaListPlayer.play();
             // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
             // before client starts receiving data
-
             if (!isAlreadyStarted) {
                 Thread.sleep(100);
                 sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
@@ -194,7 +198,7 @@ public class StreamMedia {
     }
 
     /**
-     * Close the connection with the current client. Release all resources attached to this connection.
+     * Close the connection with the current client.
      */
     public void closeConnection() {
 
@@ -209,12 +213,20 @@ public class StreamMedia {
             sendData = null;
             socket = null;
             status = CONNECTION_STATUS.DISCONNECTED;
-            playList.clear();
-            playList.release();
+            playlist.clear();
             mediaListPlayer.stop();
-            mediaListPlayer.release();
-            factory.release();
         }
+    }
+
+    /**
+     * Release all resources.
+     */
+    public void release() {
+        playlist.clear();
+        mediaListPlayer.stop();
+        playlist.release();
+        mediaListPlayer.release();
+        factory.release();
     }
 
     /**

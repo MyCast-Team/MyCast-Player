@@ -231,6 +231,7 @@ public class MainFrameController extends AnchorPane {
             }
             if(this.menuBarController != null) {
                 this.menuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
+                this.playlistController.setStreamingPlayer(menuBarController.getStreamMedia().getMediaListPlayer());
             }
         }
     }
@@ -252,5 +253,9 @@ public class MainFrameController extends AnchorPane {
 
     public PlayerController getPlayerController() {
         return playerController;
+    }
+
+    public MenuBarController getMenuBarController() {
+        return menuBarController;
     }
 }

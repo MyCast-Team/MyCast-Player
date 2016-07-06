@@ -5,10 +5,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.util.Pair;
-import sample.model.ConnectionDialog;
 import sample.model.InterfaceDialog;
-import sample.model.Playlist;
 import sample.model.StreamMedia;
 
 import java.util.Optional;
@@ -110,7 +107,7 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getPlayEventHandler() {
         return (event) -> {
             if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                if(streamMedia.getMediaListPlayer().isPlaying() || streamMedia.getMediaListPlayer().getMediaList().size() == 0) {
                     streamMedia.pauseStreamingMedia();
                     play.setText("Play");
                 } else {
@@ -128,7 +125,9 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getPreviousEventHandler() {
         return (event) -> {
             if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                streamMedia.getMediaListPlayer().pause();
                 streamMedia.getMediaListPlayer().playPrevious();
+                streamMedia.getMediaListPlayer().play();
             }
         };
     }
@@ -140,7 +139,9 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getNextEventHandler() {
         return (event) -> {
             if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                streamMedia.getMediaListPlayer().pause();
                 streamMedia.getMediaListPlayer().playNext();
+                streamMedia.getMediaListPlayer().play();
             }
         };
     }
