@@ -20,13 +20,17 @@ public class Media implements Serializable {
 
     private long duration;
 
-    // Il faut regarder les autres informations dans ID3v2 (pochette album, ...)
-    public Media(String path, String title, String author, long duration, String artwork) {
+    private String genre;
+
+    private String release;
+
+    public Media(String path, String title, String author, long duration, String release, String genre) {
         this.path = path;
         this.title = title;
         this.author = author;
         this.duration = duration;
-        this.artwork = artwork;
+        this.release = release;
+        this.genre = genre;
     }
 
     /* GETTER */
@@ -42,7 +46,13 @@ public class Media implements Serializable {
 
     public long getDuration() { return duration; }
 
-    public String getArtwork() { return artwork; }
+    public String getGenre() {
+        return genre;
+    }
+
+    public String getRelease() {
+        return release;
+    }
 
     /* SETTER */
     public void setPath(String path) {
@@ -61,6 +71,13 @@ public class Media implements Serializable {
         this.duration = duration;
     }
 
+    public void setRelease(String release) {
+        this.release = release;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
     public StringProperty titleProperty() {
         return new SimpleStringProperty(title);
@@ -73,6 +90,10 @@ public class Media implements Serializable {
     public StringProperty durationProperty() {
         return new SimpleStringProperty(createStringFromLong(duration));
     }
+
+    public StringProperty genreProperty() { return new SimpleStringProperty(genre); }
+
+    public StringProperty dateProperty() { return new SimpleStringProperty(release); }
 
     public String createStringFromLong(long time){
         int hours, minutes;

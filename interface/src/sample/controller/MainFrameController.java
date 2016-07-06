@@ -32,8 +32,6 @@ public class MainFrameController extends AnchorPane {
 
     private ArrayList<AnchorPane> components;
 
-    private final String PATH_TO_MEDIA = "/Users/thomasfouan/Desktop/video.avi";//"C:\\Users\\Vincent\\Desktop\\video.mkv";
-
     private PlayerController playerController;
     private PlaylistController playlistController;
     private MenuBarController menuBarController;
