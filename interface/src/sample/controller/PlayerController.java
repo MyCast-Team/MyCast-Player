@@ -20,7 +20,6 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -31,6 +30,7 @@ public class PlayerController implements MediaPlayerEventListener {
     private MediaListPlayer mediaListPlayer;
     private MediaPlayer mediaPlayer;
     private Stage stage;
+
     private Scene lastScene;
     private long lastTimeDisplayed;
     private String fullTime;
@@ -65,7 +65,13 @@ public class PlayerController implements MediaPlayerEventListener {
     private Button resize;
 
     @FXML
-    private BorderPane playerPane;
+    private Pane playerHolder;
+
+    @FXML
+    private ImageView imageView;
+
+    @FXML
+    private ImageView artworkView;
 
     @FXML
     private AnchorPane player;
@@ -81,13 +87,14 @@ public class PlayerController implements MediaPlayerEventListener {
     public void initialize() {
 
         this.stage = null;
-        this.resizablePlayer = new ResizablePlayer(this.playerContainer);
+
+        this.resizablePlayer = new ResizablePlayer(this.playerHolder, this.imageView, this.artworkView);
         this.mediaListPlayer = resizablePlayer.getMediaListPlayer();
         this.mediaPlayer = resizablePlayer.getMediaPlayer();
         this.mediaPlayer.addMediaPlayerEventListener(this);
 
-        //this.resizablePlayer.getPlaylist().addMedia("/Users/thomasfouan/Desktop/video.avi");
-        //this.resizablePlayer.getMediaListPlayer().play();
+        this.artworkView.setPreserveRatio(true);
+        this.artworkView.setSmooth(true);
 
         this.lastTimeDisplayed = 0;
         this.isFullscreenPlayer = false;
@@ -207,6 +214,32 @@ public class PlayerController implements MediaPlayerEventListener {
     /* OVERRIDE MediaPlayerEventListener methods */
     @Override
     public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+        String url = mrl.substring(mrl.indexOf("/"));
+
+        MediaMeta metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
+        String artworkUrl = metaInfo.getArtworkUrl();
+
+        boolean isMusic = false;
+        for(String ext : PlaylistController.EXTENSIONS_AUDIO) {
+            if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
+                isMusic = true;
+                break;
+            }
+        }
+
+        if(isMusic) {
+            if (artworkUrl != null) {
+                artworkView.setImage(new Image(artworkUrl));
+                artworkView.setX(playerHolder.getWidth()/2 - artworkView.getImage().getWidth()/2);
+                artworkView.setY(playerHolder.getHeight()/2 - artworkView.getImage().getHeight()/2);
+            }
+            imageView.setVisible(false);
+            artworkView.setVisible(true);
+        } else {
+            artworkView.setVisible(false);
+            imageView.setVisible(true);
+        }
+
         Platform.runLater(() -> {
             timeSlider.setValue(0.0);
             timeLabel.setText(getStringTime(mediaPlayer));

@@ -4,9 +4,8 @@ import javafx.fxml.FXML;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import sample.model.Media;
@@ -16,6 +15,8 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Class of control of the music.
@@ -38,7 +39,7 @@ public class PlaylistController {
 
     private MediaListPlayer streamingPlayer;
 
-    private static final String[] EXTENSIONS_AUDIO = {
+    public static final String[] EXTENSIONS_AUDIO = {
             "3ga",
             "669",
             "a52",
@@ -98,7 +99,7 @@ public class PlaylistController {
             "xm"
     };
 
-    private static final String[] EXTENSIONS_VIDEO = {
+    public static final String[] EXTENSIONS_VIDEO = {
             "3g2",
             "3gp",
             "3gp2",
@@ -201,6 +202,11 @@ public class PlaylistController {
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());
+
+        titleColumn.prefWidthProperty().bind(musicTable.widthProperty().divide(2));
+        authorColumn.prefWidthProperty().bind(musicTable.widthProperty().divide(4));
+        durationColumn.prefWidthProperty().bind(musicTable.widthProperty().divide(4));
+
         refreshPlaylist();
         setDragAndDrop();
 
@@ -215,6 +221,43 @@ public class PlaylistController {
                 this.streamingPlayer.getMediaList().clear();
             }
             refreshPlaylist();
+        });
+
+        musicTable.getSelectionModel().setSelectionMode(
+                SelectionMode.MULTIPLE
+        );
+
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem delete = new MenuItem("Delete from playlist");
+        delete.setOnAction(event1 -> {
+            ObservableList<Media> listToDelete = musicTable.getSelectionModel().getSelectedItems();
+            for(Media mToDelete : listToDelete){
+                Iterator<Media> iter = playlist.getPlaylist().iterator();
+
+                while (iter.hasNext()) {
+                    Media m = iter.next();
+
+                    if (m == mToDelete){
+                        iter.remove();
+                    }
+
+                }
+            }
+
+            this.refreshPlaylist();
+        });
+        contextMenu.getItems().addAll(delete);
+
+        musicTable.setOnMousePressed(event -> {
+            if (event.isSecondaryButtonDown()) {
+                contextMenu.show(musicTable, event.getScreenX(), event.getScreenY());
+            }
+        });
+
+        musicTable.setOnMousePressed(event -> {
+           if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
+               mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
+           }
         });
     }
 
@@ -235,7 +278,7 @@ public class PlaylistController {
                 for (File file:db.getFiles()) {
                     if(extensionIsSupported(getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength()));
+                        this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         if(this.mediaListPlayer != null) {
                             this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                         }
@@ -244,6 +287,19 @@ public class PlaylistController {
                         }
                     }
                 }
+            } else {
+                DataFormat dataFormat = null;
+                for (DataFormat df : db.getContentTypes()) {
+                    dataFormat = df;
+                }
+                if(dataFormat != null){
+                    ArrayList<Media> list = (ArrayList<Media>) db.getContent(dataFormat);
+                    for (Media m: list){
+                        this.playlist.addMedia(m);
+                        this.mediaListPlayer.getMediaList().addMedia(m.getPath());
+                    }
+                }
+
             }
             refreshPlaylist();
             event.setDropCompleted(success);

@@ -23,6 +23,8 @@ public class Playlist implements Serializable {
         playlist.add(media);
     }
 
+    public void removeMedia(Media media) { playlist.remove(media); }
+
     public void writePlaylist(){
         try {
             File file = new File(path);
