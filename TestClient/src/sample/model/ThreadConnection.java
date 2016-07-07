@@ -65,8 +65,12 @@ public class ThreadConnection extends Thread {
                 while((receivedData = Integer.parseInt(bufferedReader.readLine())) != REQUEST_CLIENT.DISCONNECTION.ordinal()) {
                     if(receivedData == REQUEST_CLIENT.STREAMING_STARTED.ordinal()) {
                         //Start receiving data from client application and play it
-                        //mediaPlayer.prepareMedia(mrl);
+                        mediaPlayer.prepareMedia(mrl);
                         mediaPlayer.playMedia(mrl);
+<<<<<<< HEAD
+=======
+                        isStreamingStarted = true;
+>>>>>>> parent of 0c6cf26... Minor bug fixed
                     }
                 }
 
