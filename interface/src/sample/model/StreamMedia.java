@@ -37,7 +37,7 @@ public class StreamMedia {
      * CONSTRUCTOR
      */
     public StreamMedia() {
-        factory = new MediaPlayerFactory("--rtsp-host=127.0.0.1", "--rtsp-caching=200");
+        factory = new MediaPlayerFactory();
         mediaListPlayer = factory.newMediaListPlayer();
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
             @Override

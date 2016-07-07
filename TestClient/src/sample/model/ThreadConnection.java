@@ -67,9 +67,9 @@ public class ThreadConnection extends Thread {
                     System.out.println(receivedData);
                     if(!isStreamingStarted && receivedData == REQUEST_CLIENT.STREAMING_STARTED.ordinal()) {
                         //Start receiving data from client application and play it
-                        mediaPlayer.prepareMedia(mrl);
+                        //mediaPlayer.prepareMedia(mrl);
                         mediaPlayer.playMedia(mrl);
-                        isStreamingStarted = true;
+                        isStreamingStarted = false;
                     }
                 }
 
