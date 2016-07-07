@@ -3,23 +3,18 @@ package sample.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import org.json.simple.JSONObject;
 import sample.model.Media;
 import sample.model.Mediacase;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
-
-import org.json.*;
 
 /**
  * Created by Vincent on 14/06/2016.
@@ -49,8 +44,14 @@ public class MediacaseController {
     private TableColumn<Media, String> genreVideo;
     @FXML
     private TableColumn<Media, String> dateVideo;
+    @FXML
+    private TextField search;
+    @FXML
+    private Button searchButton;
 
     private Mediacase mediacase;
+
+    private Mediacase filteredMediacase;
 
     private DataFormat dataFormat;
 
@@ -180,8 +181,6 @@ public class MediacaseController {
             "xesc"
     };
 
-    private static final String path = "./res/mediacase.json";
-
     public MediacaseController(){}
 
     public Mediacase getMediacase() { return mediacase; }
@@ -189,6 +188,8 @@ public class MediacaseController {
     @FXML
     public void initialize(){
         this.mediacase = new Mediacase();
+        this.filteredMediacase = new Mediacase();
+
         dataFormat =  new DataFormat("ObservableList<Media>");
 
         titleMusic.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
@@ -213,6 +214,8 @@ public class MediacaseController {
         videocaseTable.getSelectionModel().setSelectionMode(
                 SelectionMode.MULTIPLE
         );
+
+        setSearchManagement();
     }
 
     public void setDragAndDrop(){
@@ -223,7 +226,6 @@ public class MediacaseController {
 
         musiccaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
-            ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
                 success = true;
@@ -231,27 +233,8 @@ public class MediacaseController {
                     if(audioExtensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
-                        boolean found = false;
-                        for(Media m : this.mediacase.getMusiccase()){
-                            if(m.equals(media))
-                                found = true;
-                        }
-                        if(!found){
-                            this.mediacase.addMedia(media, 0);
-                            JSONObject object = new JSONObject();
-                            object.put("type", "audio");
-                            object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
-                            object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
-                            object.put("length", PlayerController.formatTime(metaInfo.getLength()));
-                            object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
-                            object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
-                            jsonList.add(object);
-                        }
+                        this.mediacase.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()), 0);
                     }
-                }
-                if(!jsonList.isEmpty()){
-                    writeMediacase(jsonList);
                 }
             }
             refreshMediacase();
@@ -278,7 +261,6 @@ public class MediacaseController {
 
         videocaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
-            ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
                 success = true;
@@ -286,20 +268,8 @@ public class MediacaseController {
                     if(videoExtensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
-                        this.mediacase.addMedia(media, 1);
-                        JSONObject object = new JSONObject();
-                        object.put("type", "video");
-                        object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
-                        object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
-                        object.put("length", PlayerController.formatTime(metaInfo.getLength()));
-                        object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
-                        object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
-                        jsonList.add(object);
+                        this.mediacase.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()), 1);
                     }
-                }
-                if(!jsonList.isEmpty()){
-                    writeMediacase(jsonList);
                 }
             }
             refreshMediacase();
@@ -320,34 +290,24 @@ public class MediacaseController {
         });
     }
 
-    public void writeMediacase(ArrayList<JSONObject> list){
-        try {
-            File file = new File(path);
-            if(!file.exists()){
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                    writer.write("");
-                    writer.close();
+    public void setSearchManagement(){
+        searchButton.setOnAction(event ->  {
+            if(!search.getText().equals("")){
+                String filter = search.getText();
+                filteredMediacase.reset();
+                for(Media m : mediacase.getMusiccase()){
+                    if( m.getAuthor().contains(filter) || m.getTitle().contains(filter) || m.getGenre().contains(filter) ) {
+                        filteredMediacase.addMedia(m, 0);
+                    }
                 }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
+                for(Media m : mediacase.getMusiccase()){
+                    if( m.getAuthor().contains(filter) || m.getTitle().contains(filter) || m.getGenre().contains(filter) ) {
+                        filteredMediacase.addMedia(m, 1);
+                    }
                 }
+                refreshMediacase();
             }
-            FileOutputStream fileOut = new FileOutputStream(path, true);
-            byte[] comma = ",".getBytes();
-            boolean first = true;
-            for(JSONObject object : list) {
-                if(!first)
-                    fileOut.write(comma);
-                byte[] byteArray = object.toString().getBytes();
-                fileOut.write(byteArray);
-                first = false;
-            }
-            fileOut.close();
-        } catch(IOException i) {
-            i.printStackTrace();
-        }
+        });
     }
 
     public String getExtension(String fileName){
@@ -380,8 +340,8 @@ public class MediacaseController {
     }
 
     public void refreshMediacase(){
-        ObservableList<Media> musiclist = FXCollections.observableArrayList(mediacase.getMusiccase());
-        ObservableList<Media> videolist = FXCollections.observableArrayList(mediacase.getVideocase());
+        ObservableList<Media> musiclist = FXCollections.observableArrayList(filteredMediacase.getMusiccase());
+        ObservableList<Media> videolist = FXCollections.observableArrayList(filteredMediacase.getVideocase());
         musiccaseTable.setItems(musiclist);
         videocaseTable.setItems(videolist);
         this.mediacase.writeMediacase();
