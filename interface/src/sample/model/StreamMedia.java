@@ -1,6 +1,7 @@
 package sample.model;
 
 import javafx.scene.control.Alert;
+import javafx.util.Pair;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -10,29 +11,27 @@ import uk.co.caprica.vlcj.player.list.MediaListPlayerEventAdapter;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.Socket;
+import java.net.*;
+import java.util.Optional;
 
 /**
  * Created by thomasfouan on 09/03/2016.
  */
 public class StreamMedia {
 
-    private final MediaPlayerFactory factory;
-
-    private final MediaListPlayer mediaListPlayer;
-
-    private final MediaList playList;
-
-    private final int PORT = 2016;
+    private MediaPlayerFactory factory;
+    private MediaListPlayer mediaListPlayer;
+    private MediaList playlist;
+    private Playlist interfacePlaylist;
 
     private Socket socket;
-
-    private CONNECTION_STATUS status = CONNECTION_STATUS.DISCONNECTED;
-
     private PrintWriter sendData;
 
-    private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
+    private boolean isAlreadyStarted;
+
+    private CONNECTION_STATUS status;
+
+    private final int PORT = 2016;
 
     /**
      * CONSTRUCTOR
@@ -46,7 +45,12 @@ public class StreamMedia {
                 System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
             }
         });
-        playList = factory.newMediaList();
+        playlist = factory.newMediaList();
+
+        status = CONNECTION_STATUS.DISCONNECTED;
+        interfacePlaylist = null;
+        socket = null;
+        sendData = null;
     }
 
     /**
@@ -56,50 +60,58 @@ public class StreamMedia {
 
     public Socket getSocket() { return socket; }
 
-    public MediaPlayerFactory getFactory() { return factory; }
-
     public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
 
-    public MediaList getPlayList() { return playList; }
+    /**
+     * SETTERS
+     */
+    public void setInterfacePlaylist(Playlist playlist) {
+        this.interfacePlaylist = playlist;
+    }
+
 
     /**
-     * Prepare the player for streaming.
+     * Create and prepare a player for streaming.
      * @param addr address of the client
-     * @param port port to use for the streaming
      */
-    public void prepareStreamingMedia(String addr, int port) {
+    public void prepareStreamingMedia(String addr) {
 
-        String rtspStream = formatRtspStream(addr, PORT, "demo");
+        String rtspStream = formatRtspStream("127.0.0.1", PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
-        playList.setStandardMediaOptions(rtspStream,
+        playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
                 ":sout-keep");
-        mediaListPlayer.setMediaList(playList);
+        /*playlist.setStandardMediaOptions("dshow://",
+                rtspStream,
+                ":no-sout-rtp-sap",
+                ":no-sout-standard-sap",
+                ":sout-all",
+                ":rtsp-caching=100",
+                ":sout-keep");*/
+
+        /*playlist.setStandardMediaOptions("--rtsp-host=127.0.0.1", rtspStream);*/
+
+        //String[] options = {":dshow-vdev=127.0.0.1 :dshow-adev=  :dshow-caching=200",
+        //      ":sout = #transcode{vcodec=theo,vb=800,scale=0.25,acodec=vorb,ab=128,channels=2,samplerate=44100}:display :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep"};
+
+        //playlist.setStandardMediaOptions(rtspStream, ":rtsp-host=127.0.0.1");
+
+        mediaListPlayer.setMediaList(playlist);
+        for(Media m : interfacePlaylist.getPlaylist()) {
+            this.playlist.addMedia(m.getPath());
+        }
+        isAlreadyStarted = false;
     }
 
     /**
-     * Start the streaming at the address and port set with the prepareStreamingMedia function.
+     * Return a string representing a RTSP stream URL for the given address, port and id.
+     * @param serverAddress
+     * @param serverPort
+     * @param id
+     * @return String
      */
-    public void startStreamingMedia() {
-        mediaListPlayer.play();
-        // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
-        // before client starts receiving data
-        try {
-            Thread.currentThread().sleep(100);
-            System.out.println("Play track 1 of "+mediaListPlayer.getMediaList().size());
-            sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED);
-            sendData.flush();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void pauseStreamingMedia() {
-        mediaListPlayer.pause();
-    }
-
     private String formatRtspStream(String serverAddress, int serverPort, String id) {
         StringBuilder sb = new StringBuilder(60);
         sb.append(":sout=#rtp{sdp=rtsp://@");
@@ -112,68 +124,124 @@ public class StreamMedia {
         return sb.toString();
     }
 
-    public boolean setClientConnection(String addr, int port) {
-
-        socket = null;
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Connection information");
-        alert.setHeaderText(null);
-        alert.setContentText("The connection to the client has been successfully done !");
-
+    /**
+     * Start the streaming at the address and port set with the prepareStreamingMedia function.
+     */
+    public void startStreamingMedia() {
         try {
-            if(port < 0) {
-                alert.setContentText("Invalid port number !");
-            } else {
-                socket = new Socket(addr, port);
+            mediaListPlayer.play();
+            // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
+            // before client starts receiving data
+            if (!isAlreadyStarted) {
+                Thread.sleep(100);
+                sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
+                sendData.flush();
+                isAlreadyStarted = true;
             }
-        } catch (ConnectException e) {
-            alert.setContentText("The connection to the client has been failed ! Make sure the client is already started !");
-        } catch (IOException e) {
-            alert.setContentText("An error occurred during making the connection to the client ! Please try later !");
-        } finally {
-            alert.showAndWait();
-
-            if(socket == null) {
-                status = CONNECTION_STATUS.DISCONNECTED;
-                return false;
-            } else {
-                try {
-                    sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
-                    status = CONNECTION_STATUS.CONNECTED;
-                    prepareStreamingMedia(socket.getInetAddress().getHostAddress(), socket.getLocalPort());
-                    return true;
-                } catch (IOException e) {
-                    closeConnection();
-                    return false;
-                }
-            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    public void closeConnection() {
+    /**
+     * Set pause to the player.
+     */
+    public void pauseStreamingMedia() {
+        mediaListPlayer.pause();
+    }
 
-        if(sendData != null) {
-            sendData.println(StreamMedia.REQUEST_CLIENT.DECONNECTION);
-            sendData.flush();
+    /**
+     * Set a connection with a client to stream media to.
+     * @return true if the connection is set, false otherwise.
+     */
+    public boolean setClientConnection() {
+        status = CONNECTION_STATUS.DISCONNECTED;
+
+        ConnectionDialog connectionDialog = new ConnectionDialog();
+        Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
+
+        if (result.isPresent()) {
+            String addr = result.get().getKey();
+            int port = result.get().getValue();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Connection information");
+            alert.setHeaderText(null);
+
+            try {
+                socket = new Socket();
+                socket.connect(new InetSocketAddress(addr, port), 1000);
+
+                sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
+                prepareStreamingMedia(socket.getInetAddress().getHostAddress());
+
+                status = CONNECTION_STATUS.CONNECTED;
+                alert.setContentText("The connection with '" + socket.getInetAddress().getCanonicalHostName() + "' has been successfully done !");
+            } catch (UnknownHostException e) {
+                alert.setContentText("Invalid Address !");
+            } catch (IllegalArgumentException e) {
+                alert.setContentText("Invalid port number !");
+            } catch (SocketTimeoutException | ConnectException e) {
+                try {
+                    socket.close();
+                } catch (IOException e1) {
+                }
+                alert.setContentText("The connection to the client has been failed ! Make sure the client is already started !");
+            } catch (IOException e) {
+                alert.setContentText("An error occurred during making the connection to the client ! Please try later !");
+            } finally {
+                alert.showAndWait();
+            }
         }
 
+        return status.equals(CONNECTION_STATUS.CONNECTED);
+    }
+
+    /**
+     * Close the connection with the current client.
+     */
+    public void closeConnection() {
+
         try {
+            sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
+            sendData.flush();
+            sendData.close();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            sendData = null;
+            socket = null;
+            status = CONNECTION_STATUS.DISCONNECTED;
+            playlist.clear();
+            mediaListPlayer.stop();
         }
-
-        status = CONNECTION_STATUS.DISCONNECTED;
     }
 
-    public static enum CONNECTION_STATUS {
+    /**
+     * Release all resources.
+     */
+    public void release() {
+        playlist.clear();
+        mediaListPlayer.stop();
+        playlist.release();
+        mediaListPlayer.release();
+        factory.release();
+    }
+
+    /**
+     * Enum for the status of the connection.
+     */
+    public enum CONNECTION_STATUS {
         CONNECTED,
         DISCONNECTED
     }
 
-    public static enum REQUEST_CLIENT {
+    /**
+     * Enum for differents possible requests to the client.
+     */
+    public enum REQUEST_CLIENT {
         STREAMING_STARTED,
-        STREAMING_STOPPED,
-        DECONNECTION
+        DISCONNECTION
     }
 }
