@@ -56,7 +56,6 @@ public class ThreadConnection extends Thread {
         int receivedData;
         while(!serverSocket.isClosed()) {
             try {
-                boolean isStreamingStarted = false;
                 socket = serverSocket.accept();
 
                 mrl = new RtspMrl().host(socket.getInetAddress().getHostAddress()).port(STREAMING_PORT).path("/demo").value();
@@ -64,12 +63,10 @@ public class ThreadConnection extends Thread {
 
                 //While there is no request for disconnection, waiting for the start of the streaming from the client
                 while((receivedData = Integer.parseInt(bufferedReader.readLine())) != REQUEST_CLIENT.DISCONNECTION.ordinal()) {
-                    System.out.println(receivedData);
-                    if(!isStreamingStarted && receivedData == REQUEST_CLIENT.STREAMING_STARTED.ordinal()) {
+                    if(receivedData == REQUEST_CLIENT.STREAMING_STARTED.ordinal()) {
                         //Start receiving data from client application and play it
-                        mediaPlayer.prepareMedia(mrl);
+                        //mediaPlayer.prepareMedia(mrl);
                         mediaPlayer.playMedia(mrl);
-                        isStreamingStarted = true;
                     }
                 }
 
