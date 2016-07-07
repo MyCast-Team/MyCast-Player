@@ -95,7 +95,7 @@ public class MainFrameController extends AnchorPane {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Interface configuration not found... Empty interface will load.");
         } finally {
             if (br != null) {
                 try {

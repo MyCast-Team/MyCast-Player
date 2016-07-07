@@ -25,12 +25,26 @@ public class Media implements Serializable {
     private String release;
 
     public Media(String path, String title, String author, long duration, String release, String genre) {
-        this.path = path;
-        this.title = title;
-        this.author = author;
+        if(path != null)
+            this.path = path;
+
+        if(title != null)
+            this.title = title;
+        else this.title = "";
+
+        if(author != null)
+            this.author = author;
+        else this.author = "";
+
         this.duration = duration;
-        this.release = release;
-        this.genre = genre;
+
+        if(release != null)
+            this.release = release;
+        else this.release = "";
+
+        if(genre != null)
+            this.genre = genre;
+        else this.genre = "";
     }
 
     /* GETTER */
@@ -110,4 +124,25 @@ public class Media implements Serializable {
         return String.format("%02d:%02d:%02d", hours, minutes, time);
     }
 
+    @Override
+    public boolean equals(Object obj){
+
+        if(!(obj instanceof Media))
+            return false;
+
+        Media m = (Media) obj;
+
+        if(!this.title.equals(m.title))
+            return false;
+        if(!this.author.equals(m.author))
+            return false;
+        if(this.duration != m.duration)
+            return false;
+        if(!this.genre.equals(m.genre))
+            return false;
+        if(!this.release.equals(m.release))
+            return false;
+
+        return true;
+    }
 }

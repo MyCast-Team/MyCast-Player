@@ -5,9 +5,24 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.stage.FileChooser;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import sample.model.InterfaceDialog;
 import sample.model.StreamMedia;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,7 +44,8 @@ public class MenuBarController {
     private MenuItem next;
     @FXML
     private MenuItem interfaceConf;
-
+    @FXML
+    private MenuItem add;
     private StreamMedia streamMedia;
 
     private Label statusLabel;
@@ -46,7 +62,7 @@ public class MenuBarController {
         previous.setOnAction(getPreviousEventHandler());
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
-
+        add.setOnAction(getAddEventHandler());
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
@@ -144,5 +160,59 @@ public class MenuBarController {
                 streamMedia.getMediaListPlayer().play();
             }
         };
+    }
+    private EventHandler<ActionEvent> getAddEventHandler() {
+        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                FileChooser chooser = new FileChooser();
+                chooser.setTitle("Open File");
+
+                File file=chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
+
+                HttpClient httpclient = new DefaultHttpClient();
+
+
+                HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
+                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                params.add(new BasicNameValuePair("author", "testname"));
+                params.add(new BasicNameValuePair("originalname", file.getName()));
+                try {
+                    httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                //Execute and get the response.
+                HttpResponse response = null;
+                try {
+                    response = httpclient.execute(httppost);
+                    System.out.println(response.getEntity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                HttpEntity entity = response.getEntity();
+
+                if (entity != null) {
+                    InputStream instream = null;
+                    try {
+                        instream = entity.getContent();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        // do something useful
+                    } finally {
+                        try {
+                            instream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        };
+
+        return handler;
     }
 }

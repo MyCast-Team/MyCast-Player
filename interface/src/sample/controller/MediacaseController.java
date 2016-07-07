@@ -10,13 +10,16 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import org.json.simple.JSONObject;
 import sample.model.Media;
 import sample.model.Mediacase;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
+
+import org.json.*;
 
 /**
  * Created by Vincent on 14/06/2016.
@@ -177,6 +180,8 @@ public class MediacaseController {
             "xesc"
     };
 
+    private static final String path = "./res/mediacase.json";
+
     public MediacaseController(){}
 
     public Mediacase getMediacase() { return mediacase; }
@@ -218,6 +223,7 @@ public class MediacaseController {
 
         musiccaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
+            ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
                 success = true;
@@ -225,8 +231,27 @@ public class MediacaseController {
                     if(audioExtensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        this.mediacase.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()), 0);
+                        Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
+                        boolean found = false;
+                        for(Media m : this.mediacase.getMusiccase()){
+                            if(m.equals(media))
+                                found = true;
+                        }
+                        if(!found){
+                            this.mediacase.addMedia(media, 0);
+                            JSONObject object = new JSONObject();
+                            object.put("type", "audio");
+                            object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
+                            object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
+                            object.put("length", PlayerController.formatTime(metaInfo.getLength()));
+                            object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
+                            object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
+                            jsonList.add(object);
+                        }
                     }
+                }
+                if(!jsonList.isEmpty()){
+                    writeMediacase(jsonList);
                 }
             }
             refreshMediacase();
@@ -253,6 +278,7 @@ public class MediacaseController {
 
         videocaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
+            ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
                 success = true;
@@ -260,8 +286,20 @@ public class MediacaseController {
                     if(videoExtensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        this.mediacase.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()), 1);
+                        Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
+                        this.mediacase.addMedia(media, 1);
+                        JSONObject object = new JSONObject();
+                        object.put("type", "video");
+                        object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
+                        object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
+                        object.put("length", PlayerController.formatTime(metaInfo.getLength()));
+                        object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
+                        object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
+                        jsonList.add(object);
                     }
+                }
+                if(!jsonList.isEmpty()){
+                    writeMediacase(jsonList);
                 }
             }
             refreshMediacase();
@@ -280,6 +318,36 @@ public class MediacaseController {
             db.setContent(content);
             event.consume();
         });
+    }
+
+    public void writeMediacase(ArrayList<JSONObject> list){
+        try {
+            File file = new File(path);
+            if(!file.exists()){
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                    writer.write("");
+                    writer.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            FileOutputStream fileOut = new FileOutputStream(path, true);
+            byte[] comma = ",".getBytes();
+            boolean first = true;
+            for(JSONObject object : list) {
+                if(!first)
+                    fileOut.write(comma);
+                byte[] byteArray = object.toString().getBytes();
+                fileOut.write(byteArray);
+                first = false;
+            }
+            fileOut.close();
+        } catch(IOException i) {
+            i.printStackTrace();
+        }
     }
 
     public String getExtension(String fileName){

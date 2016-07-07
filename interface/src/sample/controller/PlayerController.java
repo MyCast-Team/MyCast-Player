@@ -386,7 +386,7 @@ public class PlayerController implements MediaPlayerEventListener {
         return formatTime(mediaPlayer.getTime())+" / "+ fullTime;
     }
 
-    private String formatTime(long time) {
+    public static String formatTime(long time) {
 
         int hours, minutes;
 
