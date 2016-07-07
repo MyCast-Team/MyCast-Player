@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Vincent on 07/03/2016.
@@ -15,8 +16,6 @@ public class Media implements Serializable {
     private String title;
 
     private String author;
-
-    private String artwork;
 
     private long duration;
 

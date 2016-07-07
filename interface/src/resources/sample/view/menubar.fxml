@@ -16,8 +16,4 @@
     <Menu fx:id="interface" text="Interface">
         <MenuItem fx:id="interfaceConf" text="Configure interface"/>
     </Menu>
-    <Menu fx:id="plugin" text="Plugin">
-        <MenuItem fx:id="add" text="Add Plugin"/>
-
-    </Menu>
 </MenuBar>

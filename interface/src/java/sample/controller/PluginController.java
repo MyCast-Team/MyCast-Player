@@ -1,4 +1,4 @@
-package sample.model;
+package sample.controller;
 
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * Class of control of the loading of the plugins
  */
-public class PluginManager {
+public class PluginController {
 
     private String jarDirname = "plugin";
 
@@ -31,7 +31,7 @@ public class PluginManager {
      * Constructor.
      * @param jarDirname
      */
-    public PluginManager(String jarDirname) {
+    public PluginController(String jarDirname) {
         this.jarDirname = jarDirname;
         this.listPlugin = new ArrayList<AnchorPane>();
         //this.listControllerPlugin = new ArrayList<ControllerInterface>();

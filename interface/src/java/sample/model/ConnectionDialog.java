@@ -116,20 +116,26 @@ public class ConnectionDialog {
 
     private Callback<ButtonType, Pair<String, Integer>> getResultCallback() {
         // Return the values of the fields on submitButton event
-        return (param) -> {
-            // If the user clicked on the submit button
-            if(param == validateButton) {
-                String address = addr1.getText()+"."+addr2.getText()+"."+addr3.getText()+"."+addr4.getText();
-                int portNb = -1;
-                try {
-                    portNb = Integer.parseInt(port.getText());
-                } catch (NumberFormatException e) {
+        Callback<ButtonType, Pair<String, Integer>> callback = new Callback<ButtonType, Pair<String, Integer>>() {
+            @Override
+            public Pair<String, Integer> call(ButtonType param) {
+                // If the user clicked on the submit button
+                if(param == validateButton) {
+                    String address = addr1.getText()+"."+addr2.getText()+"."+addr3.getText()+"."+addr4.getText();
+                    int portNb = -1;
+                    try {
+                        portNb = Integer.parseInt(port.getText());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+
+                    return new Pair<String, Integer>(address, portNb);
                 }
 
-                return new Pair<>(address, portNb);
+                return null;
             }
-
-            return null;
         };
+
+        return callback;
     }
 }

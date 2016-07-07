@@ -95,7 +95,7 @@ public class MainFrameController extends AnchorPane {
             }
 
         } catch (IOException e) {
-            System.out.println("Interface configuration not found... Empty interface will load.");
+            e.printStackTrace();
         } finally {
             if (br != null) {
                 try {
@@ -224,15 +224,9 @@ public class MainFrameController extends AnchorPane {
     }
 
     private void bindPlaylistToPlayer() {
-        if(this.playlistController != null) {
-            if (this.playerController != null) {
-                this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
-                this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
-            }
-            if(this.menuBarController != null) {
-                this.menuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
-                this.playlistController.setStreamingPlayer(menuBarController.getStreamMedia().getMediaListPlayer());
-            }
+        if(this.playlistController != null && this.playerController != null) {
+            this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
+            this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
         }
     }
 
@@ -253,9 +247,5 @@ public class MainFrameController extends AnchorPane {
 
     public PlayerController getPlayerController() {
         return playerController;
-    }
-
-    public MenuBarController getMenuBarController() {
-        return menuBarController;
     }
 }
