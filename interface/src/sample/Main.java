@@ -43,6 +43,9 @@ public class Main extends Application {
             if(mainFrameController.getPlayerController() != null) {
                 mainFrameController.getPlayerController().getResizablePlayer().release();
             }
+            if(mainFrameController.getMenuBarController() != null) {
+                mainFrameController.getMenuBarController().getStreamMedia().release();
+            }
             Platform.exit();
             System.exit(0);
         });
