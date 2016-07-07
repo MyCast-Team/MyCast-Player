@@ -59,7 +59,7 @@ public class SuggestionController {
 
     @FXML
     public void initialize(){
-        JSONParser parser = new JSONParser();
+        /*JSONParser parser = new JSONParser();
 
         try {
 
@@ -69,8 +69,6 @@ public class SuggestionController {
 
             id=jsonObject.get("id").toString();
             System.out.println(id);
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +93,7 @@ public class SuggestionController {
         typeColumn1.setCellValueFactory(cellData->cellData.getValue().TypeProperty());
         dateColumn1.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
         lengthColumn1.setCellValueFactory(cellData->cellData.getValue().LengthProperty());
-        authorColumn1.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());
+        authorColumn1.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());*/
     }
 
 
