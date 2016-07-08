@@ -128,7 +128,7 @@ public class PluginController {
 
                     System.out.println("Deletion failed.");
 
-                    System.exit(0);
+                 //System.exit(0);
                 }
                 else{
                     System.out.println("File deleted.");

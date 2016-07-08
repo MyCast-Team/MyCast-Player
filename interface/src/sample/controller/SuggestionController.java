@@ -3,15 +3,21 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,6 +25,7 @@ import org.json.simple.parser.JSONParser;
 import sample.model.Suggestion;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Pierre on 30/05/2016.
@@ -175,6 +182,56 @@ public class SuggestionController {
         }
 
     }
+    public static void sendData(){
+
+
+                File file=new File("./res/mediacase.json");
+
+                HttpClient httpclient = new DefaultHttpClient();
+
+
+                HttpPost httppost = new HttpPost("http://localhost:3000/mediacase");
+                List<NameValuePair> params = new ArrayList<NameValuePair>(1);
+
+                params.add(new BasicNameValuePair("originalname", file.getName()));
+                try {
+                    httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                //Execute and get the response.
+                HttpResponse response = null;
+                try {
+                    response = httpclient.execute(httppost);
+                    System.out.println(response.getEntity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                HttpEntity entity = response.getEntity();
+
+                if (entity != null) {
+                    InputStream instream = null;
+                    try {
+                        instream = entity.getContent();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        // do something useful
+                    } finally {
+                        try {
+                            instream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+    }
+
+
+
+
     public void getList(String path,String http){
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet("http://localhost:3000/1/"+http);

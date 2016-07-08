@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
+import sample.controller.SuggestionController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 public class Main extends Application {
@@ -46,6 +47,7 @@ public class Main extends Application {
             if(mainFrameController.getMenuBarController() != null) {
                 mainFrameController.getMenuBarController().getStreamMedia().release();
             }
+            SuggestionController.sendData();
             Platform.exit();
             System.exit(0);
         });

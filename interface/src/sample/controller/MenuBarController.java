@@ -79,12 +79,13 @@ public class MenuBarController {
     /**
      * Return an EventHandler for the connection button.
      * Show a window to set the connection with a client or disconnect with client if already connected.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
         return (event) -> {
-            if(streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
-                if(!streamMedia.getSocket().isClosed()) {
+            if (streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
+                if (!streamMedia.getSocket().isClosed()) {
                     streamMedia.closeConnection();
                 }
                 setConnection.setText("Set a new connection");
@@ -94,13 +95,13 @@ public class MenuBarController {
                 next.setDisable(true);
                 statusLabel.setText("Not connected");
             } else {
-                if(streamMedia.setClientConnection()) {
+                if (streamMedia.setClientConnection()) {
                     String host = streamMedia.getSocket().getInetAddress().getCanonicalHostName();
-                    setConnection.setText("Disconnect with "+host);
+                    setConnection.setText("Disconnect with " + host);
                     play.setDisable(false);
                     previous.setDisable(false);
                     next.setDisable(false);
-                    statusLabel.setText("Connected with "+host);
+                    statusLabel.setText("Connected with " + host);
                 }
             }
         };
@@ -108,6 +109,7 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the Interface Configuration button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
@@ -118,12 +120,13 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the play/pause button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPlayEventHandler() {
         return (event) -> {
-            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                if(streamMedia.getMediaListPlayer().isPlaying() || streamMedia.getMediaListPlayer().getMediaList().size() == 0) {
+            if (streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                if (streamMedia.getMediaListPlayer().isPlaying() || streamMedia.getMediaListPlayer().getMediaList().size() == 0) {
                     streamMedia.pauseStreamingMedia();
                     play.setText("Play");
                 } else {
@@ -136,11 +139,12 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the previous item button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPreviousEventHandler() {
         return (event) -> {
-            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+            if (streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
                 streamMedia.getMediaListPlayer().pause();
                 streamMedia.getMediaListPlayer().playPrevious();
                 streamMedia.getMediaListPlayer().play();
@@ -150,17 +154,19 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the next item button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getNextEventHandler() {
         return (event) -> {
-            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+            if (streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
                 streamMedia.getMediaListPlayer().pause();
                 streamMedia.getMediaListPlayer().playNext();
                 streamMedia.getMediaListPlayer().play();
             }
         };
     }
+
     private EventHandler<ActionEvent> getAddEventHandler() {
         EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
             @Override
@@ -169,7 +175,7 @@ public class MenuBarController {
                 chooser.setTitle("Open File");
 
                 File file=chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
-
+                System.out.println(file.getAbsolutePath());
                 HttpClient httpclient = new DefaultHttpClient();
 
 
@@ -187,7 +193,6 @@ public class MenuBarController {
                 HttpResponse response = null;
                 try {
                     response = httpclient.execute(httppost);
-                    System.out.println(response.getEntity());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -215,4 +220,5 @@ public class MenuBarController {
 
         return handler;
     }
+
 }
