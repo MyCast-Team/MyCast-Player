@@ -3,9 +3,7 @@ package sample.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
@@ -46,8 +44,14 @@ public class MediacaseController {
     private TableColumn<Media, String> genreVideo;
     @FXML
     private TableColumn<Media, String> dateVideo;
+    @FXML
+    private TextField search;
+    @FXML
+    private Button searchButton;
 
     private Mediacase mediacase;
+
+    private Mediacase filteredMediacase;
 
     private DataFormat dataFormat;
 
@@ -184,6 +188,8 @@ public class MediacaseController {
     @FXML
     public void initialize(){
         this.mediacase = new Mediacase();
+        this.filteredMediacase = new Mediacase();
+
         dataFormat =  new DataFormat("ObservableList<Media>");
 
         titleMusic.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
@@ -208,6 +214,8 @@ public class MediacaseController {
         videocaseTable.getSelectionModel().setSelectionMode(
                 SelectionMode.MULTIPLE
         );
+
+        setSearchManagement();
     }
 
     public void setDragAndDrop(){
@@ -282,6 +290,26 @@ public class MediacaseController {
         });
     }
 
+    public void setSearchManagement(){
+        searchButton.setOnAction(event ->  {
+            if(!search.getText().equals("")){
+                String filter = search.getText();
+                filteredMediacase.reset();
+                for(Media m : mediacase.getMusiccase()){
+                    if( m.getAuthor().contains(filter) || m.getTitle().contains(filter) || m.getGenre().contains(filter) ) {
+                        filteredMediacase.addMedia(m, 0);
+                    }
+                }
+                for(Media m : mediacase.getMusiccase()){
+                    if( m.getAuthor().contains(filter) || m.getTitle().contains(filter) || m.getGenre().contains(filter) ) {
+                        filteredMediacase.addMedia(m, 1);
+                    }
+                }
+                refreshMediacase();
+            }
+        });
+    }
+
     public String getExtension(String fileName){
         String extension = "";
 
@@ -312,8 +340,8 @@ public class MediacaseController {
     }
 
     public void refreshMediacase(){
-        ObservableList<Media> musiclist = FXCollections.observableArrayList(mediacase.getMusiccase());
-        ObservableList<Media> videolist = FXCollections.observableArrayList(mediacase.getVideocase());
+        ObservableList<Media> musiclist = FXCollections.observableArrayList(filteredMediacase.getMusiccase());
+        ObservableList<Media> videolist = FXCollections.observableArrayList(filteredMediacase.getVideocase());
         musiccaseTable.setItems(musiclist);
         videocaseTable.setItems(videolist);
         this.mediacase.writeMediacase();

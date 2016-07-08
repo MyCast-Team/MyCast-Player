@@ -37,11 +37,13 @@ public class StreamMedia {
      * CONSTRUCTOR
      */
     public StreamMedia() {
-        factory = new MediaPlayerFactory();
+        factory = new MediaPlayerFactory("--rtsp-host=127.0.0.1", "--rtsp-caching=200");
         mediaListPlayer = factory.newMediaListPlayer();
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
             @Override
             public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
+                sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
+                sendData.flush();
                 System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
             }
         });
@@ -83,20 +85,6 @@ public class StreamMedia {
                 ":no-sout-standard-sap",
                 ":sout-all",
                 ":sout-keep");
-        /*playlist.setStandardMediaOptions("dshow://",
-                rtspStream,
-                ":no-sout-rtp-sap",
-                ":no-sout-standard-sap",
-                ":sout-all",
-                ":rtsp-caching=100",
-                ":sout-keep");*/
-
-        /*playlist.setStandardMediaOptions("--rtsp-host=127.0.0.1", rtspStream);*/
-
-        //String[] options = {":dshow-vdev=127.0.0.1 :dshow-adev=  :dshow-caching=200",
-        //      ":sout = #transcode{vcodec=theo,vb=800,scale=0.25,acodec=vorb,ab=128,channels=2,samplerate=44100}:display :no-sout-rtp-sap :no-sout-standard-sap :ttl=1 :sout-keep"};
-
-        //playlist.setStandardMediaOptions(rtspStream, ":rtsp-host=127.0.0.1");
 
         mediaListPlayer.setMediaList(playlist);
         for(Media m : interfacePlaylist.getPlaylist()) {
