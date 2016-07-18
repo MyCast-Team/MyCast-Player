@@ -2,9 +2,11 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.controller.MainFrameController;
 import sample.model.ResizablePlayer;
 import sample.model.ThreadConnection;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
@@ -16,16 +18,16 @@ import java.io.IOException;
  * Created by thomasfouan on 09/03/2016.
  */
 public class Main extends Application {
-
+    /*
     private ResizablePlayer resizablePlayer;
 
-    private DirectMediaPlayerComponent mediaPlayerComponent;
+    private DirectMediaPlayerComponent mediaPlayerComponent;*/
 
-    private Thread threadConnections;
+    private MainFrameController mainFrameController;
 
     @Override
     public void start(Stage primaryStage) {
-
+        /*
         resizablePlayer = new ResizablePlayer();
         mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
         Pane playerHolder = resizablePlayer.getPlayerHolder();
@@ -50,34 +52,45 @@ public class Main extends Application {
         // Set the AnchorPane to the scene
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        */
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("view/mainFrame.fxml"));
+        AnchorPane rootPane;
+        Scene scene;
 
         // Start the Thread waiting for connections
         try {
-            threadConnections = new ThreadConnection(mediaPlayerComponent.getMediaPlayer());
+            rootPane = loader.load();
+            mainFrameController = loader.getController();
+
+            scene = new Scene(rootPane);
+            primaryStage.setScene(scene);
+
+            // Control the close button of the window
+            primaryStage.setOnCloseRequest((event) -> {
+                if(mainFrameController.getThreadConnections().isAlive()) {
+                    mainFrameController.getThreadConnections().interrupt();
+                }
+
+                try {
+                    mainFrameController.getThreadConnections().join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                mainFrameController.getResizablePlayer().release();
+
+                Platform.exit();
+                System.exit(0);
+            });
+
+            primaryStage.show();
         } catch (IOException e) {
+            System.out.println("Erreur lors du démarrage de l'application. Attendez sa fermeture.");
             e.printStackTrace();
+            if (mainFrameController.getResizablePlayer() != null) {
+                mainFrameController.getResizablePlayer().release();
+            }
         }
-        threadConnections.start();
-
-        // Control the close button of the window
-        primaryStage.setOnCloseRequest((event) -> {
-            if(threadConnections.isAlive()) {
-                threadConnections.interrupt();
-            }
-
-            try {
-                threadConnections.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            mediaPlayerComponent.release(true);
-
-            Platform.exit();
-            System.exit(0);
-        });
-
-        primaryStage.show();
     }
 
     public static void main(final String[] args) {

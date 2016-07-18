@@ -84,7 +84,9 @@ public class StreamMedia {
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
-                ":sout-keep");
+                ":sout-keep",
+                ":rtsp-caching=100",
+                ":rtsp-host=127.0.0.1");
 
         mediaListPlayer.setMediaList(playlist);
         for(Media m : interfacePlaylist.getPlaylist()) {
