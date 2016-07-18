@@ -249,15 +249,12 @@ public class PlaylistController {
         contextMenu.getItems().addAll(delete);
 
         musicTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
+                mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
+            }
             if (event.isSecondaryButtonDown()) {
                 contextMenu.show(musicTable, event.getScreenX(), event.getScreenY());
             }
-        });
-
-        musicTable.setOnMousePressed(event -> {
-           if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
-               mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
-           }
         });
     }
 
