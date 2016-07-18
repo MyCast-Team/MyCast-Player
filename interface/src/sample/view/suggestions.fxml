@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="suggestions" xmlns="http://javafx.com/javafx/8.0.65" fx:controller="sample.controller.SuggestionController" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+         <tabs>
+            <Tab closable="false" text="Music">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="TOP_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Button layoutX="324.0" layoutY="15.0" mnemonicParsing="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <TableView fx:id="musicTable1" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="titleColumn1" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Title" />
+                              <TableColumn fx:id="authorColumn1" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Author" />
+                              <TableColumn fx:id="lengthColumn1" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Length" />
+                              <TableColumn fx:id="typeColumn1" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Musical genre" />
+                              <TableColumn fx:id="dateColumn1" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Release date" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Video">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="TOP_RIGHT" VBox.vgrow="NEVER" spacing="5.0">
+                           <children>
+                              <Button layoutX="324.0" layoutY="15.0" mnemonicParsing="false" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                        <TableView fx:id="filmtable1" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="titleColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Title" />
+                              <TableColumn fx:id="authorColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Director" />
+                              <TableColumn fx:id="lengthColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Length" />
+                              <TableColumn fx:id="typeColumn" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Musical genre" />
+                              <TableColumn fx:id="directorColumn1" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Film genre" />
+                              <TableColumn fx:id="dateColumn2" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Release date" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
