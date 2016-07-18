@@ -25,6 +25,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import sample.model.Plugin;
 import sample.model.StreamMedia;
 import sun.plugin2.util.PluginTrace;
@@ -54,12 +55,14 @@ public class PluginController {
     private Button download;
     @FXML
     private Button remove;
+
     private ArrayList<Plugin> pluginList;
+
     final String path = "./res/plugin.json";
+
     public PluginController(){
 
     }
-
 
     @FXML
     public void initialize(){
@@ -67,137 +70,97 @@ public class PluginController {
         getList();
         ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
         pluginTable.setItems(list);
-        nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
 
+        nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         authorColumn1.setCellValueFactory(cellData -> cellData.getValue().AuthorProperty());
         dateColumn1.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
-
         idColumn1.setCellValueFactory(cellData->cellData.getValue().IdProperty());
+
         refresh.setOnAction(getRefreshEventHandler());
         download.setOnAction(getDownloadEventHandler());
-        remove.setOnAction(RemoveEventHandler());
-
-        pluginTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            // this method will be called whenever user selected row
-            @Override
-            public void changed(ObservableValue observale, Object oldValue,Object newValue) {
-                Plugin selectedPlugin = (Plugin) newValue;
-
-                String nameplugin=selectedPlugin.getName();
-                boolean present=false;
-
-                String path0="./plugin/"+nameplugin;
-                System.out.println(path0);
-                File theDir = new File(path0);
-
-                // if the directory does not exist, create it
-                if (theDir.exists())
-                {
-                    remove.setDisable(false);
-                    download.setDisable(true);
-                }else{
-                    download.setDisable(false);
-                    remove.setDisable(true);
-                }
-                getRefreshEventHandler();
-            }});
-
+        remove.setOnAction(getRemoveEventHandler());
+        pluginTable.getSelectionModel().selectedItemProperty().addListener(getSelectedItemChangeListener());
     }
 
     public EventHandler<ActionEvent> getRefreshEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pluginList.clear();
-                getList();
-                ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+        return (event) -> {
+            pluginList.clear();
+            getList();
+            ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
 
-                pluginTable.setItems(list);
-            }
+            pluginTable.setItems(list);
         };
     }
-    public EventHandler<ActionEvent> RemoveEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                File f1 = new File("./Plugin/"+pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
 
-                boolean success = f1.delete();
-
-                if (!success){
-
-                    System.out.println("Deletion failed.");
-
-                    System.exit(0);
-                }
-                else{
-                    System.out.println("File deleted.");
-                }
-                getRefreshEventHandler();
-            }
-        };
-    }
     public EventHandler<ActionEvent> getDownloadEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet("http://localhost:3000/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
-                HttpResponse response1 = null;
-                try {
-                    response1 = httpclient.execute(httpGet);
+        return (event) -> {
+            System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet("http://localhost:3000/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            HttpResponse response1;
+            HttpEntity entity1;
+            InputStream is;
+            String filePath = "./plugin/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            FileOutputStream fos = null;
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                response1 = httpclient.execute(httpGet);
+                entity1 = response1.getEntity();
+                is = entity1.getContent();
 
-                HttpEntity entity1 = response1.getEntity();
+                fos = new FileOutputStream(new File(filePath));
 
-                InputStream is = null;
-                try {
-                    is = entity1.getContent();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String filePath = "./Plugin/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(new File(filePath));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                int inByte;
-                try {
-                    if (is != null) {
-                        while((inByte = is.read()) != -1) {
-                            try {
-                                if (fos != null) {
-                                    fos.write(inByte);
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                byte[] buffer = new byte[8 * 1024];
+                int bytesRead;
+                if (is != null) {
+                    while((bytesRead = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
                     }
-
-                    if (is != null) {
-                        is.close();
-                    }
-
-                    if (fos != null) {
-                        fos.close();
-                    }
-
-
-                    EntityUtils.consume(entity1);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    is.close();
                 }
 
+                fos.close();
+                EntityUtils.consume(entity1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+    }
 
+    public EventHandler<ActionEvent> getRemoveEventHandler() {
+        return (event) -> {
+            File f1 = new File("./plugin/"+pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
 
+            boolean success = f1.delete();
+
+            if (!success){
+                System.out.println("Deletion failed.");
+                //System.exit(0);
+            }
+            else{
+                System.out.println("File deleted.");
+            }
+            getRefreshEventHandler();
+        };
+    }
+
+    private ChangeListener<Plugin> getSelectedItemChangeListener() {
+        return (ObservableValue<? extends Plugin> observale, Plugin oldValue, Plugin newValue) -> {
+            Plugin selectedPlugin = newValue;
+            String nameplugin = selectedPlugin.getName();
+            boolean present = false;
+
+            String path0="./plugin/"+nameplugin;
+            System.out.println(path0);
+            File theDir = new File(path0);
+
+            // if the directory does not exist, create it
+            if (theDir.exists()) {
+                remove.setDisable(false);
+                download.setDisable(true);
+            } else {
+                download.setDisable(false);
+                remove.setDisable(true);
             }
         };
     }
@@ -205,87 +168,61 @@ public class PluginController {
     public void getList(){
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet("http://localhost:3000/Listepluginjava");
-        HttpResponse response1 = null;
+        HttpResponse response1;
+        HttpEntity entity1;
+        InputStream is;
+        FileOutputStream fos;
+        String filePath = "./res/plugin.json";
+
         try {
             response1 = httpclient.execute(httpGet);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        HttpEntity entity1 = response1.getEntity();
-
-        InputStream is = null;
-        try {
+            entity1 = response1.getEntity();
             is = entity1.getContent();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String filePath = "./res/plugin.json";
-        FileOutputStream fos = null;
-        try {
             fos = new FileOutputStream(new File(filePath));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int inByte;
-        try {
-            if (is != null) {
-                while((inByte = is.read()) != -1) {
-                    try {
-                        if (fos != null) {
-                            fos.write(inByte);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
 
+            byte[] buffer = new byte[8 * 1024];
+            int bytesRead;
             if (is != null) {
+                while((bytesRead = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, bytesRead);
+                }
                 is.close();
             }
 
-            if (fos != null) {
-                fos.close();
-            }
-
-
+            fos.close();
             EntityUtils.consume(entity1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        try {
             readPlugin();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void readPlugin() throws IOException {
+    public void readPlugin() {
         JSONParser parser = new JSONParser();
+        Object obj;
+        JSONArray jsonArray;
 
         try {
+            obj = parser.parse(new FileReader(path));
+            jsonArray = (JSONArray) obj;
 
-            Object obj = parser.parse(new FileReader(
-                    path));
-
-            JSONArray jsonArray = (JSONArray) obj;
-
+            JSONObject jsonObject;
             for (Object JsonItem : jsonArray) {
-                JSONObject jsonObject = (JSONObject) JsonItem;
+                jsonObject = (JSONObject) JsonItem;
                 pluginList.add(new Plugin(jsonObject.get("name").toString(), jsonObject.get("author").toString(), jsonObject.get("created_at").toString(),jsonObject.get("id").toString()));
             }
 
             for (Plugin plugin : pluginList) {
                 System.out.println(plugin.getName());
             }
-
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }

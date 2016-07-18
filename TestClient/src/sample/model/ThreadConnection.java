@@ -67,10 +67,6 @@ public class ThreadConnection extends Thread {
                         //Start receiving data from client application and play it
                         mediaPlayer.prepareMedia(mrl);
                         mediaPlayer.playMedia(mrl);
-<<<<<<< HEAD
-=======
-                        isStreamingStarted = true;
->>>>>>> parent of 0c6cf26... Minor bug fixed
                     }
                 }
 
