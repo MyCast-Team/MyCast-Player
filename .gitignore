@@ -3,3 +3,9 @@
 /*/.idea/
 /*/res
 /backoffice/node_modules
+/*/build
+/*/dist
+/*/META-INF
+/*/nbprojet
+/*/build.xml
+/*/manifest.mf
