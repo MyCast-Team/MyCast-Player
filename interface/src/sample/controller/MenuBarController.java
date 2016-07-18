@@ -155,9 +155,12 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getNextEventHandler() {
         return (event) -> {
             if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                streamMedia.getMediaListPlayer().pause();
-                streamMedia.getMediaListPlayer().playNext();
-                streamMedia.getMediaListPlayer().play();
+                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                    streamMedia.getMediaListPlayer().playNext();
+                } else {
+                    streamMedia.getMediaListPlayer().playNext();
+                    play.setText("Pause");
+                }
             }
         };
     }

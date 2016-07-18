@@ -58,7 +58,10 @@ public class ThreadConnection extends Thread {
             try {
                 socket = serverSocket.accept();
 
-                mrl = new RtspMrl().host(socket.getInetAddress().getHostAddress()).port(STREAMING_PORT).path("/demo").value();
+                mrl = new RtspMrl().host(socket.getInetAddress()
+                                    .getHostAddress())
+                                    .port(STREAMING_PORT)
+                                    .path("/demo").value();
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 //While there is no request for disconnection, waiting for the start of the streaming from the client
