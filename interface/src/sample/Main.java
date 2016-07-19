@@ -11,6 +11,9 @@ import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
+import java.io.File;
+import java.nio.file.Path;
+
 public class Main extends Application {
 
     private Stage primaryStage;
@@ -22,9 +25,17 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
         this.primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
+        checkResourceFolder();
         initRootLayout();
     }
 
+
+    public void checkResourceFolder(){
+        File f = new File("./res");
+        if (!f.exists()) {
+            f.mkdir();
+        }
+    }
     /**
      * Initializes the root layout, the main frame skeleton.
      */
