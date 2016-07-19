@@ -210,6 +210,8 @@ public class PlaylistController {
         refreshPlaylist();
         setDragAndDrop();
 
+        this.reset.setTooltip(new Tooltip("Reset the actual playlist to empty playlist"));
+
         reset.setOnAction(event -> {
             this.playlist.reset();
             if(this.mediaListPlayer != null) {

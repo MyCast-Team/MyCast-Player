@@ -16,7 +16,7 @@
          <children>
             <HBox maxHeight="30.0" prefHeight="30.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <TextField />
+                  <TextField fx:id="search"/>
                   <Separator opacity="0.0" HBox.hgrow="NEVER" />
                   <Button fx:id="refresh"  text="Refresh" />
                   <Button fx:id="download" layoutX="324.0" layoutY="15.0" text="Download" mnemonicParsing="false" />

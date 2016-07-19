@@ -21,7 +21,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
-        this.primaryStage.getIcons().add(new Image(getClass().getResource("/icon.png").toString()));
+        this.primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
         initRootLayout();
     }
 

@@ -86,15 +86,14 @@ public class StreamMedia extends Thread {
      */
     public void prepareStreamingMedia(String addr) {
 
-        String rtspStream = formatRtspStream("127.0.0.1", PORT, "demo");
+        String rtspStream = formatRtspStream(addr, PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
                 ":sout-keep",
-                ":rtsp-caching=100",
-                ":rtsp-host=127.0.0.1");
+                ":rtsp-caching=100");
 
         mediaListPlayer.setMediaList(playlist);
         for(Media m : interfacePlaylist.getPlaylist()) {
