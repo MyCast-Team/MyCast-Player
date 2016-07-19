@@ -36,7 +36,7 @@ public class MyHTMLProcessor extends AbstractProcessor {
         
         firstLoop = true;
         
-        htmlFile = new File("/Users/thomasfouan/Desktop/MyDescription.html");
+        htmlFile = new File("./resource/MyDescription.html");
 
         try {
             fw = new FileOutputStream(htmlFile);
@@ -47,18 +47,21 @@ public class MyHTMLProcessor extends AbstractProcessor {
 
         html = new StringBuilder();
         html.append("<html>\n");
-        html.append("<header>\n");
-        html.append("	<link rel=\"stylesheet\" type=\"text/css\" href=\"mystyle.css\">\n");
-		html.append("</header>\n");
+        html.append("<head>\n");
+        html.append("	<link href=\"bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\">\n");
+		html.append("</head>\n");
         html.append("<body>\n");
-        html.append("	<table>\n");
-        html.append("	<tr>\n");
-        html.append("	<td>Type</td>\n");
-        html.append("	<td>Nom Classe</td>\n");
-        html.append("	<td>Auteur</td>\n");
-        html.append("	<td>Date</td>\n");
-        html.append("	<td>Description</td>\n");
-        html.append("	</tr>\n");
+        html.append("	<table class=\"table table-bordered table-condensed table-hover\">\n");
+        html.append("	    <thead>\n");
+        html.append("	        <tr>\n");
+        html.append("	            <th>Type</th>\n");
+        html.append("	            <th>Nom de la classe</th>\n");
+        html.append("	            <th>Auteur</th>\n");
+        html.append("	            <th>Date</th>\n");
+        html.append("	            <th>Description</th>\n");
+        html.append("	        </tr>\n");
+        html.append("	    </thead>\n");
+        html.append("	    <tbody>\n");
     }
 
     @Override
@@ -77,13 +80,13 @@ public class MyHTMLProcessor extends AbstractProcessor {
                 MyAnnotation desc = element.getAnnotation(MyAnnotation.class);
                 
                 if (desc != null) {
-                    html.append("	<tr>\n");
-                    html.append("	<td>" + element.getKind() + "</td>\n");
-                    html.append("	<td>" + element.getSimpleName() + "</td>\n");
-                    html.append("	<td>" + desc.author() + "</td>\n");
-                    html.append("	<td>" + desc.date() + "</td>\n");
-                    html.append("	<td>" + desc.description()+ "</td>\n");
-                    html.append("	</tr>\n");
+                    html.append("   	<tr>\n");
+                    html.append("	        <td>" + element.getKind() + "</td>\n");
+                    html.append("	        <td>" + element.getSimpleName() + "</td>\n");
+                    html.append("	        <td>" + desc.author() + "</td>\n");
+                    html.append("	        <td>" + desc.date() + "</td>\n");
+                    html.append("	        <td>" + desc.description()+ "</td>\n");
+                    html.append("	    </tr>\n");
                 }
             }
         }
@@ -95,8 +98,8 @@ public class MyHTMLProcessor extends AbstractProcessor {
     }
 
     private void genererHTML(){
-
-        html.append("</table>\n");
+        html.append("	    </tbody>\n");
+        html.append("   </table>\n");
         html.append("</body>\n");
         html.append("</html>\n");
         

@@ -10,7 +10,6 @@ import com.test.annotation.MyAnnotation;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Coucou, c'est la méthode principale du programme.");
         System.exit(0);
     }
 }
