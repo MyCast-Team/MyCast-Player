@@ -22,7 +22,6 @@ import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
 
-
 /**
  * Control the player and bind the buttons of the player with functions
  */

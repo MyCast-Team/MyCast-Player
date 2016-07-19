@@ -49,14 +49,14 @@ public class MenuBarController {
 
     private StreamMedia streamMedia;
 
-    private Label statusLabel;
+    private static Label statusLabel;
 
     public MenuBarController() {
     }
 
     @FXML
     public void initialize() {
-        streamMedia = new StreamMedia();
+        streamMedia = new StreamMedia(setConnection);
 
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
@@ -86,23 +86,12 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getConnectionEventHandler() {
         return (event) -> {
             if(streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
-                if(!streamMedia.getSocket().isClosed()) {
-                    streamMedia.closeConnection();
-                }
-                setConnection.setText("Set a new connection");
-                play.setText("Play");
-                play.setDisable(true);
-                previous.setDisable(true);
-                next.setDisable(true);
-                statusLabel.setText("Not connected");
+                streamMedia.closeConnection();
+                updateStreamMenu(true, null);
             } else {
                 if(streamMedia.setClientConnection()) {
                     String host = streamMedia.getSocket().getInetAddress().getCanonicalHostName();
-                    setConnection.setText("Disconnect with "+host);
-                    play.setDisable(false);
-                    previous.setDisable(false);
-                    next.setDisable(false);
-                    statusLabel.setText("Connected with "+host);
+                    updateStreamMenu(false, host);
                 }
             }
         };
@@ -143,9 +132,12 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getPreviousEventHandler() {
         return (event) -> {
             if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                streamMedia.getMediaListPlayer().pause();
-                streamMedia.getMediaListPlayer().playPrevious();
-                streamMedia.getMediaListPlayer().play();
+                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                    streamMedia.getMediaListPlayer().playPrevious();
+                } else {
+                    streamMedia.getMediaListPlayer().playPrevious();
+                    play.setText("Pause");
+                }
             }
         };
     }
@@ -157,12 +149,36 @@ public class MenuBarController {
     private EventHandler<ActionEvent> getNextEventHandler() {
         return (event) -> {
             if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                streamMedia.getMediaListPlayer().pause();
-                streamMedia.getMediaListPlayer().playNext();
-                streamMedia.getMediaListPlayer().play();
+                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                    streamMedia.getMediaListPlayer().playNext();
+                } else {
+                    streamMedia.getMediaListPlayer().playNext();
+                    play.setText("Pause");
+                }
             }
         };
     }
+
+    /**
+     * Update the menuBar after setting or closing a connection.
+     */
+    public void updateStreamMenu(boolean isReset, String host) {
+        if(isReset) {
+            setConnection.setText("Set a new connection");
+            play.setText("Play");
+            play.setDisable(true);
+            previous.setDisable(true);
+            next.setDisable(true);
+            statusLabel.setText("Not connected");
+        } else {
+            setConnection.setText("Disconnect with "+host);
+            play.setDisable(false);
+            previous.setDisable(false);
+            next.setDisable(false);
+            statusLabel.setText("Connected with "+host);
+        }
+    }
+
     private EventHandler<ActionEvent> getAddEventHandler() {
         return (event) -> {
             FileChooser chooser = new FileChooser();
