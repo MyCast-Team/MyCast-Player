@@ -4,10 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import org.json.simple.JSONObject;
 import sample.model.Media;
 import sample.model.Mediacase;
@@ -59,6 +56,8 @@ public class MediacaseController {
     private Button searchButton2;
     @FXML
     private Button resetButton2;
+    @FXML
+    private TabPane tab;
 
     private Mediacase mediacase;
 
@@ -227,6 +226,8 @@ public class MediacaseController {
                 SelectionMode.MULTIPLE
         );
 
+        installTooltips();
+
         setSearchManagement();
 
         refreshMediacase();
@@ -353,6 +354,15 @@ public class MediacaseController {
         });
     }
 
+    public void installTooltips(){
+        search.setTooltip(new Tooltip("Enter the filter for the music search in your mediacase"));
+        search2.setTooltip(new Tooltip("Enter the filter for the video search in your mediacase"));
+        searchButton.setTooltip(new Tooltip("Do the search process"));
+        searchButton2.setTooltip(new Tooltip("Do the search process"));
+        resetButton.setTooltip(new Tooltip("Reset the search filter"));
+        resetButton2.setTooltip(new Tooltip("Reset the search filter"));
+    }
+
     public void setSearchManagement() {
         searchButton.setOnAction(event -> {
             if (!search.getText().equals("")) {
@@ -394,6 +404,15 @@ public class MediacaseController {
                 filteredMediacase.addMedia(m, 1);
             }
             refreshMediacase();
+        });
+
+        tab.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER && tab.getSelectionModel().isSelected(0)){
+                searchButton.fire();
+            }
+            if(event.getCode() == KeyCode.ENTER && tab.getSelectionModel().isSelected(1)){
+                searchButton2.fire();
+            }
         });
     }
 

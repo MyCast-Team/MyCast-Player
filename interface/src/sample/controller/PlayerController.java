@@ -214,10 +214,13 @@ public class PlayerController implements MediaPlayerEventListener {
     }
 
     public void installTooltips(){
-        this.play.setTooltip(new Tooltip("Play the current media"));
+        this.play.setTooltip(new Tooltip("Play/Pause the current media"));
         this.previous.setTooltip(new Tooltip("Play the previous media"));
         this.stop.setTooltip(new Tooltip("Stop the reading of the media"));
         this.next.setTooltip(new Tooltip("Play the next media"));
+        this.repeat.setTooltip(new Tooltip("Set the repetition of the playlist"));
+        this.resize.setTooltip(new Tooltip("Change the player mode to full screen"));
+        this.timeSlider.setTooltip(new Tooltip("Set the media time location"));
     }
 
     /* OVERRIDE MediaPlayerEventListener methods */
