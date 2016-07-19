@@ -12,6 +12,7 @@ import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class Main extends Application {
@@ -33,7 +34,9 @@ public class Main extends Application {
     public void checkResourceFolder(){
         File f = new File("./res");
         if (!f.exists()) {
-            f.mkdir();
+            boolean result = f.mkdir();
+            if(!result)
+                System.out.println("No permission for creating directory");
         }
     }
     /**
