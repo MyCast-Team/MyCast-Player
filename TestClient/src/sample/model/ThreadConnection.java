@@ -9,10 +9,7 @@ import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -24,6 +21,7 @@ public class ThreadConnection extends Thread {
     private ServerSocket serverSocket;
     private Socket socket;
     private BufferedReader bufferedReader;
+    private PrintWriter printWriter;
 
     private MediaPlayer mediaPlayer;
     private Pane playerHolder;
@@ -50,39 +48,48 @@ public class ThreadConnection extends Thread {
     public void interrupt() {
         super.interrupt();
         try {
+            mediaPlayer.stop();
             // This will throw an IOException to end the accept() method
             serverSocket.close();
             if(socket != null && !socket.isClosed()) {
+                System.out.println("Send disconnection request to server");
+                printWriter.println(REQUEST_CLIENT.DISCONNECTION.ordinal());
+                printWriter.flush();
                 socket.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
     public void run() {
+        String data;
         int receivedData;
+
         while(!serverSocket.isClosed()) {
             try {
+                System.out.println("Waiting for another connection");
                 socket = serverSocket.accept();
 
                 mrl = new RtspMrl().host(socket.getInetAddress()
                                     .getHostAddress())
                                     .port(STREAMING_PORT)
                                     .path("/demo").value();
+
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 
                 //While there is no request for disconnection, waiting for the start of the streaming from the client
-                while((receivedData = Integer.parseInt(bufferedReader.readLine())) != REQUEST_CLIENT.DISCONNECTION.ordinal()) {
+                while((data = bufferedReader.readLine()) != null && !data.trim().equals("")) {
+                    receivedData = Integer.parseInt(data);
                     if(receivedData == REQUEST_CLIENT.STREAMING_STARTED.ordinal()) {
                         //Start receiving data from client application and play it
-                        //mediaPlayer.prepareMedia(mrl);
                         mediaPlayer.playMedia(mrl);
                         //computeImageView();
+                    } else if(receivedData == REQUEST_CLIENT.DISCONNECTION.ordinal()) {
+                        break;
                     }
                 }
-
             } catch (InterruptedIOException e) {
                 Thread.currentThread().interrupt();
             } catch (IOException e) {
@@ -95,7 +102,6 @@ public class ThreadConnection extends Thread {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

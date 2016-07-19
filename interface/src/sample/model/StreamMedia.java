@@ -1,6 +1,7 @@
 package sample.model;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
 import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
@@ -36,10 +37,14 @@ public class StreamMedia extends Thread {
 
     private ClientDataReceiver clientDataReceiver;
 
+    private MenuItem setConnection;
+
     /**
      * CONSTRUCTOR
      */
-    public StreamMedia() {
+    public StreamMedia(MenuItem setConnection) {
+        this.setConnection = setConnection;
+
         factory = new MediaPlayerFactory();
         mediaListPlayer = factory.newMediaListPlayer();
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
@@ -128,8 +133,6 @@ public class StreamMedia extends Thread {
             // before client starts receiving data
             if (!isAlreadyStarted) {
                 Thread.sleep(100);
-                sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
-                sendData.flush();
                 isAlreadyStarted = true;
             }
         } catch (InterruptedException e) {
@@ -169,7 +172,8 @@ public class StreamMedia extends Thread {
                 sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
                 prepareStreamingMedia(socket.getInetAddress().getHostAddress());
 
-                clientDataReceiver = new ClientDataReceiver(socket, sendData, status, playlist, mediaListPlayer);
+                clientDataReceiver = new ClientDataReceiver(socket, setConnection);
+                clientDataReceiver.start();
 
                 status = CONNECTION_STATUS.CONNECTED;
                 alert.setContentText("The connection with '" + socket.getInetAddress().getCanonicalHostName() + "' has been successfully done !");
@@ -198,26 +202,28 @@ public class StreamMedia extends Thread {
      */
     public void closeConnection() {
 
-        if(clientDataReceiver != null && clientDataReceiver.isAlive()) {
-            try {
+        if(status.equals(CONNECTION_STATUS.DISCONNECTED))
+            return;
+
+        try {
+            sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
+            sendData.flush();
+
+            if(clientDataReceiver != null && clientDataReceiver.isAlive()) {
                 clientDataReceiver.interrupt();
                 clientDataReceiver.join(100);
-
-                sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
-                sendData.flush();
-                sendData.close();
-                socket.close();
-            } catch (InterruptedException e) {
-            } catch (IOException e) {
-            } finally {
-                clientDataReceiver = null;
-
-                sendData = null;
-                socket = null;
-                status = CONNECTION_STATUS.DISCONNECTED;
-                playlist.clear();
-                mediaListPlayer.stop();
             }
+
+            socket.close();
+        } catch (InterruptedException e) {
+        } catch (IOException e) {
+        } finally {
+            clientDataReceiver = null;
+            sendData = null;
+            socket = null;
+            status = CONNECTION_STATUS.DISCONNECTED;
+            playlist.clear();
+            mediaListPlayer.stop();
         }
     }
 
@@ -225,6 +231,8 @@ public class StreamMedia extends Thread {
      * Release all resources.
      */
     public void release() {
+        closeConnection();
+
         playlist.clear();
         mediaListPlayer.stop();
         playlist.release();

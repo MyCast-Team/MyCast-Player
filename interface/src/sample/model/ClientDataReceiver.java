@@ -1,5 +1,9 @@
 package sample.model;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.scene.control.MenuItem;
 import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
@@ -16,51 +20,44 @@ import java.net.Socket;
 public class ClientDataReceiver extends Thread {
 
     private Socket socket;
-
     private BufferedReader bufferedReader;
 
-    private PrintWriter sendData;
+    private MenuItem setConnection;
 
-    private StreamMedia.CONNECTION_STATUS status;
-
-    private MediaList playlist;
-
-    private MediaListPlayer mediaListPlayer;
-
-    public ClientDataReceiver(Socket socket, PrintWriter sendData, StreamMedia.CONNECTION_STATUS status, MediaList mediaList, MediaListPlayer mediaListPlayer) throws IOException {
+    public ClientDataReceiver(Socket socket, MenuItem setConnection) throws IOException {
 
         this.socket = socket;
         this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.sendData = sendData;
-        this.status = status;
-        this.playlist = mediaList;
-        this.mediaListPlayer = mediaListPlayer;
+        this.setConnection = setConnection;
     }
 
     @Override
     public void interrupt() {
         super.interrupt();
-        try {
-            bufferedReader.close();
-        } catch (IOException e) {
-        }
     }
 
     @Override
     public void run() {
-        int receivedData;
         super.run();
+        String data;
 
         try {
-            while((receivedData = Integer.parseInt(bufferedReader.readLine())) != StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal()) {
-                if (receivedData == StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal()) {
-                    // Fire event on disconnection button
-                    this.interrupt();
+            // Wait forever for disconnection signal from client
+            while((data = bufferedReader.readLine()) != null && !data.trim().equals("")) {
+                if(Integer.parseInt(data) == StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal()) {
+                    // Fire an ActionEvent on the setConnection/Disconnect MenuItem
+                    Platform.runLater(() -> {
+                        Event.fireEvent(setConnection, new ActionEvent(null, setConnection));
+                    });
                 }
             }
         } catch (IOException e) {
-            // Fire event on disconnection button
-            this.interrupt();
+            if(socket != null && !socket.isClosed()) {
+                // Fire an ActionEvent on the setConnection/Disconnect MenuItem
+                Platform.runLater(() -> {
+                    Event.fireEvent(setConnection, new ActionEvent(null, setConnection));
+                });
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ public class MenuBarController {
 
     @FXML
     public void initialize() {
-        streamMedia = new StreamMedia();
+        streamMedia = new StreamMedia(setConnection);
 
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
