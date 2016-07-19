@@ -52,8 +52,16 @@ public class PluginController {
     private Button download;
     @FXML
     private Button remove;
+    @FXML
+    private Button search;
+    @FXML
+    private Button reset;
+    @FXML
+    private TextField filter;
 
     private ArrayList<Plugin> pluginList;
+
+    private ArrayList<Plugin> filteredPluginList;
 
     final String path = "./res/plugin.json";
 
@@ -64,8 +72,11 @@ public class PluginController {
     @FXML
     public void initialize(){
         pluginList = new ArrayList<>();
+        filteredPluginList = new ArrayList<>();
+
         getList();
-        ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
         pluginTable.setItems(list);
 
         nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -78,7 +89,34 @@ public class PluginController {
         remove.setOnAction(getRemoveEventHandler());
         pluginTable.getSelectionModel().selectedItemProperty().addListener(getSelectedItemChangeListener());
 
+        setSearchManagement();
+
         installTooltips();
+    }
+
+    public void setSearchManagement() {
+        search.setOnAction(event -> {
+            if (!filter.getText().equals("")) {
+                String filterString = search.getText().toLowerCase();
+                filteredPluginList.clear();
+                for (Plugin p : pluginList) {
+                    if (p.getAuthor().toLowerCase().contains(filterString) ||
+                            p.getDate().toLowerCase().contains(filterString) ||
+                            p.getName().toLowerCase().contains(filterString)) {
+                        filteredPluginList.add(p);
+                    }
+                }
+                refreshPlugin();
+            }
+        });
+
+        reset.setOnAction(event -> {
+            filteredPluginList.clear();
+            for (Plugin p : pluginList) {
+                filteredPluginList.add(p);
+            }
+            refreshPlugin();
+        });
     }
 
     public void installTooltips(){
@@ -91,7 +129,7 @@ public class PluginController {
         return (event) -> {
             pluginList.clear();
             getList();
-            ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+            ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
 
             pluginTable.setItems(list);
         };
@@ -202,6 +240,9 @@ public class PluginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        for(Plugin p : pluginList)
+            filteredPluginList.add(p);
     }
 
     public void readPlugin() {
@@ -229,5 +270,10 @@ public class PluginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void refreshPlugin(){
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
+        pluginTable.setItems(list);
     }
 }
