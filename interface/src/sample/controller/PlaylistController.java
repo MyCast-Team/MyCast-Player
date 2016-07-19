@@ -218,10 +218,6 @@ public class PlaylistController {
                 this.mediaListPlayer.stop();
                 this.mediaListPlayer.getMediaList().clear();
             }
-            if(this.streamingPlayer != null) {
-                this.streamingPlayer.stop();
-                this.streamingPlayer.getMediaList().clear();
-            }
             refreshPlaylist();
         });
 
@@ -252,7 +248,8 @@ public class PlaylistController {
 
         musicTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
-                mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
+                if(musicTable.getSelectionModel().getSelectedIndex() != -1)
+                    mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
             }
             if (event.isSecondaryButtonDown()) {
                 contextMenu.show(musicTable, event.getScreenX(), event.getScreenY());
@@ -281,9 +278,6 @@ public class PlaylistController {
                         if(this.mediaListPlayer != null) {
                             this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                         }
-                        if(this.streamingPlayer != null) {
-                            this.streamingPlayer.getMediaList().addMedia(file.getPath());
-                        }
                     }
                 }
             } else {
@@ -298,7 +292,6 @@ public class PlaylistController {
                         this.mediaListPlayer.getMediaList().addMedia(m.getPath());
                     }
                 }
-
             }
             refreshPlaylist();
             event.setDropCompleted(success);
