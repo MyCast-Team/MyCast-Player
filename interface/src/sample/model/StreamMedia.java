@@ -2,6 +2,7 @@ package sample.model;
 
 import javafx.scene.control.Alert;
 import javafx.util.Pair;
+import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -17,7 +18,7 @@ import java.util.Optional;
 /**
  * Created by thomasfouan on 09/03/2016.
  */
-public class StreamMedia {
+public class StreamMedia extends Thread {
 
     private MediaPlayerFactory factory;
     private MediaListPlayer mediaListPlayer;
@@ -32,6 +33,8 @@ public class StreamMedia {
     private CONNECTION_STATUS status;
 
     private final int PORT = 2016;
+
+    private ClientDataReceiver clientDataReceiver;
 
     /**
      * CONSTRUCTOR
@@ -51,6 +54,7 @@ public class StreamMedia {
 
         status = CONNECTION_STATUS.DISCONNECTED;
         interfacePlaylist = null;
+        clientDataReceiver = null;
         socket = null;
         sendData = null;
     }
@@ -165,6 +169,8 @@ public class StreamMedia {
                 sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
                 prepareStreamingMedia(socket.getInetAddress().getHostAddress());
 
+                clientDataReceiver = new ClientDataReceiver(socket, sendData, status, playlist, mediaListPlayer);
+
                 status = CONNECTION_STATUS.CONNECTED;
                 alert.setContentText("The connection with '" + socket.getInetAddress().getCanonicalHostName() + "' has been successfully done !");
             } catch (UnknownHostException e) {
@@ -192,19 +198,26 @@ public class StreamMedia {
      */
     public void closeConnection() {
 
-        try {
-            sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
-            sendData.flush();
-            sendData.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            sendData = null;
-            socket = null;
-            status = CONNECTION_STATUS.DISCONNECTED;
-            playlist.clear();
-            mediaListPlayer.stop();
+        if(clientDataReceiver != null && clientDataReceiver.isAlive()) {
+            try {
+                clientDataReceiver.interrupt();
+                clientDataReceiver.join(100);
+
+                sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
+                sendData.flush();
+                sendData.close();
+                socket.close();
+            } catch (InterruptedException e) {
+            } catch (IOException e) {
+            } finally {
+                clientDataReceiver = null;
+
+                sendData = null;
+                socket = null;
+                status = CONNECTION_STATUS.DISCONNECTED;
+                playlist.clear();
+                mediaListPlayer.stop();
+            }
         }
     }
 
