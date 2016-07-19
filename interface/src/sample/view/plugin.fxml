@@ -18,10 +18,9 @@
                <children>
                   <TextField />
                   <Separator opacity="0.0" HBox.hgrow="NEVER" />
-                  <Button fx:id="refresh"  text="refresh" />
+                  <Button fx:id="refresh"  text="Refresh" />
                   <Button fx:id="download" layoutX="324.0" layoutY="15.0" text="Download" mnemonicParsing="false" />
                   <Button fx:id="remove" alignment="CENTER_RIGHT" layoutX="381.0" text="Remove" layoutY="15.0" mnemonicParsing="false" />
-                  <Button alignment="CENTER_RIGHT" layoutX="461.0" text="test3" layoutY="15.0" mnemonicParsing="false" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

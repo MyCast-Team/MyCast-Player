@@ -3,9 +3,7 @@ package sample.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
@@ -49,8 +47,22 @@ public class MediacaseController {
     private TableColumn<Media, String> genreVideo;
     @FXML
     private TableColumn<Media, String> dateVideo;
+    @FXML
+    private TextField search;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private Button resetButton;
+    @FXML
+    private TextField search2;
+    @FXML
+    private Button searchButton2;
+    @FXML
+    private Button resetButton2;
 
     private Mediacase mediacase;
+
+    private Mediacase filteredMediacase;
 
     private DataFormat dataFormat;
 
@@ -189,6 +201,8 @@ public class MediacaseController {
     @FXML
     public void initialize(){
         this.mediacase = new Mediacase();
+        this.filteredMediacase = new Mediacase();
+
         dataFormat =  new DataFormat("ObservableList<Media>");
 
         titleMusic.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
@@ -203,7 +217,6 @@ public class MediacaseController {
         genreVideo.setCellValueFactory(cellData -> cellData.getValue().genreProperty());
         dateVideo.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
 
-        refreshMediacase();
         setDragAndDrop();
 
         musiccaseTable.getSelectionModel().setSelectionMode(
@@ -213,6 +226,10 @@ public class MediacaseController {
         videocaseTable.getSelectionModel().setSelectionMode(
                 SelectionMode.MULTIPLE
         );
+
+        setSearchManagement();
+
+        refreshMediacase();
     }
 
     public void setDragAndDrop(){
@@ -254,6 +271,10 @@ public class MediacaseController {
                     writeMediacase(jsonList);
                 }
             }
+            filteredMediacase.reset();
+            for (Media m : mediacase.getMusiccase()) {
+                filteredMediacase.addMedia(m, 0);
+            }
             refreshMediacase();
             event.setDropCompleted(success);
             event.consume();
@@ -282,25 +303,37 @@ public class MediacaseController {
             boolean success = false;
             if (db.hasFiles()) {
                 success = true;
-                for (File file:db.getFiles()) {
-                    if(videoExtensionIsSupported(getExtension(file.getPath()))){
+                for (File file : db.getFiles()) {
+                    if (videoExtensionIsSupported(getExtension(file.getPath()))) {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
-                        this.mediacase.addMedia(media, 1);
-                        JSONObject object = new JSONObject();
-                        object.put("type", "video");
-                        object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
-                        object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
-                        object.put("length", PlayerController.formatTime(metaInfo.getLength()));
-                        object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
-                        object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
-                        jsonList.add(object);
+                        boolean found = false;
+                        for(Media m : this.mediacase.getVideocase()){
+                            if(m.equals(media))
+                                found = true;
+                        }
+                        if(!found){
+                            System.out.println("add !");
+                            this.mediacase.addMedia(media, 1);
+                            JSONObject object = new JSONObject();
+                            object.put("type", "video");
+                            object.put("title", metaInfo.getTitle() == null ? "" : metaInfo.getTitle());
+                            object.put("artist", metaInfo.getArtist() == null ? "" : metaInfo.getTitle());
+                            object.put("length", PlayerController.formatTime(metaInfo.getLength()));
+                            object.put("date", metaInfo.getDate() == null ? "" : metaInfo.getTitle());
+                            object.put("genre", metaInfo.getGenre() == null ? "" : metaInfo.getTitle());
+                            jsonList.add(object);
+                        }
                     }
                 }
-                if(!jsonList.isEmpty()){
+                if (!jsonList.isEmpty()) {
                     writeMediacase(jsonList);
                 }
+            }
+            filteredMediacase.reset();
+            for (Media m : mediacase.getVideocase()) {
+                filteredMediacase.addMedia(m, 1);
             }
             refreshMediacase();
             event.setDropCompleted(success);
@@ -317,6 +350,50 @@ public class MediacaseController {
             content.put(dataFormat, list);
             db.setContent(content);
             event.consume();
+        });
+    }
+
+    public void setSearchManagement() {
+        searchButton.setOnAction(event -> {
+            if (!search.getText().equals("")) {
+                String filter = search.getText().toLowerCase();
+                filteredMediacase.reset();
+                for (Media m : mediacase.getMusiccase()) {
+                    if (m.getAuthor().toLowerCase().contains(filter) || m.getTitle().toLowerCase().contains(filter) || m.getGenre().toLowerCase().contains(filter)) {
+                        filteredMediacase.addMedia(m, 0);
+                    }
+                }
+                refreshMediacase();
+            }
+        });
+
+        resetButton.setOnAction(event -> {
+            filteredMediacase.reset();
+            for (Media m : mediacase.getMusiccase()) {
+                filteredMediacase.addMedia(m, 0);
+            }
+            refreshMediacase();
+        });
+
+        searchButton2.setOnAction(event -> {
+            if (!search2.getText().equals("")) {
+                String filter = search2.getText().toLowerCase();
+                filteredMediacase.reset();
+                for (Media m : mediacase.getVideocase()) {
+                    if (m.getAuthor().toLowerCase().contains(filter) || m.getTitle().toLowerCase().contains(filter) || m.getGenre().toLowerCase().contains(filter)) {
+                        filteredMediacase.addMedia(m, 1);
+                    }
+                }
+                refreshMediacase();
+            }
+        });
+
+        resetButton2.setOnAction(event -> {
+            filteredMediacase.reset();
+            for (Media m : mediacase.getVideocase()) {
+                filteredMediacase.addMedia(m, 1);
+            }
+            refreshMediacase();
         });
     }
 
@@ -380,8 +457,8 @@ public class MediacaseController {
     }
 
     public void refreshMediacase(){
-        ObservableList<Media> musiclist = FXCollections.observableArrayList(mediacase.getMusiccase());
-        ObservableList<Media> videolist = FXCollections.observableArrayList(mediacase.getVideocase());
+        ObservableList<Media> musiclist = FXCollections.observableArrayList(filteredMediacase.getMusiccase());
+        ObservableList<Media> videolist = FXCollections.observableArrayList(filteredMediacase.getVideocase());
         musiccaseTable.setItems(musiclist);
         videocaseTable.setItems(videolist);
         this.mediacase.writeMediacase();

@@ -64,6 +64,7 @@ public class MenuBarController {
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
         add.setOnAction(getAddEventHandler());
+
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
@@ -179,57 +180,38 @@ public class MenuBarController {
     }
 
     private EventHandler<ActionEvent> getAddEventHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                FileChooser chooser = new FileChooser();
-                chooser.setTitle("Open File");
+        return (event) -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Open File");
+            File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
+            InputStream inStream;
 
-                File file=chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
+            HttpResponse response;
+            HttpEntity entity;
 
-                HttpClient httpclient = new DefaultHttpClient();
+            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+            params.add(new BasicNameValuePair("author", "testname"));
+            params.add(new BasicNameValuePair("originalname", file.getName()));
 
-
-                HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
-                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                params.add(new BasicNameValuePair("author", "testname"));
-                params.add(new BasicNameValuePair("originalname", file.getName()));
-                try {
-                    httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+            try {
+                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
                 //Execute and get the response.
-                HttpResponse response = null;
-                try {
-                    response = httpclient.execute(httppost);
-                    System.out.println(response.getEntity());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                HttpEntity entity = response.getEntity();
+                response = httpclient.execute(httppost);
+                System.out.println(response.getEntity());
 
+                entity = response.getEntity();
                 if (entity != null) {
-                    InputStream instream = null;
-                    try {
-                        instream = entity.getContent();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        // do something useful
-                    } finally {
-                        try {
-                            instream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    inStream = entity.getContent();
+                    inStream.close();
                 }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         };
-
-        return handler;
     }
 }

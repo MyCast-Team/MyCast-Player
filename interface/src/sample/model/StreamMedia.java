@@ -3,7 +3,6 @@ package sample.model;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
-import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;

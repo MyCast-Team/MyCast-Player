@@ -7,19 +7,13 @@ import javafx.beans.property.StringProperty;
  * Created by Pierre on 30/05/2016.
  */
 public class Suggestion {
+
     String Name;
     String Type;
     String Date;
     String  Director;
     String Length;
     String Producer;
-
-
-    public String getProducer() {
-        return Producer;
-    }
-
-
 
     public Suggestion(String name, String date, String director, String len, String type, String prod){
         this.Name=name;
@@ -31,11 +25,9 @@ public class Suggestion {
 
     }
 
-
     public StringProperty nameProperty() {
         return new SimpleStringProperty(Name);
     }
-
     public StringProperty DateProperty() {
         return new SimpleStringProperty(Date);
     }
@@ -58,5 +50,8 @@ public class Suggestion {
         return Type;
     }
     public String getDirector(){return Director ;}
+    public String getProducer() {
+        return Producer;
+    }
     public String getLength(){return Length;}
 }

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -97,6 +98,8 @@ public class PlayerController implements MediaPlayerEventListener {
 
         this.lastTimeDisplayed = 0;
         this.isFullscreenPlayer = false;
+
+        installTooltips();
 
         addPreviousListener();
         addStopListener();
@@ -209,6 +212,12 @@ public class PlayerController implements MediaPlayerEventListener {
         });
     }
 
+    public void installTooltips(){
+        this.play.setTooltip(new Tooltip("Play the current media"));
+        this.previous.setTooltip(new Tooltip("Play the previous media"));
+        this.stop.setTooltip(new Tooltip("Stop the reading of the media"));
+        this.next.setTooltip(new Tooltip("Play the next media"));
+    }
 
     /* OVERRIDE MediaPlayerEventListener methods */
     @Override

@@ -28,12 +28,11 @@ import java.util.List;
  * Created by Pierre on 30/05/2016.
  */
 public class Plugin {
+
     String Name;
     String Author;
     String Date;
     String  Id;
-
-
 
     public Plugin(String name, String author,String date,String Id){
         this.Name=name;
@@ -41,7 +40,6 @@ public class Plugin {
         this.Date=date;
         this.Id=Id;
     }
-
 
     public StringProperty nameProperty() {
         return new SimpleStringProperty(Name);
