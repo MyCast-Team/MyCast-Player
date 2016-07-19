@@ -26,8 +26,7 @@
                <TextField fx:id="search"/>
                <Separator opacity="0.0" HBox.hgrow="NEVER"/>
                <Button fx:id="searchButton">Search</Button>
-               <Button layoutX="324.0" layoutY="15.0" mnemonicParsing="false"/>
-               <Button layoutX="381.0" layoutY="15.0" mnemonicParsing="false"/>
+               <Button fx:id="resetButton" layoutX="324.0" layoutY="15.0" mnemonicParsing="false">Reset</Button>
             </HBox>
             <TableView fx:id="musiccaseTable" VBox.vgrow="ALWAYS">
                <columns>
@@ -54,12 +53,10 @@
                <children>
                   <HBox VBox.vgrow="NEVER" spacing="5.0">
                      <children>
-                        <TextField/>
-                        <ChoiceBox prefWidth="150.0"/>
+                        <TextField fx:id="search2"/>
                         <Separator opacity="0.0" HBox.hgrow="NEVER"/>
-                        <Button mnemonicParsing="false"/>
-                        <Button layoutX="324.0" layoutY="15.0" mnemonicParsing="false"/>
-                        <Button layoutX="381.0" layoutY="15.0" mnemonicParsing="false"/>
+                        <Button fx:id="searchButton2">Search</Button>
+                        <Button fx:id="resetButton2" layoutX="324.0" layoutY="15.0" mnemonicParsing="false">Reset</Button>
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>

@@ -4,3 +4,9 @@
 /*/res
 /backoffice/node_modules
 /testAnnotation/src/*.class
+/*/build
+/*/dist
+/*/META-INF
+/*/nbprojet
+/*/build.xml
+/*/manifest.mf
