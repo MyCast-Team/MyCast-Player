@@ -3,6 +3,7 @@ package sample.model;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import sample.constant.Constant;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,38 +20,16 @@ import java.util.List;
  */
 public class PluginManager {
 
-    private String jarDirname = "plugin";
-
-    private final String packageName = "plugin";
-
     private List<AnchorPane> listPlugin;
 
     //private List<ControllerInterface> listControllerPlugin;
 
     /**
      * Constructor.
-     * @param jarDirname
      */
-    public PluginManager(String jarDirname) {
-        this.jarDirname = jarDirname;
+    public PluginManager() {
         this.listPlugin = new ArrayList<AnchorPane>();
         //this.listControllerPlugin = new ArrayList<ControllerInterface>();
-    }
-
-    /**
-     * Get path to the directory containing the plugins.
-     * @return jarDirname
-     */
-    public String getJarDirname() {
-        return jarDirname;
-    }
-
-    /**
-     * Set path of the directory containing the plugins.
-     * @param jarDirname
-     */
-    public void setJarDirname(String jarDirname) {
-        this.jarDirname = jarDirname;
     }
 
     /**
@@ -67,7 +46,7 @@ public class PluginManager {
      */
     public void loadJarFiles() {
 
-        File jarDir = new File(jarDirname);
+        File jarDir = new File(Constant.pathToPlugin);
         // Check if the path containing the plugins exists and represents a directory.
         if(jarDir.exists() && jarDir.isDirectory()) {
             String[] dirContent = jarDir.list();
@@ -87,7 +66,7 @@ public class PluginManager {
                     loader = new URLClassLoader(urlList);
 
                     // Get the path of the main fxml to load
-                    String pathToFxml = packageName+"/mainPluginView.fxml";
+                    String pathToFxml = Constant.packageName+"/mainPluginView.fxml";
                     URL urlToFxml = loader.getResource(pathToFxml);
                     if (urlToFxml != null) {
                         // If the loader founds the file, load the component attached to the file.

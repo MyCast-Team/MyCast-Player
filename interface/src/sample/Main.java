@@ -19,7 +19,6 @@ public class Main extends Application {
 
     private Stage primaryStage;
     private MainFrameController mainFrameController;
-    private MenuBarController menuBarController;
 
     @Override
     public void start(Stage primaryStage) {

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import org.json.simple.JSONObject;
+import sample.constant.Constant;
 import sample.model.Media;
 import sample.model.Mediacase;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -13,8 +14,6 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
-
-import org.json.*;
 
 /**
  * Created by Vincent on 14/06/2016.
@@ -64,134 +63,6 @@ public class MediacaseController {
     private Mediacase filteredMediacase;
 
     private DataFormat dataFormat;
-
-    private static final String[] EXTENSIONS_AUDIO = {
-            "3ga",
-            "669",
-            "a52",
-            "aac",
-            "ac3",
-            "adt",
-            "adts",
-            "aif",
-            "aifc",
-            "aiff",
-            "amb",
-            "amr",
-            "aob",
-            "ape",
-            "au",
-            "awb",
-            "caf",
-            "dts",
-            "flac",
-            "it",
-            "kar",
-            "m4a",
-            "m4b",
-            "m4p",
-            "m5p",
-            "mid",
-            "mka",
-            "mlp",
-            "mod",
-            "mpa",
-            "mp1",
-            "mp2",
-            "mp3",
-            "mpc",
-            "mpga",
-            "mus",
-            "oga",
-            "ogg",
-            "oma",
-            "opus",
-            "qcp",
-            "ra",
-            "rmi",
-            "s3m",
-            "sid",
-            "spx",
-            "tak",
-            "thd",
-            "tta",
-            "voc",
-            "vqf",
-            "w64",
-            "wav",
-            "wma",
-            "wv",
-            "xa",
-            "xm"
-    };
-
-    private static final String[] EXTENSIONS_VIDEO = {
-            "3g2",
-            "3gp",
-            "3gp2",
-            "3gpp",
-            "amv",
-            "asf",
-            "avi",
-            "bik",
-            "bin",
-            "divx",
-            "drc",
-            "dv",
-            "evo",
-            "f4v",
-            "flv",
-            "gvi",
-            "gxf",
-            "iso",
-            "m1v",
-            "m2v",
-            "m2t",
-            "m2ts",
-            "m4v",
-            "mkv",
-            "mov",
-            "mp2",
-            "mp2v",
-            "mp4",
-            "mp4v",
-            "mpe",
-            "mpeg",
-            "mpeg1",
-            "mpeg2",
-            "mpeg4",
-            "mpg",
-            "mpv2",
-            "mts",
-            "mtv",
-            "mxf",
-            "mxg",
-            "nsv",
-            "nuv",
-            "ogg",
-            "ogm",
-            "ogv",
-            "ogx",
-            "ps",
-            "rec",
-            "rm",
-            "rmvb",
-            "rpl",
-            "thp",
-            "tod",
-            "ts",
-            "tts",
-            "txd",
-            "vob",
-            "vro",
-            "webm",
-            "wm",
-            "wmv",
-            "wtv",
-            "xesc"
-    };
-
-    private static final String path = "./res/mediacase.json";
 
     public MediacaseController(){}
 
@@ -418,7 +289,7 @@ public class MediacaseController {
 
     public void writeMediacase(ArrayList<JSONObject> list){
         try {
-            File file = new File(path);
+            File file = new File(Constant.pathToMediacase);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -430,7 +301,7 @@ public class MediacaseController {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(path, true);
+            FileOutputStream fileOut = new FileOutputStream(Constant.pathToMediacase, true);
             byte[] comma = ",".getBytes();
             boolean first = true;
             for(JSONObject object : list) {
@@ -457,8 +328,8 @@ public class MediacaseController {
         return extension;
     }
 
-    public boolean audioExtensionIsSupported(String extension){
-        for(String str: EXTENSIONS_AUDIO){
+    public static boolean audioExtensionIsSupported(String extension){
+        for(String str: Constant.EXTENSIONS_AUDIO){
             if(extension.compareTo(str) == 0){
                 return true;
             }
@@ -466,8 +337,8 @@ public class MediacaseController {
         return false;
     }
 
-    public boolean videoExtensionIsSupported(String extension) {
-        for (String str : EXTENSIONS_VIDEO) {
+    public static boolean videoExtensionIsSupported(String extension) {
+        for (String str : Constant.EXTENSIONS_VIDEO) {
             if (extension.compareTo(str) == 0) {
                 return true;
             }

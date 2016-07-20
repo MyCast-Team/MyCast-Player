@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.Point;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -29,8 +30,6 @@ public class MainFrameController extends AnchorPane {
     private AnchorPane rootContentPane;
 
     private GridPane grid;
-
-    private HBox statusBar;
 
     private ArrayList<AnchorPane> components;
 
@@ -83,12 +82,11 @@ public class MainFrameController extends AnchorPane {
 
     public static HashMap<String, Point> readComponent(){
         HashMap<String, Point> list = new HashMap<>();
-        String csvFile = "./res/interface.csv";
         BufferedReader br = null;
-        String line = "";
+        String line;
         try {
 
-            br = new BufferedReader(new FileReader(csvFile));
+            br = new BufferedReader(new FileReader(Constant.pathToInterfaceConf));
             while ((line = br.readLine()) != null) {
 
                 String array[] = line.split(";");

@@ -23,6 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sample.constant.Constant;
 import sample.model.Plugin;
 import sample.model.StreamMedia;
 import sun.plugin2.util.PluginTrace;
@@ -55,10 +56,7 @@ public class PluginController {
 
     private ArrayList<Plugin> pluginList;
 
-    final String path = "./res/plugin.json";
-
     public PluginController(){
-
     }
 
     @FXML
@@ -105,7 +103,7 @@ public class PluginController {
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
-            String filePath = "./plugin/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String filePath = Constant.pathToPlugin + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
             FileOutputStream fos = null;
 
             try {
@@ -134,7 +132,7 @@ public class PluginController {
 
     public EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
-            File f1 = new File("./plugin/"+pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
+            File f1 = new File(Constant.pathToPlugin + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
 
             boolean success = f1.delete();
 
@@ -155,7 +153,7 @@ public class PluginController {
             String nameplugin = selectedPlugin.getName();
             boolean present = false;
 
-            String path0="./plugin/"+nameplugin;
+            String path0 = Constant.pathToPlugin + "/" + nameplugin;
             System.out.println(path0);
             File theDir = new File(path0);
 
@@ -177,14 +175,13 @@ public class PluginController {
         HttpEntity entity1;
         InputStream is;
         FileOutputStream fos;
-        String filePath = "./res/plugin.json";
 
         try {
             response1 = httpclient.execute(httpGet);
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(filePath));
+            fos = new FileOutputStream(new File(Constant.pathToPluginFile));
 
             byte[] buffer = new byte[8 * 1024];
             int bytesRead;
@@ -210,7 +207,7 @@ public class PluginController {
         JSONArray jsonArray;
 
         try {
-            obj = parser.parse(new FileReader(path));
+            obj = parser.parse(new FileReader(Constant.pathToPluginFile));
             jsonArray = (JSONArray) obj;
 
             JSONObject jsonObject;

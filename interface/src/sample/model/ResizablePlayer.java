@@ -42,12 +42,6 @@ public class ResizablePlayer {
         pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
-        // Add the player pane in the playerContainer
-        //BorderPane playerPane = new BorderPane(playerHolder);
-        //playerPane.setStyle("-fx-background-color: black");
-        //playerContainer.getChildren().add(0, playerPane);
-        //VBox.setVgrow(playerPane, Priority.ALWAYS);
-
         this.playerHolder = playerHolder;
         this.imageView = imageView;
         this.artworkView = artworkView;
