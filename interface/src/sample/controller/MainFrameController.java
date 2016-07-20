@@ -3,6 +3,7 @@ package sample.controller;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.PluginManager;
 import sample.model.Point;
@@ -21,6 +22,7 @@ import java.util.Objects;
 /**
  * Class to manage our main frame of the application
  */
+@DocumentationAnnotation(author = "Vincent Rossignol et Thomas Fouan", date = "01/02/2016", description = "This is the main class that manage our application. We load the different components and plugins.")
 public class MainFrameController extends AnchorPane {
 
     private VBox rootPane;

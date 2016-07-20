@@ -1,8 +1,11 @@
 package sample.constant;
 
+import sample.annotation.DocumentationAnnotation;
+
 /**
  * Created by thomasfouan on 20/07/2016.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date="20/07/2016", description = "This class contains all our constants. For example, there are paths to resource files or even format filters.")
 public class Constant {
 
     /**
@@ -192,3 +195,4 @@ public class Constant {
             "xesc"
     };
 }
+
