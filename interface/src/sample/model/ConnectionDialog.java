@@ -7,6 +7,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.scene.control.*;
 import sample.Main;
+import sample.annotation.DocumentationAnnotation;
 
 import java.io.IOException;
 import java.util.function.UnaryOperator;
@@ -14,6 +15,7 @@ import java.util.function.UnaryOperator;
 /**
  * Class of creation of the connection dialog box.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "10/05/2016", description = "This is a complete GUI for a connection dialog to connect to a distant client.")
 public class ConnectionDialog {
 
     private Dialog<Pair<String, Integer>> dialog;

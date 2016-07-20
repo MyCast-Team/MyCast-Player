@@ -6,6 +6,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.WritablePixelFormat;
+import sample.annotation.DocumentationAnnotation;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.direct.BufferFormat;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
@@ -17,6 +18,7 @@ import java.nio.ByteBuffer;
  *
  * Control the writing of images in the player : update the writableImage which is link to the player pane.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "24/04/2016", description = "This class control the writing of images in the player.")
 public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
 
     private PixelWriter pixelWriter = null;

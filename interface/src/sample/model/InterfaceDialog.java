@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import sample.Main;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.controller.MainFrameController;
 
@@ -25,6 +26,7 @@ import java.util.Map.Entry;
 /**
  * Created by thomasfouan on 14/06/16.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "14/06/2016", description = "This is a complete GUI to manage the way component are displayed in our application.")
 public class InterfaceDialog {
 
     private Dialog dialog;

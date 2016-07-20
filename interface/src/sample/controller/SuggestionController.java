@@ -17,6 +17,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Suggestion;
 import java.io.*;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the controller for the suggestion panel. The application will give to the user some ideas about movies to watch and music to listen.")
 public class SuggestionController {
     @FXML
     private TableView<Suggestion> musicTable1;

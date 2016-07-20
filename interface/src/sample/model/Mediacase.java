@@ -1,5 +1,6 @@
 package sample.model;
 
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
 import java.io.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Vincent on 14/06/2016.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "14/06/2016", description = "The Mediacase is composed with 2 ArrayList of Media : one for the video and one for the music. The mediacase contains all the medias played in our application.")
 public class Mediacase {
 
     private ArrayList<Media> videocase;

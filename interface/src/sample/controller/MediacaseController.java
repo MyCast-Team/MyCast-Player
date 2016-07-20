@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import org.json.simple.JSONObject;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Media;
 import sample.model.Mediacase;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by Vincent on 14/06/2016.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "14/06/2016", description = "This is the controller of the mediacase component. The mediacase is the list of the user's medias. You can search in this list and drag and drop medias into the playlist")
 public class MediacaseController {
     @FXML
     private TableView<Media> musiccaseTable;

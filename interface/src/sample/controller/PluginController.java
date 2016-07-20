@@ -23,6 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Plugin;
 import sample.model.StreamMedia;
@@ -36,6 +37,7 @@ import java.util.Iterator;
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the controller for the plugin panel. You can manage multiple things like search, download or uninstall plugins.")
 public class PluginController {
     @FXML
     private TableView<Plugin> pluginTable;

@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import sample.annotation.DocumentationAnnotation;
 import sample.model.Media;
 import sample.model.Playlist;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 /**
  * Class of control of the music.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "25/04/2016", description = "This is the controller of the playlist component. The playlist is a list of medias that will be played in order. You can delete medias or reset the playlist. The playlist is saved in a file between two MyShare use.")
 public class PlaylistController {
     @FXML
     private TableView<Media> musicTable;
