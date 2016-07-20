@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import sample.model.InterfaceDialog;
+import sample.model.Point;
 import sample.model.StreamMedia;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +51,8 @@ public class MenuBarController {
 
     private StreamMedia streamMedia;
 
+    private HashMap<String, Point> availableComponents;
+
     private static Label statusLabel;
 
     public MenuBarController() {
@@ -68,6 +72,10 @@ public class MenuBarController {
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
+    }
+
+    public void setAvailableComponents(HashMap<String, Point> availableComponents) {
+        this.availableComponents = availableComponents;
     }
 
     public StreamMedia getStreamMedia() {
@@ -103,7 +111,7 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
         return (event) -> {
-            InterfaceDialog interfaceDialog = new InterfaceDialog();
+            InterfaceDialog interfaceDialog = new InterfaceDialog(availableComponents);
         };
     }
 

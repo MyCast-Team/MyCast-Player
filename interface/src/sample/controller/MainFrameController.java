@@ -11,12 +11,10 @@ import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
@@ -51,6 +49,8 @@ public class MainFrameController extends AnchorPane {
         this.components = new ArrayList<>();
 
         try {
+            AnchorPane pane;
+
             this.rootPane = (VBox) loadRoot(path);
             rootPane.getChildren().add(0, loadMenuBar());
             rootPane.getChildren().add(2, loadStatusBar());
@@ -66,9 +66,7 @@ public class MainFrameController extends AnchorPane {
             for (String str : Constant.staticInterfaces) {
                 availableComponents.put(str, new Point(-1, -1));
             }
-            pluginManager.loadJarFiles().forEach((str) -> {
-                availableComponents.put(str, new Point(-1, -1));
-            });
+            pluginManager.loadJarFiles().forEach((str) -> availableComponents.put(str, new Point(-1, -1)));
 
             HashMap<String, Point> componentToLoad = readComponent();
 
@@ -76,11 +74,12 @@ public class MainFrameController extends AnchorPane {
                 Point point = availableComponents.get(m.getKey());
                 if(point != null) {
                     if (m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
-                        AnchorPane pane = loadComponent(m.getKey(), true);
-                        this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
-                        this.components.add(pane);
-                        point.setX(m.getValue().getX());
-                        point.setY(m.getValue().getY());
+                        if((pane = loadComponent(m.getKey())) != null) {
+                            this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                            this.components.add(pane);
+                            point.setX(m.getValue().getX());
+                            point.setY(m.getValue().getY());
+                        }
                     }
                 }
             }
@@ -92,26 +91,34 @@ public class MainFrameController extends AnchorPane {
 
             setRowContraints();
             setColumnConstraints();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static HashMap<String, Point> readComponent(){
+    public VBox getRootPane(){
+        return rootPane;
+    }
+
+    public PlayerController getPlayerController() {
+        return playerController;
+    }
+
+    public MenuBarController getMenuBarController() {
+        return menuBarController;
+    }
+
+    private static HashMap<String, Point> readComponent(){
         HashMap<String, Point> list = new HashMap<>();
         BufferedReader br = null;
         String line;
         try {
-
             br = new BufferedReader(new FileReader(Constant.pathToInterfaceConf));
+
             while ((line = br.readLine()) != null) {
-
                 String array[] = line.split(";");
-
                 list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
             }
-
         } catch (IOException e) {
             System.out.println("Interface configuration not found... Empty interface will load.");
         } finally {
@@ -144,14 +151,18 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
-    public AnchorPane loadComponent(String path, boolean loadController){
-        AnchorPane pane = null;
+    private AnchorPane loadComponent(String path){
+        AnchorPane pane;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(path));
-        try {
-            pane = loader.load();
 
-            if (loadController) {
+        try {
+            if(path.startsWith("jar:file:")) {
+                loader.setLocation(new URL(path));
+                pane = loader.load();
+            } else {
+                loader.setLocation(getClass().getResource(path));
+                pane = loader.load();
+
                 if (pane.getId().equals("player")) {
                     playerController = loader.getController();
                 } else if (pane.getId().equals("playlist")) {
@@ -160,11 +171,13 @@ public class MainFrameController extends AnchorPane {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            pane = null;
         }
+
         return pane;
     }
 
-    public Pane loadRoot(String path) throws IOException {
+    private Pane loadRoot(String path) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(path));
         return loader.load();
@@ -175,6 +188,7 @@ public class MainFrameController extends AnchorPane {
         loader.setLocation(getClass().getResource("/sample/view/menubar.fxml"));
         MenuBar menuBar = loader.load();
         this.menuBarController = loader.getController();
+        menuBarController.setAvailableComponents(availableComponents);
         return menuBar;
     }
 
@@ -186,7 +200,7 @@ public class MainFrameController extends AnchorPane {
         return pane;
     }
 
-    public void initDragAndDrop(AnchorPane pane){
+    private void initDragAndDrop(AnchorPane pane){
         pane.setOnDragDetected(event -> {
             Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
@@ -203,37 +217,52 @@ public class MainFrameController extends AnchorPane {
         pane.setOnDragDropped(event -> swap(event.getDragboard().getString(), pane));
     }
 
-    public void enableDragAndDrop(){
+    public void enableDragAndDrop() {
         components.forEach(this::initDragAndDrop);
     }
 
-    public void disableDragAndDrop(){
+    public void disableDragAndDrop() {
         components.forEach(this::disableDragAndDropPane);
     }
 
-    public void disableDragAndDropPane(AnchorPane pane){
+    private void disableDragAndDropPane(AnchorPane pane){
         pane.setOnDragDetected(MouseEvent::consume);
-
         pane.setOnDragOver(DragEvent::consume);
-
         pane.setOnDragDropped(event -> {
+
         });
     }
 
-    public void swap(String sourceStr, AnchorPane target){
+    private void swap(String sourceStr, AnchorPane target) {
         String[] sourcePosition = sourceStr.split(";");
-        int sourceRow = Integer.parseInt(sourcePosition[0]);
-        int sourceColumn = Integer.parseInt(sourcePosition[1]);
-        int targetRow = GridPane.getRowIndex(target);
-        int targetColumn = GridPane.getColumnIndex(target);
-        AnchorPane source = (AnchorPane) getNodeByRowColumnIndex(sourceRow, sourceColumn);
+        Point sourcePoint = new Point(Integer.parseInt(sourcePosition[1]), Integer.parseInt(sourcePosition[0]));
+        Point targetPoint = new Point(GridPane.getColumnIndex(target), GridPane.getRowIndex(target));
+        String sourcePath = getKeyByValue(sourcePoint);
+        String targetPath = getKeyByValue(targetPoint);
+        AnchorPane source = (AnchorPane) getNodeByRowColumnIndex(sourcePoint.getY(), sourcePoint.getX());
+
         grid.getChildren().remove(source);
         grid.getChildren().remove(target);
-        grid.add(source, targetColumn, targetRow);
-        grid.add(target, sourceColumn, sourceRow);
+        grid.add(source, targetPoint.getX(), targetPoint.getY());
+        grid.add(target, sourcePoint.getX(), sourcePoint.getY());
+
+        // Update availableComponents by theses new values
+        if(sourcePath != null && targetPath != null) {
+            availableComponents.replace(sourcePath, sourcePoint, targetPoint);
+            availableComponents.replace(targetPath, targetPoint, sourcePoint);
+        }
     }
 
-    public Node getNodeByRowColumnIndex(int row, int column) {
+    private String getKeyByValue(Point point) {
+        for(Entry<String, Point> entry : availableComponents.entrySet()) {
+            if(entry.getValue().equals(point)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    private Node getNodeByRowColumnIndex(int row, int column) {
         ObservableList<Node> childrens = grid.getChildren();
         for(Node node : childrens) {
             if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
@@ -241,6 +270,32 @@ public class MainFrameController extends AnchorPane {
             }
         }
         return null;
+    }
+
+    /**
+     * Save the actual interface in the "interface.csv" file.
+     */
+    public void saveInterface() {
+        BufferedWriter bw = null;
+
+        try {
+            bw = new BufferedWriter(new FileWriter(Constant.pathToInterfaceConf, false));
+
+            for(Entry<String, Point> entry : availableComponents.entrySet()) {
+                bw.write(entry.getKey()+";"+entry.getValue().getX()+";"+entry.getValue().getY());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void bindPlaylistToPlayer() {
@@ -265,17 +320,5 @@ public class MainFrameController extends AnchorPane {
                 menuBarController.setStatusLabel(statusBarController.getRightContent());
             }
         }
-    }
-
-    public VBox getRootPane(){
-        return rootPane;
-    }
-
-    public PlayerController getPlayerController() {
-        return playerController;
-    }
-
-    public MenuBarController getMenuBarController() {
-        return menuBarController;
     }
 }
