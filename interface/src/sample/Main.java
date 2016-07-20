@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.annotation.DocumentationAnnotation;
 import sample.controller.MainFrameController;
 import sample.controller.MenuBarController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+@DocumentationAnnotation(author = "Vincent Rossignol, Thomas Fouan and Pierre Lochouarn", date = "01/03/2016", description = "MyShare is a media players with many functionality like suggestions, plugins, mediacase, playlist and even more !")
 public class Main extends Application {
 
     private Stage primaryStage;
@@ -28,7 +30,6 @@ public class Main extends Application {
         checkResourceFolder();
         initRootLayout();
     }
-
 
     public void checkResourceFolder(){
         File f = new File("./res");

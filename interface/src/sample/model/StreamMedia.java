@@ -3,6 +3,7 @@ package sample.model;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
@@ -19,6 +20,7 @@ import java.util.Optional;
 /**
  * Created by thomasfouan on 09/03/2016.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "09/03/2016", description = "This class is the streaming manager. It creates socket with a client to broadcast medias.")
 public class StreamMedia extends Thread {
 
     private MediaPlayerFactory factory;

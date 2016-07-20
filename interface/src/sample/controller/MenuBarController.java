@@ -14,6 +14,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import sample.annotation.DocumentationAnnotation;
 import sample.model.InterfaceDialog;
 import sample.model.StreamMedia;
 
@@ -28,6 +29,7 @@ import java.util.Optional;
 /**
  * Class of control of the menuBar.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "10/03/16", description = "This is the controller to manage the MenuBar. It defines functions to call on events.")
 public class MenuBarController {
 
     @FXML

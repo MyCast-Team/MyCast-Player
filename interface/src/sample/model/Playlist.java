@@ -1,5 +1,6 @@
 package sample.model;
 
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
 import java.io.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Vincent on 28/04/2016.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "28/04/2016", description = "The Playlist model contains an ArrayList of Media. This class contains methods to write/read playlist between two use of MyShare.")
 public class Playlist implements Serializable {
     private ArrayList<Media> playlist;
 

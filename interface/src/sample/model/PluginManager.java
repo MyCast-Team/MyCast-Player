@@ -3,6 +3,7 @@ package sample.model;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
 import java.io.File;
@@ -18,6 +19,7 @@ import java.util.List;
  *
  * Class of control of the loading of the plugins
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "07/06/2016", description = "This class manages our list of plugins at the beginning of the session.")
 public class PluginManager {
 
     private List<AnchorPane> listPlugin;
