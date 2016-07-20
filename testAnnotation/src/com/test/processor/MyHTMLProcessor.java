@@ -5,6 +5,10 @@ import com.test.annotation.MyAnnotation;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -35,8 +39,11 @@ public class MyHTMLProcessor extends AbstractProcessor {
         super.init(env);
         
         firstLoop = true;
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+        Date date = new Date();
         
-        htmlFile = new File("./resource/MyDescription.html");
+        htmlFile = new File("./resource/MyDescription"+dateFormat.format(date)+".html");
 
         try {
             fw = new FileOutputStream(htmlFile);
