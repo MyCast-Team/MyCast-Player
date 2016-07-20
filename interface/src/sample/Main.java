@@ -55,6 +55,9 @@ public class Main extends Application {
         });
 
         primaryStage.setOnCloseRequest(event -> {
+            // Save the current interface in the interface.csv file
+            mainFrameController.saveInterface();
+
             if(mainFrameController.getPlayerController() != null) {
                 mainFrameController.getPlayerController().getResizablePlayer().release();
             }
