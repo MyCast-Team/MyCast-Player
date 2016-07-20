@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 import sample.constant.Constant;
+import sample.model.PluginManager;
 import sample.model.Point;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 /**
@@ -29,7 +31,11 @@ public class MainFrameController extends AnchorPane {
 
     private GridPane grid;
 
+    private HashMap<String, Point> availableComponents;
+
     private ArrayList<AnchorPane> components;
+
+    private PluginManager pluginManager;
 
     private PlayerController playerController;
     private PlaylistController playlistController;
@@ -38,8 +44,10 @@ public class MainFrameController extends AnchorPane {
 
     public MainFrameController(String path, Stage primaryStage) {
 
+        this.pluginManager = new PluginManager();
         this.playerController = null;
         this.playlistController = null;
+        this.availableComponents = new HashMap<>();
         this.components = new ArrayList<>();
 
         try {
@@ -55,13 +63,25 @@ public class MainFrameController extends AnchorPane {
                 this.grid = (GridPane) node;
             });
 
+            for (String str : Constant.staticInterfaces) {
+                availableComponents.put(str, new Point(-1, -1));
+            }
+            pluginManager.loadJarFiles().forEach((str) -> {
+                availableComponents.put(str, new Point(-1, -1));
+            });
+
             HashMap<String, Point> componentToLoad = readComponent();
 
-            for(Map.Entry<String, Point> m : componentToLoad.entrySet()) {
-                if(m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
-                    AnchorPane pane = loadComponent(m.getKey());
-                    this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
-                    this.components.add(pane);
+            for(Entry<String, Point> m : componentToLoad.entrySet()) {
+                Point point = availableComponents.get(m.getKey());
+                if(point != null) {
+                    if (m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
+                        AnchorPane pane = loadComponent(m.getKey(), true);
+                        this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                        this.components.add(pane);
+                        point.setX(m.getValue().getX());
+                        point.setY(m.getValue().getY());
+                    }
                 }
             }
 
@@ -124,17 +144,19 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
-    public AnchorPane loadComponent(String path){
+    public AnchorPane loadComponent(String path, boolean loadController){
         AnchorPane pane = null;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(path));
         try {
             pane = loader.load();
 
-            if(pane.getId().equals("player")) {
-                playerController = loader.getController();
-            } else if(pane.getId().equals("playlist")) {
-                playlistController = loader.getController();
+            if (loadController) {
+                if (pane.getId().equals("player")) {
+                    playerController = loader.getController();
+                } else if (pane.getId().equals("playlist")) {
+                    playlistController = loader.getController();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
