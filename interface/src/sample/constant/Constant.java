@@ -9,9 +9,19 @@ import sample.annotation.DocumentationAnnotation;
 public class Constant {
 
     /**
+     * Define the path of the main view of the app
+     */
+    public static final String pathToMainView = "/sample/view/mainFrame.fxml";
+
+    /**
      * Define the path where all the plugins are stored
      */
     public static final String pathToPlugin = "./plugin";
+
+    /**
+     * Define the path to the resource directory
+     */
+    public static final String pathToResources = "./res";
 
     /**
      * Define the path where the plugin file to communicate with the server is stored

@@ -181,7 +181,7 @@ public class PlayerController implements MediaPlayerEventListener {
         repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
-                repeat.setGraphic(new ImageView(new Image("./img/random.png")));
+                repeat.setGraphic(new ImageView(new Image("./img/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
                 repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));

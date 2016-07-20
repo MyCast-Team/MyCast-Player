@@ -3,8 +3,16 @@ package sample.constant;
 /**
  * Created by thomasfouan on 18/07/2016.
  */
-public class FormatConstant {
+public class Constant {
 
+    /**
+     * Define the path of the main view of the app
+     */
+    public static final String pathToMainView = "view/mainFrame.fxml";
+
+    /**
+     * Define all audio extensions that can be used with the player
+     */
     public static final String[] EXTENSIONS_AUDIO = {
             "3ga",
             "669",

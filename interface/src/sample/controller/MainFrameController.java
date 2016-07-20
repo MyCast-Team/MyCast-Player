@@ -1,8 +1,8 @@
 package sample.controller;
 
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
-import javafx.stage.Stage;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.PluginManager;
@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * Class to manage our main frame of the application
@@ -25,89 +24,77 @@ import java.util.Objects;
 @DocumentationAnnotation(author = "Vincent Rossignol et Thomas Fouan", date = "01/02/2016", description = "This is the main class that manage our application. We load the different components and plugins.")
 public class MainFrameController extends AnchorPane {
 
+    @FXML
     private VBox rootPane;
 
-    private AnchorPane rootContentPane;
+    @FXML
+    private AnchorPane rootContent;
 
+    @FXML
     private GridPane grid;
 
-    private HashMap<String, Point> availableComponents;
+    @FXML
+    private MenuBarController includedMenuBarController;
 
-    private ArrayList<AnchorPane> components;
+    @FXML
+    private StatusBarController includedStatusBarController;
+
+    private HashMap<String, Point> availableComponents;
 
     private PluginManager pluginManager;
 
     private PlayerController playerController;
     private PlaylistController playlistController;
-    private MenuBarController menuBarController;
-    private StatusBarController statusBarController;
 
-    public MainFrameController(String path, Stage primaryStage) {
+    public MainFrameController() {
+    }
 
-        this.pluginManager = new PluginManager();
-        this.playerController = null;
-        this.playlistController = null;
-        this.availableComponents = new HashMap<>();
-        this.components = new ArrayList<>();
+    @FXML
+    public void initialize() {
+        AnchorPane pane;
 
-        try {
-            AnchorPane pane;
+        pluginManager = new PluginManager();
+        playerController = null;
+        playlistController = null;
+        availableComponents = new HashMap<>();
 
-            this.rootPane = (VBox) loadRoot(path);
-            rootPane.getChildren().add(0, loadMenuBar());
-            rootPane.getChildren().add(2, loadStatusBar());
+        includedMenuBarController.setAvailableComponents(availableComponents);
 
-            this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "rootContent")).forEach(node -> {
-                this.rootContentPane = (AnchorPane) node;
-            });
+        for (String str : Constant.staticInterfaces) {
+            availableComponents.put(str, new Point(-1, -1));
+        }
+        pluginManager.loadJarFiles().forEach((str) -> availableComponents.put(str, new Point(-1, -1)));
 
-            this.rootContentPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
-                this.grid = (GridPane) node;
-            });
+        HashMap<String, Point> componentToLoad = readComponent();
 
-            for (String str : Constant.staticInterfaces) {
-                availableComponents.put(str, new Point(-1, -1));
-            }
-            pluginManager.loadJarFiles().forEach((str) -> availableComponents.put(str, new Point(-1, -1)));
-
-            HashMap<String, Point> componentToLoad = readComponent();
-
-            for(Entry<String, Point> m : componentToLoad.entrySet()) {
-                Point point = availableComponents.get(m.getKey());
-                if(point != null) {
-                    if (m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
-                        if((pane = loadComponent(m.getKey())) != null) {
-                            this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
-                            this.components.add(pane);
-                            point.setX(m.getValue().getX());
-                            point.setY(m.getValue().getY());
-                        }
+        for(Entry<String, Point> m : componentToLoad.entrySet()) {
+            Point point = availableComponents.get(m.getKey());
+            if(point != null) {
+                if (m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
+                    if((pane = loadComponent(m.getKey())) != null) {
+                        grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                        point.setX(m.getValue().getX());
+                        point.setY(m.getValue().getY());
                     }
                 }
             }
-
-            enableDragAndDrop();
-
-            bindPlaylistToPlayer();
-            bindStatusBarToControllers();
-
-            setRowContraints();
-            setColumnConstraints();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        enableDragAndDrop();
+
+        bindPlaylistToPlayer();
+        bindStatusBarToControllers();
+
+        setRowContraints();
+        setColumnConstraints();
     }
 
-    public VBox getRootPane(){
-        return rootPane;
+    public MenuBarController getIncludedMenuBarController() {
+        return includedMenuBarController;
     }
 
     public PlayerController getPlayerController() {
         return playerController;
-    }
-
-    public MenuBarController getMenuBarController() {
-        return menuBarController;
     }
 
     private static HashMap<String, Point> readComponent(){
@@ -179,29 +166,6 @@ public class MainFrameController extends AnchorPane {
         return pane;
     }
 
-    private Pane loadRoot(String path) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(path));
-        return loader.load();
-    }
-
-    private MenuBar loadMenuBar() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/view/menubar.fxml"));
-        MenuBar menuBar = loader.load();
-        this.menuBarController = loader.getController();
-        menuBarController.setAvailableComponents(availableComponents);
-        return menuBar;
-    }
-
-    private HBox loadStatusBar() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/view/statusBar.fxml"));
-        HBox pane = loader.load();
-        this.statusBarController = loader.getController();
-        return pane;
-    }
-
     private void initDragAndDrop(AnchorPane pane){
         pane.setOnDragDetected(event -> {
             Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
@@ -220,11 +184,11 @@ public class MainFrameController extends AnchorPane {
     }
 
     public void enableDragAndDrop() {
-        components.forEach(this::initDragAndDrop);
+        grid.getChildren().forEach((node) -> initDragAndDrop((AnchorPane) node));
     }
 
     public void disableDragAndDrop() {
-        components.forEach(this::disableDragAndDropPane);
+        grid.getChildren().forEach((node) -> disableDragAndDropPane((AnchorPane) node));
     }
 
     private void disableDragAndDropPane(AnchorPane pane){
@@ -265,8 +229,7 @@ public class MainFrameController extends AnchorPane {
     }
 
     private Node getNodeByRowColumnIndex(int row, int column) {
-        ObservableList<Node> childrens = grid.getChildren();
-        for(Node node : childrens) {
+        for(Node node : grid.getChildren()) {
             if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
                 return node;
             }
@@ -301,25 +264,25 @@ public class MainFrameController extends AnchorPane {
     }
 
     private void bindPlaylistToPlayer() {
-        if(this.playlistController != null) {
-            if (this.playerController != null) {
-                this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
-                this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+        if(playlistController != null) {
+            if (playerController != null) {
+                playerController.getResizablePlayer().setPlaylist(playlistController.getPlaylist());
+                playlistController.setMediaListPlayer(playerController.getResizablePlayer().getMediaListPlayer());
             }
-            if(this.menuBarController != null) {
-                this.menuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
-                this.playlistController.setStreamingPlayer(menuBarController.getStreamMedia().getMediaListPlayer());
+            if(includedMenuBarController != null) {
+                includedMenuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
+                this.playlistController.setStreamingPlayer(includedMenuBarController.getStreamMedia().getMediaListPlayer());
             }
         }
     }
 
     private void bindStatusBarToControllers() {
-        if(statusBarController != null) {
+        if(includedStatusBarController != null) {
             if(playerController != null) {
-                playerController.setStatusLabel(statusBarController.getCenterContent());
+                playerController.setStatusLabel(includedStatusBarController.getCenterContent());
             }
-            if(menuBarController != null) {
-                menuBarController.setStatusLabel(statusBarController.getRightContent());
+            if(includedMenuBarController != null) {
+                includedMenuBarController.setStatusLabel(includedStatusBarController.getRightContent());
             }
         }
     }

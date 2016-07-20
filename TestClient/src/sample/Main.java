@@ -4,8 +4,10 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.constant.Constant;
 import sample.controller.MainFrameController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
@@ -19,8 +21,30 @@ public class Main extends Application {
     private MainFrameController mainFrameController;
 
     @Override
+    public void stop() {
+        try {
+            super.stop();
+            if(mainFrameController != null) {
+                if(mainFrameController.getThreadConnections() != null) {
+                    if (mainFrameController.getThreadConnections().isAlive()) {
+                        mainFrameController.getThreadConnections().interrupt();
+                    }
+                    mainFrameController.getThreadConnections().join();
+                }
+                mainFrameController.getResizablePlayer().release();
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
+            e.printStackTrace();
+        } finally {
+            Platform.exit();
+            System.exit(0);
+        }
+    }
+
+    @Override
     public void start(Stage primaryStage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("view/mainFrame.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constant.pathToMainView));
         AnchorPane rootPane;
         Scene scene;
 
@@ -34,34 +58,24 @@ public class Main extends Application {
 
             // Control the close button of the window
             primaryStage.setOnCloseRequest((event) -> {
-                if(mainFrameController.getThreadConnections().isAlive()) {
-                    mainFrameController.getThreadConnections().interrupt();
-                }
-
-                try {
-                    mainFrameController.getThreadConnections().join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                mainFrameController.getResizablePlayer().release();
-
-                Platform.exit();
-                System.exit(0);
+                stop();
             });
 
+            primaryStage.setTitle("MyCast");
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
+            primaryStage.setFullScreen(true);
             primaryStage.show();
         } catch (IOException e) {
-            System.out.println("Erreur lors du démarrage de l'application. Attendez sa fermeture.");
+            System.out.println("Error while starting the application. Wait for it to close.");
             e.printStackTrace();
-            if (mainFrameController.getResizablePlayer() != null) {
-                mainFrameController.getResizablePlayer().release();
-            }
+            stop();
         }
     }
 
     public static void main(final String[] args) {
         new NativeDiscovery().discover();
-        Application.launch(Main.class);
+        launch(args);
     }
 }

@@ -3,11 +3,10 @@ package sample.model;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import sample.constant.FormatConstant;
+import sample.constant.Constant;
 import uk.co.caprica.vlcj.mrl.RtspMrl;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -100,7 +99,9 @@ public class ThreadConnection extends Thread {
                 //Disconnection requested, close the socket, and wait for another connection...
                 mediaPlayer.stop();
                 try {
-                    socket.close();
+                    if(socket != null) {
+                        socket.close();
+                    }
                 } catch (IOException e) {
                 }
             }
@@ -124,7 +125,7 @@ public class ThreadConnection extends Thread {
         String url = metaInfo.getUrl();
         System.out.println(metaInfo.getEncodedBy());
 
-        for(String ext : FormatConstant.EXTENSIONS_AUDIO) {
+        for(String ext : Constant.EXTENSIONS_AUDIO) {
             if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
                 isMusic = true;
                 break;
