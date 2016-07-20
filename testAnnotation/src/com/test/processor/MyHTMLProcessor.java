@@ -40,10 +40,10 @@ public class MyHTMLProcessor extends AbstractProcessor {
         
         firstLoop = true;
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
         Date date = new Date();
         
-        htmlFile = new File("./resource/MyDescription"+dateFormat.format(date)+".html");
+        htmlFile = new File("./resource/Doc-"+dateFormat.format(date)+".html");
 
         try {
             fw = new FileOutputStream(htmlFile);
