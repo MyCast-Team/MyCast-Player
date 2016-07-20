@@ -3,6 +3,7 @@ package sample.model;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
+import sample.constant.Constant;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -31,8 +32,6 @@ public class StreamMedia extends Thread {
     private boolean isAlreadyStarted;
 
     private CONNECTION_STATUS status;
-
-    private final int PORT = 2016;
 
     private ClientDataReceiver clientDataReceiver;
 
@@ -86,7 +85,7 @@ public class StreamMedia extends Thread {
      */
     public void prepareStreamingMedia(String addr) {
 
-        String rtspStream = formatRtspStream(addr, PORT, "demo");
+        String rtspStream = formatRtspStream(addr, Constant.PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
