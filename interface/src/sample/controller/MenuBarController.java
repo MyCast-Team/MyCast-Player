@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * Class of control of the menuBar.
  */
-@DocumentationAnnotation(author = "Thomas Fouan", date = "10/03/16", description = "This is the controller to manage the MenuBar. It defines functions to call on events.")
+@DocumentationAnnotation(author = "Thomas Fouan", date = "10/03/2016", description = "This is the controller to manage the MenuBar. It defines functions to call on events.")
 public class MenuBarController {
 
     @FXML

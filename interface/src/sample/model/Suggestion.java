@@ -2,16 +2,18 @@ package sample.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import sample.annotation.DocumentationAnnotation;
 
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the suggestion model. It's pretty much like a Media but with some additionnal informations.")
 public class Suggestion {
 
     String Name;
     String Type;
     String Date;
-    String  Director;
+    String Director;
     String Length;
     String Producer;
 
