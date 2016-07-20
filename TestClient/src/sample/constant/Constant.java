@@ -11,6 +11,16 @@ public class Constant {
     public static final String pathToMainView = "view/mainFrame.fxml";
 
     /**
+     * Define the port to communicate with the server application
+     */
+    public static final int PORT = 12345;
+
+    /**
+     * Define the port to stream with the server application
+     */
+    public static final int STREAMING_PORT = 5555;
+
+    /**
      * Define all audio extensions that can be used with the player
      */
     public static final String[] EXTENSIONS_AUDIO = {
