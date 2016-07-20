@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import sample.Main;
+import sample.constant.Constant;
 import sample.controller.MainFrameController;
 
 import java.io.*;
@@ -30,8 +31,6 @@ public class InterfaceDialog {
     private ScrollPane content;
     private GridPane table;
     private ButtonType validateButton;
-    private final String pathToPlugin = "/plugin";
-    private final String[] staticInterfaces = {"/sample/view/suggestions.fxml", "/sample/view/playlist.fxml", "/sample/view/player.fxml", "/sample/view/plugin.fxml", "/sample/view/mediacase.fxml"};
     private HashMap<String, Point> currentInterface;
 
     /**
@@ -55,10 +54,8 @@ public class InterfaceDialog {
             // Get the interface stored in interface.csv
             currentInterface = MainFrameController.readComponent();
             // Make sure staticInterfaces are in the HashMap. Else, put in it.
-            for(String inter : staticInterfaces) {
-                if(currentInterface.get(inter) == null) {
-                    currentInterface.put(inter, new Point(-1, -1));
-                }
+            for(String inter : Constant.staticInterfaces) {
+                currentInterface.putIfAbsent(inter, new Point(-1, -1));
             }
             getNewPlugins();
 
@@ -118,7 +115,7 @@ public class InterfaceDialog {
      * Add new plugins in the interface HashMap (In fact, all plugins that a are not in the "interface.csv" file).
      */
     private void getNewPlugins() {
-        Path path = Paths.get(pathToPlugin);
+        Path path = Paths.get(Constant.pathToPlugin);
         if(Files.isDirectory(path)) {
             try {
                 for (Path path1 : Files.newDirectoryStream(path)) {
@@ -210,12 +207,10 @@ public class InterfaceDialog {
      * Save the new position of interface in the "interface.csv" file.
      */
     private void saveInterface() {
-        String csvFile = "./res/interface.csv";
         BufferedWriter bw = null;
-        String line = "";
 
         try {
-            bw = new BufferedWriter(new FileWriter(csvFile, false));
+            bw = new BufferedWriter(new FileWriter(Constant.pathToInterfaceConf, false));
 
             for(Entry<String, Point> entry : currentInterface.entrySet()) {
                 bw.write(entry.getKey()+";"+entry.getValue().getX()+";"+entry.getValue().getY());

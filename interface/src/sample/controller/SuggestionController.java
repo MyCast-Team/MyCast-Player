@@ -17,6 +17,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sample.constant.Constant;
 import sample.model.Suggestion;
 import java.io.*;
 import java.util.ArrayList;
@@ -103,7 +104,6 @@ public class SuggestionController {
         HttpResponse response1;
         HttpEntity entity1;
 
-        String filePath = "./res/id.json";
         FileOutputStream fos;
         InputStream is;
         JSONParser parser = new JSONParser();
@@ -115,7 +115,7 @@ public class SuggestionController {
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(filePath));
+            fos = new FileOutputStream(new File(Constant.pathToId));
 
             byte[] buffer = new byte[8 * 1024];
             int bytesRead;
@@ -129,7 +129,7 @@ public class SuggestionController {
             fos.close();
             EntityUtils.consume(entity1);
 
-            obj = parser.parse(new FileReader("./res/id.json"));
+            obj = parser.parse(new FileReader(Constant.pathToId));
             jsonObject = (JSONObject) obj;
 
             id = jsonObject.get("id").toString();

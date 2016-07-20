@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.constant.Constant;
 import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -231,7 +232,7 @@ public class PlayerController implements MediaPlayerEventListener {
         String artworkUrl = metaInfo.getArtworkUrl();
 
         boolean isMusic = false;
-        for(String ext : PlaylistController.EXTENSIONS_AUDIO) {
+        for(String ext : Constant.EXTENSIONS_AUDIO) {
             if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
                 isMusic = true;
                 break;
