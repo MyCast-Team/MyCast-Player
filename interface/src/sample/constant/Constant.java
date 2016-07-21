@@ -71,7 +71,7 @@ public class Constant {
     /**
      * Define the port number for streaming media between the main application and the client application
      */
-    public static final int PORT = 2016;
+    public static final int PORT = 5555;
 
     /**
      * Define all audio extensions that can be used with the player

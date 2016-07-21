@@ -83,18 +83,15 @@ public class StreamMedia extends Thread {
 
     /**
      * Create and prepare a player for streaming.
-     * @param addr address of the client
      */
-    public void prepareStreamingMedia(String addr) {
-
-        String rtspStream = formatRtspStream(addr, Constant.PORT, "demo");
+    public void prepareStreamingMedia() {
+        String rtspStream = formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
-                ":sout-keep",
-                ":rtsp-caching=100");
+                ":sout-keep");
 
         mediaListPlayer.setMediaList(playlist);
         for(Media m : interfacePlaylist.getPlaylist()) {
@@ -169,7 +166,7 @@ public class StreamMedia extends Thread {
                 socket.connect(new InetSocketAddress(addr, port), 1000);
 
                 sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
-                prepareStreamingMedia(socket.getInetAddress().getHostAddress());
+                prepareStreamingMedia();
 
                 clientDataReceiver = new ClientDataReceiver(socket, setConnection);
                 clientDataReceiver.start();

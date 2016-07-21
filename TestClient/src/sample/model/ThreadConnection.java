@@ -29,9 +29,6 @@ public class ThreadConnection extends Thread {
 
     private String mrl;
 
-    private final int PORT = 12345;
-    private final int STREAMING_PORT = 2016;
-
     public ThreadConnection(MediaPlayer mediaPlayer, Pane playerHolder, ImageView imageView, ImageView artworkView) throws IOException {
 
         this.mediaPlayer = mediaPlayer;
@@ -39,7 +36,7 @@ public class ThreadConnection extends Thread {
         this.imageView = imageView;
         this.artworkView = artworkView;
 
-        this.serverSocket = new ServerSocket(PORT);
+        this.serverSocket = new ServerSocket(Constant.PORT);
         System.out.println("Server is listening on port : "+serverSocket.getLocalPort());
     }
 
@@ -72,7 +69,7 @@ public class ThreadConnection extends Thread {
 
                 mrl = new RtspMrl().host(socket.getInetAddress()
                                     .getHostAddress())
-                                    .port(STREAMING_PORT)
+                                    .port(Constant.STREAMING_PORT)
                                     .path("/demo").value();
 
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
