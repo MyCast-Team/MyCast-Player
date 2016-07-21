@@ -99,7 +99,7 @@ public class PluginController {
     public void setSearchManagement() {
         search.setOnAction(event -> {
             if (!filter.getText().equals("")) {
-                String filterString = search.getText().toLowerCase();
+                String filterString = filter.getText().toLowerCase();
                 filteredPluginList.clear();
                 for (Plugin p : pluginList) {
                     if (p.getAuthor().toLowerCase().contains(filterString) ||
