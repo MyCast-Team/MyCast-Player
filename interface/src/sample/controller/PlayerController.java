@@ -7,10 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.constant.Constant;
 import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -20,7 +22,6 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
-
 
 /**
  * Control the player and bind the buttons of the player with functions
@@ -98,6 +99,8 @@ public class PlayerController implements MediaPlayerEventListener {
 
         this.lastTimeDisplayed = 0;
         this.isFullscreenPlayer = false;
+
+        installTooltips();
 
         addPreviousListener();
         addStopListener();
@@ -178,7 +181,7 @@ public class PlayerController implements MediaPlayerEventListener {
         repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
-                repeat.setGraphic(new ImageView(new Image("./img/random.png")));
+                repeat.setGraphic(new ImageView(new Image("./img/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
                 repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));
@@ -210,6 +213,15 @@ public class PlayerController implements MediaPlayerEventListener {
         });
     }
 
+    public void installTooltips(){
+        this.play.setTooltip(new Tooltip("Play/Pause the current media"));
+        this.previous.setTooltip(new Tooltip("Play the previous media"));
+        this.stop.setTooltip(new Tooltip("Stop the reading of the media"));
+        this.next.setTooltip(new Tooltip("Play the next media"));
+        this.repeat.setTooltip(new Tooltip("Set the repetition of the playlist"));
+        this.resize.setTooltip(new Tooltip("Change the player mode to full screen"));
+        this.timeSlider.setTooltip(new Tooltip("Set the media time location"));
+    }
 
     /* OVERRIDE MediaPlayerEventListener methods */
     @Override
@@ -220,7 +232,7 @@ public class PlayerController implements MediaPlayerEventListener {
         String artworkUrl = metaInfo.getArtworkUrl();
 
         boolean isMusic = false;
-        for(String ext : PlaylistController.EXTENSIONS_AUDIO) {
+        for(String ext : Constant.EXTENSIONS_AUDIO) {
             if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
                 isMusic = true;
                 break;

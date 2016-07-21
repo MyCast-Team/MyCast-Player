@@ -15,11 +15,11 @@
    <children>
       <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" prefHeight="58.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="NEVER">
+            <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Label text="Actual playlist :" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                      </font>
                      <HBox.margin>
                         <Insets />
@@ -33,7 +33,7 @@
                   </Button>
                </children>
                <padding>
-                  <Insets bottom="10.0" top="10.0" />
+                  <Insets bottom="10.0" top="10.0" left="10.0" />
                </padding>
             </HBox>
             <TableView fx:id="musicTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">

@@ -1,14 +1,17 @@
 package sample.model;
 
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
+
 import java.io.*;
 import java.util.ArrayList;
 
 /**
  * Created by Vincent on 28/04/2016.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "28/04/2016", description = "The Playlist model contains an ArrayList of Media. This class contains methods to write/read playlist between two use of MyShare.")
 public class Playlist implements Serializable {
     private ArrayList<Media> playlist;
-    final String path = "./res/playlist.ser";
 
     public Playlist(){
         playlist = new ArrayList<>();
@@ -27,7 +30,7 @@ public class Playlist implements Serializable {
 
     public void writePlaylist(){
         try {
-            File file = new File(path);
+            File file = new File(Constant.pathToPlaylist);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -39,7 +42,7 @@ public class Playlist implements Serializable {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(path);
+            FileOutputStream fileOut = new FileOutputStream(Constant.pathToPlaylist);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this.playlist);
             out.flush();
@@ -53,7 +56,7 @@ public class Playlist implements Serializable {
     public void readPlaylist(){
         ObjectInputStream ois = null;
         try {
-            FileInputStream fichier = new FileInputStream(path);
+            FileInputStream fichier = new FileInputStream(Constant.pathToPlaylist);
             ois = new ObjectInputStream(fichier);
             this.playlist = (ArrayList<Media>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {

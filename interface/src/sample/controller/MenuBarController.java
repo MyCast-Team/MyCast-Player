@@ -21,7 +21,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
+import sample.annotation.DocumentationAnnotation;
 import sample.model.InterfaceDialog;
+import sample.model.Point;
 import sample.model.StreamMedia;
 
 import java.io.File;
@@ -29,12 +31,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Class of control of the menuBar.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "10/03/2016", description = "This is the controller to manage the MenuBar. It defines functions to call on events.")
 public class MenuBarController {
 
     @FXML
@@ -56,14 +60,16 @@ public class MenuBarController {
 
     private StreamMedia streamMedia;
 
-    private Label statusLabel;
+    private HashMap<String, Point> availableComponents;
+
+    private static Label statusLabel;
 
     public MenuBarController() {
     }
 
     @FXML
     public void initialize() {
-        streamMedia = new StreamMedia();
+        streamMedia = new StreamMedia(setConnection);
 
         setConnection.setOnAction(getConnectionEventHandler());
         play.setOnAction(getPlayEventHandler());
@@ -75,6 +81,10 @@ public class MenuBarController {
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
+    }
+
+    public void setAvailableComponents(HashMap<String, Point> availableComponents) {
+        this.availableComponents = availableComponents;
     }
 
     public StreamMedia getStreamMedia() {
@@ -93,24 +103,13 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
         return (event) -> {
-            if (streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
-                if (!streamMedia.getSocket().isClosed()) {
-                    streamMedia.closeConnection();
-                }
-                setConnection.setText("Set a new connection");
-                play.setText("Play");
-                play.setDisable(true);
-                previous.setDisable(true);
-                next.setDisable(true);
-                statusLabel.setText("Not connected");
+            if(streamMedia.getStatus() == StreamMedia.CONNECTION_STATUS.CONNECTED) {
+                streamMedia.closeConnection();
+                updateStreamMenu(true, null);
             } else {
                 if (streamMedia.setClientConnection()) {
                     String host = streamMedia.getSocket().getInetAddress().getCanonicalHostName();
-                    setConnection.setText("Disconnect with " + host);
-                    play.setDisable(false);
-                    previous.setDisable(false);
-                    next.setDisable(false);
-                    statusLabel.setText("Connected with " + host);
+                    updateStreamMenu(false, host);
                 }
             }
         };
@@ -123,7 +122,7 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
         return (event) -> {
-            InterfaceDialog interfaceDialog = new InterfaceDialog();
+            InterfaceDialog interfaceDialog = new InterfaceDialog(availableComponents);
         };
     }
 
@@ -153,10 +152,13 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getPreviousEventHandler() {
         return (event) -> {
-            if (streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                streamMedia.getMediaListPlayer().pause();
-                streamMedia.getMediaListPlayer().playPrevious();
-                streamMedia.getMediaListPlayer().play();
+            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                    streamMedia.getMediaListPlayer().playPrevious();
+                } else {
+                    streamMedia.getMediaListPlayer().playPrevious();
+                    play.setText("Pause");
+                }
             }
         };
     }
@@ -168,12 +170,35 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getNextEventHandler() {
         return (event) -> {
-            if (streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                streamMedia.getMediaListPlayer().pause();
-                streamMedia.getMediaListPlayer().playNext();
-                streamMedia.getMediaListPlayer().play();
+            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                if(streamMedia.getMediaListPlayer().isPlaying()) {
+                    streamMedia.getMediaListPlayer().playNext();
+                } else {
+                    streamMedia.getMediaListPlayer().playNext();
+                    play.setText("Pause");
+                }
             }
         };
+    }
+
+    /**
+     * Update the menuBar after setting or closing a connection.
+     */
+    public void updateStreamMenu(boolean isReset, String host) {
+        if(isReset) {
+            setConnection.setText("Set a new connection");
+            play.setText("Play");
+            play.setDisable(true);
+            previous.setDisable(true);
+            next.setDisable(true);
+            statusLabel.setText("Not connected");
+        } else {
+            setConnection.setText("Disconnect with "+host);
+            play.setDisable(false);
+            previous.setDisable(false);
+            next.setDisable(false);
+            statusLabel.setText("Connected with "+host);
+        }
     }
 
     private EventHandler<ActionEvent> getAddEventHandler() {
