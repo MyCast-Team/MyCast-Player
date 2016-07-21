@@ -28,8 +28,10 @@
             </Label>
             <HBox maxHeight="30.0" prefHeight="30.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <TextField fx:id="search"/>
+                  <TextField fx:id="filter"/>
                   <Separator opacity="0.0" HBox.hgrow="NEVER" />
+                  <Button fx:id="search"  text="Search" />
+                  <Button fx:id="reset"  text="Reset" />
                   <Button fx:id="refresh"  text="Refresh" />
                   <Button fx:id="download" layoutX="324.0" layoutY="15.0" text="Download" mnemonicParsing="false" />
                   <Button fx:id="remove" alignment="CENTER_RIGHT" layoutX="381.0" text="Remove" layoutY="15.0" mnemonicParsing="false" />
