@@ -66,8 +66,6 @@ public class PluginController {
 
     private ArrayList<Plugin> filteredPluginList;
 
-    final String path = "./res/plugin.json";
-
     public PluginController(){
     }
 
@@ -176,14 +174,11 @@ public class PluginController {
     public EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
             File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
-
             boolean success = f1.delete();
 
-            if (!success){
+            if (!success) {
                 System.out.println("Deletion failed.");
-                //System.exit(0);
-            }
-            else{
+            } else {
                 System.out.println("File deleted.");
             }
             getRefreshEventHandler();
