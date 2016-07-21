@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import sample.annotation.DocumentationAnnotation;
 import sample.model.Media;
 import sample.model.Playlist;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 /**
  * Class of control of the music.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "25/04/2016", description = "This is the controller of the playlist component. The playlist is a list of medias that will be played in order. You can delete medias or reset the playlist. The playlist is saved in a file between two MyShare use.")
 public class PlaylistController {
     @FXML
     private TableView<Media> musicTable;
@@ -38,132 +40,6 @@ public class PlaylistController {
     private MediaListPlayer mediaListPlayer;
 
     private MediaListPlayer streamingPlayer;
-
-    public static final String[] EXTENSIONS_AUDIO = {
-            "3ga",
-            "669",
-            "a52",
-            "aac",
-            "ac3",
-            "adt",
-            "adts",
-            "aif",
-            "aifc",
-            "aiff",
-            "amb",
-            "amr",
-            "aob",
-            "ape",
-            "au",
-            "awb",
-            "caf",
-            "dts",
-            "flac",
-            "it",
-            "kar",
-            "m4a",
-            "m4b",
-            "m4p",
-            "m5p",
-            "mid",
-            "mka",
-            "mlp",
-            "mod",
-            "mpa",
-            "mp1",
-            "mp2",
-            "mp3",
-            "mpc",
-            "mpga",
-            "mus",
-            "oga",
-            "ogg",
-            "oma",
-            "opus",
-            "qcp",
-            "ra",
-            "rmi",
-            "s3m",
-            "sid",
-            "spx",
-            "tak",
-            "thd",
-            "tta",
-            "voc",
-            "vqf",
-            "w64",
-            "wav",
-            "wma",
-            "wv",
-            "xa",
-            "xm"
-    };
-
-    public static final String[] EXTENSIONS_VIDEO = {
-            "3g2",
-            "3gp",
-            "3gp2",
-            "3gpp",
-            "amv",
-            "asf",
-            "avi",
-            "bik",
-            "bin",
-            "divx",
-            "drc",
-            "dv",
-            "evo",
-            "f4v",
-            "flv",
-            "gvi",
-            "gxf",
-            "iso",
-            "m1v",
-            "m2v",
-            "m2t",
-            "m2ts",
-            "m4v",
-            "mkv",
-            "mov",
-            "mp2",
-            "mp2v",
-            "mp4",
-            "mp4v",
-            "mpe",
-            "mpeg",
-            "mpeg1",
-            "mpeg2",
-            "mpeg4",
-            "mpg",
-            "mpv2",
-            "mts",
-            "mtv",
-            "mxf",
-            "mxg",
-            "nsv",
-            "nuv",
-            "ogg",
-            "ogm",
-            "ogv",
-            "ogx",
-            "ps",
-            "rec",
-            "rm",
-            "rmvb",
-            "rpl",
-            "thp",
-            "tod",
-            "ts",
-            "tts",
-            "txd",
-            "vob",
-            "vro",
-            "webm",
-            "wm",
-            "wmv",
-            "wtv",
-            "xesc"
-    };
 
     /**
      * The constructor.
@@ -199,6 +75,7 @@ public class PlaylistController {
     @FXML
     public void initialize() {
         this.playlist = new Playlist();
+        System.out.println("eeeee");
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());
@@ -210,15 +87,13 @@ public class PlaylistController {
         refreshPlaylist();
         setDragAndDrop();
 
+        this.reset.setTooltip(new Tooltip("Reset the actual playlist to empty playlist"));
+
         reset.setOnAction(event -> {
             this.playlist.reset();
             if(this.mediaListPlayer != null) {
                 this.mediaListPlayer.stop();
                 this.mediaListPlayer.getMediaList().clear();
-            }
-            if(this.streamingPlayer != null) {
-                this.streamingPlayer.stop();
-                this.streamingPlayer.getMediaList().clear();
             }
             refreshPlaylist();
         });
@@ -249,15 +124,13 @@ public class PlaylistController {
         contextMenu.getItems().addAll(delete);
 
         musicTable.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
+                if(musicTable.getSelectionModel().getSelectedIndex() != -1 && mediaListPlayer != null)
+                    mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
+            }
             if (event.isSecondaryButtonDown()) {
                 contextMenu.show(musicTable, event.getScreenX(), event.getScreenY());
             }
-        });
-
-        musicTable.setOnMousePressed(event -> {
-           if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
-               mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
-           }
         });
     }
 
@@ -276,13 +149,14 @@ public class PlaylistController {
             if (db.hasFiles()) {
                 success = true;
                 for (File file:db.getFiles()) {
-                    if(extensionIsSupported(getExtension(file.getPath()))){
+                    if(MediacaseController.audioExtensionIsSupported(getExtension(file.getPath()))
+                            || MediacaseController.videoExtensionIsSupported(getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         if(this.mediaListPlayer != null) {
                             this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                         }
-                        if(this.streamingPlayer != null) {
+                        if(this.streamingPlayer != null && this.streamingPlayer.getMediaList() != null) {
                             this.streamingPlayer.getMediaList().addMedia(file.getPath());
                         }
                     }
@@ -296,10 +170,14 @@ public class PlaylistController {
                     ArrayList<Media> list = (ArrayList<Media>) db.getContent(dataFormat);
                     for (Media m: list){
                         this.playlist.addMedia(m);
-                        this.mediaListPlayer.getMediaList().addMedia(m.getPath());
+                        if(this.mediaListPlayer != null && this.mediaListPlayer.getMediaList() != null) {
+                            this.mediaListPlayer.getMediaList().addMedia(m.getPath());
+                        }
+                        if(this.streamingPlayer != null && this.streamingPlayer.getMediaList() != null) {
+                            this.streamingPlayer.getMediaList().addMedia(m.getPath());
+                        }
                     }
                 }
-
             }
             refreshPlaylist();
             event.setDropCompleted(success);
@@ -316,21 +194,6 @@ public class PlaylistController {
         }
 
         return extension;
-    }
-
-    public boolean extensionIsSupported(String extension){
-        for(String str: EXTENSIONS_AUDIO){
-            if(extension.compareTo(str) == 0){
-                return true;
-            }
-        }
-
-        for(String str: EXTENSIONS_VIDEO){
-            if(extension.compareTo(str) == 0){
-                return true;
-            }
-        }
-        return false;
     }
 
     public void refreshPlaylist(){

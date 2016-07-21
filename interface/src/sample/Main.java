@@ -2,63 +2,111 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.constant.Constant;
+import sample.annotation.DocumentationAnnotation;
 import sample.controller.MainFrameController;
-import sample.controller.MenuBarController;
+import sample.controller.SuggestionController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
+import java.io.File;
+import java.io.IOException;
+
+@DocumentationAnnotation(author = "Vincent Rossignol, Thomas Fouan and Pierre Lochouarn", date = "01/03/2016", description = "MyShare is a media players with many functionality like suggestions, plugins, mediacase, playlist and even more !")
 public class Main extends Application {
 
     private Stage primaryStage;
     private MainFrameController mainFrameController;
-    private MenuBarController menuBarController;
 
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MyCast");
-
+        this.primaryStage.setMinWidth(800);
+        this.primaryStage.setMinHeight(600);
+        this.primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
+        checkResourceFolder();
         initRootLayout();
+    }
+
+    private void checkResourceFolder() {
+        File f = new File(Constant.PATH_TO_RESOURCES);
+        if (!f.exists()) {
+            boolean result = f.mkdir();
+            if(!result) {
+                System.out.println("No permission for creating resource directory necessary to run the application");
+                stop();
+            }
+        }
+    }
+
+    /**
+     * Prepare the application to stop. Release resources and save useful info
+     * @throws Exception
+     */
+    @Override
+    public void stop() {
+        try {
+            super.stop();
+
+            if(mainFrameController != null) {
+                // Save the current interface in the interface.csv file
+                mainFrameController.saveInterface();
+
+                if (mainFrameController.getPlayerController() != null) {
+                    mainFrameController.getPlayerController().getResizablePlayer().release();
+                }
+                if (mainFrameController.getIncludedMenuBarController() != null) {
+                    mainFrameController.getIncludedMenuBarController().getStreamMedia().release();
+                }
+            }
+            SuggestionController.sendData();
+        } catch (Exception e) {
+            System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
+            e.printStackTrace();
+        } finally {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     /**
      * Initializes the root layout, the main frame skeleton.
      */
-    public void initRootLayout() {
-        // Load root layout from fxml file
-        mainFrameController = new MainFrameController("/sample/view/mainFrame.fxml", this.primaryStage);
-        VBox rootLayout = mainFrameController.getRootPane();
+    private void initRootLayout() {
+        Scene scene;
+        VBox rootLayout;
+        mainFrameController = null;
+        FXMLLoader loader = new FXMLLoader();
 
-        Scene scene = new Scene(rootLayout);
+        try {
+            // Load root layout from fxml file
+            loader.setLocation(getClass().getResource(Constant.PATH_TO_MAIN_VIEW));
+            rootLayout = loader.load();
+            mainFrameController = loader.getController();
+            scene = new Scene(rootLayout);
 
-        scene.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
-            if(event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
-        });
+            scene.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
+                if (event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
+            });
 
-        primaryStage.setOnCloseRequest(event -> {
-            if(mainFrameController.getPlayerController() != null) {
-                mainFrameController.getPlayerController().getResizablePlayer().release();
-            }
-            if(mainFrameController.getMenuBarController() != null) {
-                mainFrameController.getMenuBarController().getStreamMedia().release();
-            }
-            Platform.exit();
-            System.exit(0);
-        });
+            primaryStage.setOnCloseRequest(event -> {
+                stop();
+            });
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-    /**
-     * Returns the main stage.
-     * @return primaryStage which is the only stage at the time
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            System.out.println("An error occurred when the application try to start. Wait for it to close.");
+            e.printStackTrace();
+            stop();
+        }
     }
 
     public static void main(String[] args) {

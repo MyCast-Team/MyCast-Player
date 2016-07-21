@@ -1,99 +1,114 @@
 package sample.controller;
 
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
-import javafx.stage.Stage;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
+import sample.model.PluginManager;
 import sample.model.Point;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Map.Entry;
 
 /**
  * Class to manage our main frame of the application
  */
+@DocumentationAnnotation(author = "Vincent Rossignol et Thomas Fouan", date = "01/02/2016", description = "This is the main class that manage our application. We load the different components and plugins.")
 public class MainFrameController extends AnchorPane {
 
+    @FXML
     private VBox rootPane;
 
-    private AnchorPane rootContentPane;
+    @FXML
+    private AnchorPane rootContent;
 
+    @FXML
     private GridPane grid;
 
-    private HBox statusBar;
+    @FXML
+    private MenuBarController includedMenuBarController;
 
-    private ArrayList<AnchorPane> components;
+    @FXML
+    private StatusBarController includedStatusBarController;
+
+    private HashMap<String, Point> availableComponents;
+
+    private PluginManager pluginManager;
 
     private PlayerController playerController;
     private PlaylistController playlistController;
-    private MenuBarController menuBarController;
-    private StatusBarController statusBarController;
 
-    public MainFrameController(String path, Stage primaryStage) {
-
-        this.playerController = null;
-        this.playlistController = null;
-        this.components = new ArrayList<>();
-
-        try {
-            this.rootPane = (VBox) loadRoot(path);
-            rootPane.getChildren().add(0, loadMenuBar());
-            rootPane.getChildren().add(2, loadStatusBar());
-
-            this.rootPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "rootContent")).forEach(node -> {
-                this.rootContentPane = (AnchorPane) node;
-            });
-
-            this.rootContentPane.getChildren().stream().filter(node -> Objects.equals(node.getId(), "grid")).forEach(node -> {
-                this.grid = (GridPane) node;
-            });
-
-            HashMap<String, Point> componentToLoad = readComponent();
-
-            for(Map.Entry<String, Point> m : componentToLoad.entrySet()) {
-                if(m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
-                    AnchorPane pane = loadComponent(m.getKey());
-                    this.grid.add(pane, m.getValue().getX(), m.getValue().getY());
-                    this.components.add(pane);
-                }
-            }
-
-            enableDragAndDrop();
-
-            bindPlaylistToPlayer();
-            bindStatusBarToControllers();
-
-            setRowContraints();
-            setColumnConstraints();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public MainFrameController() {
     }
 
-    public static HashMap<String, Point> readComponent(){
+    @FXML
+    public void initialize() {
+        AnchorPane pane;
+
+        pluginManager = new PluginManager();
+        playerController = null;
+        playlistController = null;
+        availableComponents = new HashMap<>();
+
+        includedMenuBarController.setAvailableComponents(availableComponents);
+
+        for (String str : Constant.STATIC_INTERFACES) {
+            availableComponents.put(str, new Point(-1, -1));
+        }
+        pluginManager.loadJarFiles().forEach((str) -> availableComponents.put(str, new Point(-1, -1)));
+
+        HashMap<String, Point> componentToLoad = readComponent();
+
+        for(Entry<String, Point> m : componentToLoad.entrySet()) {
+            Point point = availableComponents.get(m.getKey());
+            if(point != null) {
+                if (m.getValue().getX() >= 0 && m.getValue().getY() >= 0) {
+                    if((pane = loadComponent(m.getKey())) != null) {
+                        grid.add(pane, m.getValue().getX(), m.getValue().getY());
+                        point.setX(m.getValue().getX());
+                        point.setY(m.getValue().getY());
+                    }
+                }
+            }
+        }
+
+        enableDragAndDrop();
+
+        bindPlaylistToPlayer();
+        bindStatusBarToControllers();
+
+        setRowContraints();
+        setColumnConstraints();
+    }
+
+    public MenuBarController getIncludedMenuBarController() {
+        return includedMenuBarController;
+    }
+
+    public PlayerController getPlayerController() {
+        return playerController;
+    }
+
+    private static HashMap<String, Point> readComponent(){
         HashMap<String, Point> list = new HashMap<>();
-        String csvFile = "./res/interface.csv";
         BufferedReader br = null;
-        String line = "";
+        String line;
         try {
+            br = new BufferedReader(new FileReader(Constant.PATH_TO_INTERFACE_CONF));
 
-            br = new BufferedReader(new FileReader(csvFile));
             while ((line = br.readLine()) != null) {
-
                 String array[] = line.split(";");
-
                 list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
             }
-
         } catch (IOException e) {
             System.out.println("Interface configuration not found... Empty interface will load.");
         } finally {
@@ -126,47 +141,33 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
-    public AnchorPane loadComponent(String path){
-        AnchorPane pane = null;
+    private AnchorPane loadComponent(String path){
+        AnchorPane pane;
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(path));
-        try {
-            pane = loader.load();
 
-            if(pane.getId().equals("player")) {
-                playerController = loader.getController();
-            } else if(pane.getId().equals("playlist")) {
-                playlistController = loader.getController();
+        try {
+            if(path.startsWith("jar:file:")) {
+                loader.setLocation(new URL(path));
+                pane = loader.load();
+            } else {
+                loader.setLocation(getClass().getResource(path));
+                pane = loader.load();
+
+                if (pane.getId().equals("player")) {
+                    playerController = loader.getController();
+                } else if (pane.getId().equals("playlist")) {
+                    playlistController = loader.getController();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
+            pane = null;
         }
+
         return pane;
     }
 
-    public Pane loadRoot(String path) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(path));
-        return loader.load();
-    }
-
-    private MenuBar loadMenuBar() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/view/menubar.fxml"));
-        MenuBar menuBar = loader.load();
-        this.menuBarController = loader.getController();
-        return menuBar;
-    }
-
-    private HBox loadStatusBar() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/view/statusBar.fxml"));
-        HBox pane = loader.load();
-        this.statusBarController = loader.getController();
-        return pane;
-    }
-
-    public void initDragAndDrop(AnchorPane pane){
+    private void initDragAndDrop(AnchorPane pane){
         pane.setOnDragDetected(event -> {
             Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
@@ -183,39 +184,53 @@ public class MainFrameController extends AnchorPane {
         pane.setOnDragDropped(event -> swap(event.getDragboard().getString(), pane));
     }
 
-    public void enableDragAndDrop(){
-        components.forEach(this::initDragAndDrop);
+    public void enableDragAndDrop() {
+        grid.getChildren().forEach((node) -> initDragAndDrop((AnchorPane) node));
     }
 
-    public void disableDragAndDrop(){
-        components.forEach(this::disableDragAndDropPane);
+    public void disableDragAndDrop() {
+        grid.getChildren().forEach((node) -> disableDragAndDropPane((AnchorPane) node));
     }
 
-    public void disableDragAndDropPane(AnchorPane pane){
+    private void disableDragAndDropPane(AnchorPane pane){
         pane.setOnDragDetected(MouseEvent::consume);
-
         pane.setOnDragOver(DragEvent::consume);
-
         pane.setOnDragDropped(event -> {
+
         });
     }
 
-    public void swap(String sourceStr, AnchorPane target){
+    private void swap(String sourceStr, AnchorPane target) {
         String[] sourcePosition = sourceStr.split(";");
-        int sourceRow = Integer.parseInt(sourcePosition[0]);
-        int sourceColumn = Integer.parseInt(sourcePosition[1]);
-        int targetRow = GridPane.getRowIndex(target);
-        int targetColumn = GridPane.getColumnIndex(target);
-        AnchorPane source = (AnchorPane) getNodeByRowColumnIndex(sourceRow, sourceColumn);
+        Point sourcePoint = new Point(Integer.parseInt(sourcePosition[1]), Integer.parseInt(sourcePosition[0]));
+        Point targetPoint = new Point(GridPane.getColumnIndex(target), GridPane.getRowIndex(target));
+        String sourcePath = getKeyByValue(sourcePoint);
+        String targetPath = getKeyByValue(targetPoint);
+        AnchorPane source = (AnchorPane) getNodeByRowColumnIndex(sourcePoint.getY(), sourcePoint.getX());
+
         grid.getChildren().remove(source);
         grid.getChildren().remove(target);
-        grid.add(source, targetColumn, targetRow);
-        grid.add(target, sourceColumn, sourceRow);
+        grid.add(source, targetPoint.getX(), targetPoint.getY());
+        grid.add(target, sourcePoint.getX(), sourcePoint.getY());
+
+        // Update availableComponents by theses new values
+        if(sourcePath != null && targetPath != null) {
+            availableComponents.replace(sourcePath, sourcePoint, targetPoint);
+            availableComponents.replace(targetPath, targetPoint, sourcePoint);
+        }
     }
 
-    public Node getNodeByRowColumnIndex(int row, int column) {
-        ObservableList<Node> childrens = grid.getChildren();
-        for(Node node : childrens) {
+    private String getKeyByValue(Point point) {
+        for(Entry<String, Point> entry : availableComponents.entrySet()) {
+            if(entry.getValue().equals(point)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    private Node getNodeByRowColumnIndex(int row, int column) {
+        for(Node node : grid.getChildren()) {
             if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
                 return node;
             }
@@ -223,39 +238,53 @@ public class MainFrameController extends AnchorPane {
         return null;
     }
 
-    private void bindPlaylistToPlayer() {
-        if(this.playlistController != null) {
-            if (this.playerController != null) {
-                this.playerController.getResizablePlayer().setPlaylist(this.playlistController.getPlaylist());
-                this.playlistController.setMediaListPlayer(this.playerController.getResizablePlayer().getMediaListPlayer());
+    /**
+     * Save the actual interface in the "interface.csv" file.
+     */
+    public void saveInterface() {
+        BufferedWriter bw = null;
+
+        try {
+            bw = new BufferedWriter(new FileWriter(Constant.PATH_TO_INTERFACE_CONF, false));
+
+            for(Entry<String, Point> entry : availableComponents.entrySet()) {
+                bw.write(entry.getKey()+";"+entry.getValue().getX()+";"+entry.getValue().getY());
+                bw.newLine();
             }
-            if(this.menuBarController != null) {
-                this.menuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
-                this.playlistController.setStreamingPlayer(menuBarController.getStreamMedia().getMediaListPlayer());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void bindPlaylistToPlayer() {
+        if(playlistController != null) {
+            if (playerController != null) {
+                playerController.getResizablePlayer().setPlaylist(playlistController.getPlaylist());
+                playlistController.setMediaListPlayer(playerController.getResizablePlayer().getMediaListPlayer());
+            }
+            if(includedMenuBarController != null) {
+                includedMenuBarController.getStreamMedia().setInterfacePlaylist(playlistController.getPlaylist());
+                this.playlistController.setStreamingPlayer(includedMenuBarController.getStreamMedia().getMediaListPlayer());
             }
         }
     }
 
     private void bindStatusBarToControllers() {
-        if(statusBarController != null) {
+        if(includedStatusBarController != null) {
             if(playerController != null) {
-                playerController.setStatusLabel(statusBarController.getCenterContent());
+                playerController.setStatusLabel(includedStatusBarController.getCenterContent());
             }
-            if(menuBarController != null) {
-                menuBarController.setStatusLabel(statusBarController.getRightContent());
+            if(includedMenuBarController != null) {
+                includedMenuBarController.setStatusLabel(includedStatusBarController.getRightContent());
             }
         }
-    }
-
-    public VBox getRootPane(){
-        return rootPane;
-    }
-
-    public PlayerController getPlayerController() {
-        return playerController;
-    }
-
-    public MenuBarController getMenuBarController() {
-        return menuBarController;
     }
 }

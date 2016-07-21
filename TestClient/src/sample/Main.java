@@ -2,12 +2,13 @@ package sample;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import sample.model.ResizablePlayer;
-import sample.model.ThreadConnection;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
+import sample.constant.Constant;
+import sample.controller.MainFrameController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 import java.io.IOException;
@@ -17,72 +18,64 @@ import java.io.IOException;
  */
 public class Main extends Application {
 
-    private ResizablePlayer resizablePlayer;
+    private MainFrameController mainFrameController;
 
-    private DirectMediaPlayerComponent mediaPlayerComponent;
-
-    private Thread threadConnections;
+    @Override
+    public void stop() {
+        try {
+            super.stop();
+            if(mainFrameController != null) {
+                if(mainFrameController.getThreadConnections() != null) {
+                    if (mainFrameController.getThreadConnections().isAlive()) {
+                        mainFrameController.getThreadConnections().interrupt();
+                    }
+                    mainFrameController.getThreadConnections().join();
+                }
+                mainFrameController.getResizablePlayer().release();
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
+            e.printStackTrace();
+        } finally {
+            Platform.exit();
+            System.exit(0);
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) {
-
-        resizablePlayer = new ResizablePlayer();
-        mediaPlayerComponent = resizablePlayer.getMediaPlayerComponent();
-        Pane playerHolder = resizablePlayer.getPlayerHolder();
-        AnchorPane root = new AnchorPane();
-        VBox vBox = new VBox();
-
-        // Set the player in the BorderPane
-        BorderPane bp = new BorderPane(playerHolder);
-        bp.setStyle("-fx-background-color: black");
-
-        // First, add the BorderPane containing the player in the vBox
-        vBox.getChildren().add(bp);
-        VBox.setVgrow(bp, Priority.ALWAYS);
-
-        // Add the vBox in the AnchorPane
-        root.getChildren().add(vBox);
-        AnchorPane.setTopAnchor(vBox, 0.0);
-        AnchorPane.setBottomAnchor(vBox, 0.0);
-        AnchorPane.setLeftAnchor(vBox, 0.0);
-        AnchorPane.setRightAnchor(vBox, 0.0);
-
-        // Set the AnchorPane to the scene
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constant.PATH_TO_MAIN_VIEW));
+        AnchorPane rootPane;
+        Scene scene;
 
         // Start the Thread waiting for connections
         try {
-            threadConnections = new ThreadConnection(mediaPlayerComponent.getMediaPlayer());
+            rootPane = loader.load();
+            mainFrameController = loader.getController();
+
+            scene = new Scene(rootPane);
+            primaryStage.setScene(scene);
+
+            // Control the close button of the window
+            primaryStage.setOnCloseRequest((event) -> {
+                stop();
+            });
+
+            primaryStage.setTitle("MyCast");
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
+            primaryStage.setFullScreen(true);
+            primaryStage.show();
         } catch (IOException e) {
+            System.out.println("Error while starting the application. Wait for it to close.");
             e.printStackTrace();
+            stop();
         }
-        threadConnections.start();
-
-        // Control the close button of the window
-        primaryStage.setOnCloseRequest((event) -> {
-            if(threadConnections.isAlive()) {
-                threadConnections.interrupt();
-            }
-
-            try {
-                threadConnections.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            mediaPlayerComponent.release(true);
-
-            Platform.exit();
-            System.exit(0);
-        });
-
-        primaryStage.show();
     }
 
     public static void main(final String[] args) {
-
         new NativeDiscovery().discover();
-        Application.launch(Main.class);
+        launch(args);
     }
 }

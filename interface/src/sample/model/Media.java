@@ -2,12 +2,14 @@ package sample.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import sample.annotation.DocumentationAnnotation;
 
 import java.io.Serializable;
 
 /**
  * Created by Vincent on 07/03/2016.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "07/03/2016", description = "The Media class contains the main informations for a Media : it can be a video or a music. We use this template to manage our list of medias like Mediacase or Playlist.")
 public class Media implements Serializable {
 
     private String path;
@@ -15,8 +17,6 @@ public class Media implements Serializable {
     private String title;
 
     private String author;
-
-    private String artwork;
 
     private long duration;
 
