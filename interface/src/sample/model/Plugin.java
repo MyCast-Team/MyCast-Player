@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import sample.annotation.DocumentationAnnotation;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the model for a Plugin. It contains several informations that will be displayed in the plugin component.")
 public class Plugin {
 
     String Name;

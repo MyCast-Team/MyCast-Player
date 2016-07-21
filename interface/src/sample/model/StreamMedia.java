@@ -3,6 +3,8 @@ package sample.model;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -18,6 +20,7 @@ import java.util.Optional;
 /**
  * Created by thomasfouan on 09/03/2016.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "09/03/2016", description = "This class is the streaming manager. It creates socket with a client to broadcast medias.")
 public class StreamMedia extends Thread {
 
     private MediaPlayerFactory factory;
@@ -31,8 +34,6 @@ public class StreamMedia extends Thread {
     private boolean isAlreadyStarted;
 
     private CONNECTION_STATUS status;
-
-    private final int PORT = 2016;
 
     private ClientDataReceiver clientDataReceiver;
 
@@ -82,22 +83,21 @@ public class StreamMedia extends Thread {
 
     /**
      * Create and prepare a player for streaming.
-     * @param addr address of the client
      */
-    public void prepareStreamingMedia(String addr) {
-
-        String rtspStream = formatRtspStream(addr, PORT, "demo");
+    public void prepareStreamingMedia() {
+        String rtspStream = formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
-                ":sout-keep",
-                ":rtsp-caching=100");
+                ":sout-keep");
 
         mediaListPlayer.setMediaList(playlist);
-        for(Media m : interfacePlaylist.getPlaylist()) {
-            this.playlist.addMedia(m.getPath());
+        if(interfacePlaylist != null) {
+            for (Media m : interfacePlaylist.getPlaylist()) {
+                this.playlist.addMedia(m.getPath());
+            }
         }
         isAlreadyStarted = false;
     }
@@ -168,7 +168,7 @@ public class StreamMedia extends Thread {
                 socket.connect(new InetSocketAddress(addr, port), 1000);
 
                 sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
-                prepareStreamingMedia(socket.getInetAddress().getHostAddress());
+                prepareStreamingMedia();
 
                 clientDataReceiver = new ClientDataReceiver(socket, setConnection);
                 clientDataReceiver.start();

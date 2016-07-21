@@ -4,11 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.Media;
 import sample.model.Mediacase;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -17,11 +18,10 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import java.io.*;
 import java.util.ArrayList;
 
-import org.json.*;
-
 /**
  * Created by Vincent on 14/06/2016.
  */
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "14/06/2016", description = "This is the controller of the mediacase component. The mediacase is the list of the user's medias. You can search in this list and drag and drop medias into the playlist")
 public class MediacaseController {
     @FXML
     private TableView<Media> musiccaseTable;
@@ -59,140 +59,14 @@ public class MediacaseController {
     private Button searchButton2;
     @FXML
     private Button resetButton2;
+    @FXML
+    private TabPane tab;
 
     private Mediacase mediacase;
 
     private Mediacase filteredMediacase;
 
     private DataFormat dataFormat;
-
-    private static final String[] EXTENSIONS_AUDIO = {
-            "3ga",
-            "669",
-            "a52",
-            "aac",
-            "ac3",
-            "adt",
-            "adts",
-            "aif",
-            "aifc",
-            "aiff",
-            "amb",
-            "amr",
-            "aob",
-            "ape",
-            "au",
-            "awb",
-            "caf",
-            "dts",
-            "flac",
-            "it",
-            "kar",
-            "m4a",
-            "m4b",
-            "m4p",
-            "m5p",
-            "mid",
-            "mka",
-            "mlp",
-            "mod",
-            "mpa",
-            "mp1",
-            "mp2",
-            "mp3",
-            "mpc",
-            "mpga",
-            "mus",
-            "oga",
-            "ogg",
-            "oma",
-            "opus",
-            "qcp",
-            "ra",
-            "rmi",
-            "s3m",
-            "sid",
-            "spx",
-            "tak",
-            "thd",
-            "tta",
-            "voc",
-            "vqf",
-            "w64",
-            "wav",
-            "wma",
-            "wv",
-            "xa",
-            "xm"
-    };
-
-    private static final String[] EXTENSIONS_VIDEO = {
-            "3g2",
-            "3gp",
-            "3gp2",
-            "3gpp",
-            "amv",
-            "asf",
-            "avi",
-            "bik",
-            "bin",
-            "divx",
-            "drc",
-            "dv",
-            "evo",
-            "f4v",
-            "flv",
-            "gvi",
-            "gxf",
-            "iso",
-            "m1v",
-            "m2v",
-            "m2t",
-            "m2ts",
-            "m4v",
-            "mkv",
-            "mov",
-            "mp2",
-            "mp2v",
-            "mp4",
-            "mp4v",
-            "mpe",
-            "mpeg",
-            "mpeg1",
-            "mpeg2",
-            "mpeg4",
-            "mpg",
-            "mpv2",
-            "mts",
-            "mtv",
-            "mxf",
-            "mxg",
-            "nsv",
-            "nuv",
-            "ogg",
-            "ogm",
-            "ogv",
-            "ogx",
-            "ps",
-            "rec",
-            "rm",
-            "rmvb",
-            "rpl",
-            "thp",
-            "tod",
-            "ts",
-            "tts",
-            "txd",
-            "vob",
-            "vro",
-            "webm",
-            "wm",
-            "wmv",
-            "wtv",
-            "xesc"
-    };
-
-    private static final String path = "./res/mediacase.json";
 
     public MediacaseController(){}
 
@@ -227,6 +101,8 @@ public class MediacaseController {
                 SelectionMode.MULTIPLE
         );
 
+        installTooltips();
+
         setSearchManagement();
 
         refreshMediacase();
@@ -243,7 +119,24 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
+                System.out.println("here");
+                String id = "";
                 success = true;
+                File idFile = new File(Constant.PATH_TO_ID);
+                if(idFile.exists()){
+                    JSONParser parser = new JSONParser();
+                    try {
+                        JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
+                        id = String.valueOf(obj.get("id"));
+                    } catch (IOException | ParseException e) {
+                        id = SuggestionController.generateid();
+                    }
+                } else {
+                    id = SuggestionController.generateid();
+                }
+                JSONObject idObj = new JSONObject();
+                idObj.put("id", id);
+                jsonList.add(idObj);
                 for (File file:db.getFiles()) {
                     if(audioExtensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
@@ -302,7 +195,23 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
+                String id = "";
                 success = true;
+                File idFile = new File(Constant.PATH_TO_ID);
+                if(idFile.exists()){
+                    JSONParser parser = new JSONParser();
+                    try {
+                        JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
+                        id = (String) obj.get("id");
+                    } catch (IOException | ParseException e) {
+                        id = SuggestionController.generateid();
+                    }
+                } else {
+                    id = SuggestionController.generateid();
+                }
+                JSONObject idObj = new JSONObject();
+                idObj.put("id", id);
+                jsonList.add(idObj);
                 for (File file : db.getFiles()) {
                     if (videoExtensionIsSupported(getExtension(file.getPath()))) {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
@@ -353,6 +262,15 @@ public class MediacaseController {
         });
     }
 
+    public void installTooltips(){
+        search.setTooltip(new Tooltip("Enter the filter for the music search in your mediacase"));
+        search2.setTooltip(new Tooltip("Enter the filter for the video search in your mediacase"));
+        searchButton.setTooltip(new Tooltip("Do the search process"));
+        searchButton2.setTooltip(new Tooltip("Do the search process"));
+        resetButton.setTooltip(new Tooltip("Reset the search filter"));
+        resetButton2.setTooltip(new Tooltip("Reset the search filter"));
+    }
+
     public void setSearchManagement() {
         searchButton.setOnAction(event -> {
             if (!search.getText().equals("")) {
@@ -395,25 +313,35 @@ public class MediacaseController {
             }
             refreshMediacase();
         });
+
+        tab.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER && tab.getSelectionModel().isSelected(0)){
+                searchButton.fire();
+            }
+            if(event.getCode() == KeyCode.ENTER && tab.getSelectionModel().isSelected(1)){
+                searchButton2.fire();
+            }
+        });
     }
 
     public void writeMediacase(ArrayList<JSONObject> list){
         try {
-            File file = new File(path);
+            File file = new File(Constant.PATH_TO_MEDIACASE);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                     writer.write("");
                     writer.close();
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(path, true);
+            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_MEDIACASE, true);
             byte[] comma = ",".getBytes();
+            byte[] begin = "[".getBytes();
+            byte[] end = "]".getBytes();
             boolean first = true;
+            fileOut.write(begin);
             for(JSONObject object : list) {
                 if(!first)
                     fileOut.write(comma);
@@ -421,6 +349,7 @@ public class MediacaseController {
                 fileOut.write(byteArray);
                 first = false;
             }
+            fileOut.write(end);
             fileOut.close();
         } catch(IOException i) {
             i.printStackTrace();
@@ -438,18 +367,18 @@ public class MediacaseController {
         return extension;
     }
 
-    public boolean audioExtensionIsSupported(String extension){
-        for(String str: EXTENSIONS_AUDIO){
-            if(extension.compareTo(str) == 0){
+    public static boolean audioExtensionIsSupported(String extension){
+        for(String str: Constant.EXTENSIONS_AUDIO){
+            if(extension.toLowerCase().compareTo(str.toLowerCase()) == 0){
                 return true;
             }
         }
         return false;
     }
 
-    public boolean videoExtensionIsSupported(String extension) {
-        for (String str : EXTENSIONS_VIDEO) {
-            if (extension.compareTo(str) == 0) {
+    public static boolean videoExtensionIsSupported(String extension) {
+        for (String str : Constant.EXTENSIONS_VIDEO) {
+            if (extension.toLowerCase().compareTo(str.toLowerCase()) == 0) {
                 return true;
             }
         }

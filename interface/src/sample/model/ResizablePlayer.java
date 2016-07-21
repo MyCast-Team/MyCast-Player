@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
+import sample.annotation.DocumentationAnnotation;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -18,6 +19,7 @@ import java.nio.ByteBuffer;
 /**
  * Class of creation and control of the vlcj player.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "25/04/2016", description = "The ResizablePlayer class manage the resize of our player. It uses multiple classes like CanvasPlayerComponent or CanvasBufferFormatCallback.")
 public class ResizablePlayer {
 
     private DirectMediaPlayerComponent mediaPlayerComponent;
@@ -41,12 +43,6 @@ public class ResizablePlayer {
         // Initialisation of the components
         pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
-
-        // Add the player pane in the playerContainer
-        //BorderPane playerPane = new BorderPane(playerHolder);
-        //playerPane.setStyle("-fx-background-color: black");
-        //playerContainer.getChildren().add(0, playerPane);
-        //VBox.setVgrow(playerPane, Priority.ALWAYS);
 
         this.playerHolder = playerHolder;
         this.imageView = imageView;

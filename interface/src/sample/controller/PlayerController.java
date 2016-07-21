@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.constant.Constant;
 import sample.model.ResizablePlayer;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaMeta;
@@ -180,7 +181,7 @@ public class PlayerController implements MediaPlayerEventListener {
         repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
-                repeat.setGraphic(new ImageView(new Image("./img/random.png")));
+                repeat.setGraphic(new ImageView(new Image("./img/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
                 repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));
@@ -213,10 +214,13 @@ public class PlayerController implements MediaPlayerEventListener {
     }
 
     public void installTooltips(){
-        this.play.setTooltip(new Tooltip("Play the current media"));
+        this.play.setTooltip(new Tooltip("Play/Pause the current media"));
         this.previous.setTooltip(new Tooltip("Play the previous media"));
         this.stop.setTooltip(new Tooltip("Stop the reading of the media"));
         this.next.setTooltip(new Tooltip("Play the next media"));
+        this.repeat.setTooltip(new Tooltip("Set the repetition of the playlist"));
+        this.resize.setTooltip(new Tooltip("Change the player mode to full screen"));
+        this.timeSlider.setTooltip(new Tooltip("Set the media time location"));
     }
 
     /* OVERRIDE MediaPlayerEventListener methods */
@@ -228,7 +232,7 @@ public class PlayerController implements MediaPlayerEventListener {
         String artworkUrl = metaInfo.getArtworkUrl();
 
         boolean isMusic = false;
-        for(String ext : PlaylistController.EXTENSIONS_AUDIO) {
+        for(String ext : Constant.EXTENSIONS_AUDIO) {
             if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
                 isMusic = true;
                 break;

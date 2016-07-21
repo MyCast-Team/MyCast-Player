@@ -3,6 +3,8 @@ package sample.model;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,40 +19,19 @@ import java.util.List;
  *
  * Class of control of the loading of the plugins
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "07/06/2016", description = "This class manages our list of plugins at the beginning of the session.")
 public class PluginManager {
 
-    private String jarDirname = "plugin";
-
-    private final String packageName = "plugin";
-
-    private List<AnchorPane> listPlugin;
+    private List<String> listPlugin;
 
     //private List<ControllerInterface> listControllerPlugin;
 
     /**
      * Constructor.
-     * @param jarDirname
      */
-    public PluginManager(String jarDirname) {
-        this.jarDirname = jarDirname;
-        this.listPlugin = new ArrayList<AnchorPane>();
+    public PluginManager() {
+        this.listPlugin = new ArrayList<String>();
         //this.listControllerPlugin = new ArrayList<ControllerInterface>();
-    }
-
-    /**
-     * Get path to the directory containing the plugins.
-     * @return jarDirname
-     */
-    public String getJarDirname() {
-        return jarDirname;
-    }
-
-    /**
-     * Set path of the directory containing the plugins.
-     * @param jarDirname
-     */
-    public void setJarDirname(String jarDirname) {
-        this.jarDirname = jarDirname;
     }
 
     /**
@@ -65,9 +46,9 @@ public class PluginManager {
      * Main method of the class. Get all ".jar" files in the path define in jarDirname.
      * Try to load the mainView. It must be in packageName, with "mainPluginView.fxml" as name.
      */
-    public void loadJarFiles() {
+    public List<String> loadJarFiles() {
 
-        File jarDir = new File(jarDirname);
+        File jarDir = new File(Constant.PATH_TO_PLUGIN);
         // Check if the path containing the plugins exists and represents a directory.
         if(jarDir.exists() && jarDir.isDirectory()) {
             String[] dirContent = jarDir.list();
@@ -77,7 +58,7 @@ public class PluginManager {
 
             try {
                 for(String filepath : dirContent) {
-                    file = new File(jarDir.getAbsolutePath()+"/"+filepath);
+                    file = new File(jarDir.getAbsolutePath() + "/" + filepath);
                     // Check if the current file in jarDir is a file with the ".jar" extension
                     if (file.isDirectory() || !file.getPath().endsWith(".jar")) {
                         continue;
@@ -87,13 +68,14 @@ public class PluginManager {
                     loader = new URLClassLoader(urlList);
 
                     // Get the path of the main fxml to load
-                    String pathToFxml = packageName+"/mainPluginView.fxml";
+                    String pathToFxml = Constant.PACKAGE_PLUGIN_NAME + "/mainPluginView.fxml";
                     URL urlToFxml = loader.getResource(pathToFxml);
                     if (urlToFxml != null) {
                         // If the loader founds the file, load the component attached to the file.
-                        loadComponent(urlToFxml);
+                        //loadComponent(urlToFxml);
+                        listPlugin.add(urlToFxml.toString());
                     } else {
-                        System.out.println("No file '"+pathToFxml+"' has been found in jar '" + file.getName() + "'");
+                        System.out.println("No file '" + pathToFxml + "' has been found in jar '" + file.getName() + "'");
                     }
                 }
             } catch (MalformedURLException e) {
@@ -103,18 +85,23 @@ public class PluginManager {
         } else {
             System.out.println("The path to directory containing all plugins hasn't been found...");
         }
+
+        return listPlugin;
     }
 
     /**
      * Load the main component of a fxml file with its URL.
      * @param urlToFxml
      */
+
     private void loadComponent(@NotNull URL urlToFxml) {
 
         FXMLLoader loader = new FXMLLoader();
         try {
             loader.setLocation(urlToFxml);
-            listPlugin.add(loader.load());
+            AnchorPane pane = loader.load();
+            System.out.println(pane);
+            //listPlugin.add(loader.load());
             //listControllerPlugin.add(loader.getController());
         } catch (IOException e) {
             e.printStackTrace();

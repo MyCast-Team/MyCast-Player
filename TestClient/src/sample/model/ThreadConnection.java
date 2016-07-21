@@ -3,11 +3,10 @@ package sample.model;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import sample.constant.FormatConstant;
+import sample.constant.Constant;
 import uk.co.caprica.vlcj.mrl.RtspMrl;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -30,9 +29,6 @@ public class ThreadConnection extends Thread {
 
     private String mrl;
 
-    private final int PORT = 12345;
-    private final int STREAMING_PORT = 2016;
-
     public ThreadConnection(MediaPlayer mediaPlayer, Pane playerHolder, ImageView imageView, ImageView artworkView) throws IOException {
 
         this.mediaPlayer = mediaPlayer;
@@ -40,7 +36,7 @@ public class ThreadConnection extends Thread {
         this.imageView = imageView;
         this.artworkView = artworkView;
 
-        this.serverSocket = new ServerSocket(PORT);
+        this.serverSocket = new ServerSocket(Constant.PORT);
         System.out.println("Server is listening on port : "+serverSocket.getLocalPort());
     }
 
@@ -73,7 +69,7 @@ public class ThreadConnection extends Thread {
 
                 mrl = new RtspMrl().host(socket.getInetAddress()
                                     .getHostAddress())
-                                    .port(STREAMING_PORT)
+                                    .port(Constant.STREAMING_PORT)
                                     .path("/demo").value();
 
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -100,7 +96,9 @@ public class ThreadConnection extends Thread {
                 //Disconnection requested, close the socket, and wait for another connection...
                 mediaPlayer.stop();
                 try {
-                    socket.close();
+                    if(socket != null) {
+                        socket.close();
+                    }
                 } catch (IOException e) {
                 }
             }
@@ -124,7 +122,7 @@ public class ThreadConnection extends Thread {
         String url = metaInfo.getUrl();
         System.out.println(metaInfo.getEncodedBy());
 
-        for(String ext : FormatConstant.EXTENSIONS_AUDIO) {
+        for(String ext : Constant.EXTENSIONS_AUDIO) {
             if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
                 isMusic = true;
                 break;

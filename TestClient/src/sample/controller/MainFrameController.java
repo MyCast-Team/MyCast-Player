@@ -37,8 +37,10 @@ public class MainFrameController {
             threadConnections = new ThreadConnection(resizablePlayer.getMediaPlayer(), playerHolder, imageView, artworkView);
             threadConnections.start();
         } catch (IOException e) {
+            System.out.println("Impossible to create the server socket.");
             e.printStackTrace();
-
+            threadConnections = null;
+            resizablePlayer.release();
         }
     }
 

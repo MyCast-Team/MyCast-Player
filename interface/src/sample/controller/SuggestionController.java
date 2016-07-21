@@ -3,27 +3,43 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.Suggestion;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the controller for the suggestion panel. The application will give to the user some ideas about movies to watch and music to listen.")
 public class SuggestionController {
     @FXML
     private TableView<Suggestion> musicTable1;
@@ -60,7 +76,7 @@ public class SuggestionController {
 
     @FXML
     public void initialize(){
-        /*JSONParser parser = new JSONParser();
+        JSONParser parser = new JSONParser();
 
         try {
 
@@ -75,7 +91,7 @@ public class SuggestionController {
             e.printStackTrace();
         }
         if (id == null) {
-            getid();
+            id = generateid();
         }
         SuggestionList = new ArrayList<>();
         SuggestionMusicList=new ArrayList<>();
@@ -94,16 +110,15 @@ public class SuggestionController {
         typeColumn1.setCellValueFactory(cellData->cellData.getValue().TypeProperty());
         dateColumn1.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
         lengthColumn1.setCellValueFactory(cellData->cellData.getValue().LengthProperty());
-        authorColumn1.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());*/
+        authorColumn1.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());
     }
 
-    public void getid(){
+    public static String generateid(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://localhost:3000/addUser");
+        HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/addUser");
         HttpResponse response1;
         HttpEntity entity1;
 
-        String filePath = "./res/id.json";
         FileOutputStream fos;
         InputStream is;
         JSONParser parser = new JSONParser();
@@ -115,7 +130,7 @@ public class SuggestionController {
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(filePath));
+            fos = new FileOutputStream(new File(Constant.PATH_TO_ID));
 
             byte[] buffer = new byte[8 * 1024];
             int bytesRead;
@@ -129,21 +144,58 @@ public class SuggestionController {
             fos.close();
             EntityUtils.consume(entity1);
 
-            obj = parser.parse(new FileReader("./res/id.json"));
+            obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
             jsonObject = (JSONObject) obj;
 
-            id = jsonObject.get("id").toString();
-            System.out.println(id);
+            return jsonObject.get("id").toString();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static void sendData(){
+        File file=new File("./res/mediacase.json");
+        if(file.exists()){
+            HttpClient httpclient = new DefaultHttpClient();
+            httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+
+            HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/mediacase");
+            try {
+                MultipartEntity mpEntity = new MultipartEntity();
+                ContentBody cbFile = new FileBody(file);
+
+                mpEntity.addPart("mediacase", cbFile);
+
+
+
+
+                httppost.setEntity(mpEntity);
+
+
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity resEntity = response.getEntity();
+
+                System.out.println(response.getStatusLine());
+                if (resEntity != null) {
+                    System.out.println(EntityUtils.toString(resEntity));
+                }
+                if (resEntity != null) {
+                    resEntity.consumeContent();
+                }
+
+                httpclient.getConnectionManager().shutdown();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public void getList(String path,String http){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://localhost:3000/1/"+http);
+        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/"+id+"/"+http);
         HttpResponse response1;
         HttpEntity entity1;
 

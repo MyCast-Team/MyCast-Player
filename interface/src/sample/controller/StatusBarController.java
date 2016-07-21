@@ -2,10 +2,12 @@ package sample.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import sample.annotation.DocumentationAnnotation;
 
 /**
  * Created by thomasfouan on 18/06/16.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "18/06/2016", description = "This controller manage the little status bar at the bottom of the application.")
 public class StatusBarController {
 
     @FXML
