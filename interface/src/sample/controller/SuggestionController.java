@@ -11,13 +11,19 @@ import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -106,7 +112,7 @@ public class SuggestionController {
 
     public void getid(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://localhost:3000/addUser");
+        HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/addUser");
         HttpResponse response1;
         HttpEntity entity1;
 
@@ -149,50 +155,37 @@ public class SuggestionController {
     }
 
     public static void sendData(){
+        File file=new File("./res/mediacase.json");
+        HttpClient httpclient = new DefaultHttpClient();
+        httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+
+        HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/mediacase");
+        try {
+            MultipartEntity mpEntity = new MultipartEntity();
+            ContentBody cbFile = new FileBody(file);
+
+            mpEntity.addPart("mediacase", cbFile);
 
 
-                File file=new File("./res/mediacase.json");
 
-                HttpClient httpclient = new DefaultHttpClient();
+            httppost.setEntity(mpEntity);
 
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity resEntity = response.getEntity();
 
-                HttpPost httppost = new HttpPost("http://localhost:3000/mediacase");
-                List<NameValuePair> params = new ArrayList<NameValuePair>(1);
+            System.out.println(response.getStatusLine());
+            if (resEntity != null) {
+                System.out.println(EntityUtils.toString(resEntity));
+            }
+            if (resEntity != null) {
+                resEntity.consumeContent();
+            }
 
-                params.add(new BasicNameValuePair("originalname", file.getName()));
-                try {
-                    httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+            httpclient.getConnectionManager().shutdown();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-                //Execute and get the response.
-                HttpResponse response = null;
-                try {
-                    response = httpclient.execute(httppost);
-                    System.out.println(response.getEntity());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                HttpEntity entity = response.getEntity();
-
-                if (entity != null) {
-                    InputStream instream = null;
-                    try {
-                        instream = entity.getContent();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        // do something useful
-                    } finally {
-                        try {
-                            instream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
     }
 
 
@@ -200,7 +193,7 @@ public class SuggestionController {
 
     public void getList(String path,String http){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://localhost:3000/1/"+http);
+        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/1/"+http);
         HttpResponse response1;
         HttpEntity entity1;
 
