@@ -166,8 +166,6 @@ public class SuggestionController {
 
             mpEntity.addPart("mediacase", cbFile);
 
-
-
             httppost.setEntity(mpEntity);
 
             HttpResponse response = httpclient.execute(httppost);
