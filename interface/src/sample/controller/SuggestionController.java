@@ -130,7 +130,7 @@ public class SuggestionController {
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(Constant.pathToId));
+            fos = new FileOutputStream(new File(Constant.PATH_TO_ID));
 
             byte[] buffer = new byte[8 * 1024];
             int bytesRead;
@@ -144,7 +144,7 @@ public class SuggestionController {
             fos.close();
             EntityUtils.consume(entity1);
 
-            obj = parser.parse(new FileReader(Constant.pathToId));
+            obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
             jsonObject = (JSONObject) obj;
 
             return jsonObject.get("id").toString();

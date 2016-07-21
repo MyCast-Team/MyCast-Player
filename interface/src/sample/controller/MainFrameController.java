@@ -61,7 +61,7 @@ public class MainFrameController extends AnchorPane {
 
         includedMenuBarController.setAvailableComponents(availableComponents);
 
-        for (String str : Constant.staticInterfaces) {
+        for (String str : Constant.STATIC_INTERFACES) {
             availableComponents.put(str, new Point(-1, -1));
         }
         pluginManager.loadJarFiles().forEach((str) -> availableComponents.put(str, new Point(-1, -1)));
@@ -103,7 +103,7 @@ public class MainFrameController extends AnchorPane {
         BufferedReader br = null;
         String line;
         try {
-            br = new BufferedReader(new FileReader(Constant.pathToInterfaceConf));
+            br = new BufferedReader(new FileReader(Constant.PATH_TO_INTERFACE_CONF));
 
             while ((line = br.readLine()) != null) {
                 String array[] = line.split(";");
@@ -245,7 +245,7 @@ public class MainFrameController extends AnchorPane {
         BufferedWriter bw = null;
 
         try {
-            bw = new BufferedWriter(new FileWriter(Constant.pathToInterfaceConf, false));
+            bw = new BufferedWriter(new FileWriter(Constant.PATH_TO_INTERFACE_CONF, false));
 
             for(Entry<String, Point> entry : availableComponents.entrySet()) {
                 bw.write(entry.getKey()+";"+entry.getValue().getX()+";"+entry.getValue().getY());

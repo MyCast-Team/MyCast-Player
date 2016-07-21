@@ -48,7 +48,7 @@ public class Mediacase {
 
     public void writeMediacase(){
         try {
-            File file = new File(Constant.pathToVideo);
+            File file = new File(Constant.PATH_TO_VIDEO);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -60,7 +60,7 @@ public class Mediacase {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(Constant.pathToVideo);
+            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_VIDEO);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this.videocase);
             out.flush();
@@ -70,7 +70,7 @@ public class Mediacase {
             i.printStackTrace();
         }
         try {
-            File file = new File(Constant.pathToMusic);
+            File file = new File(Constant.PATH_TO_MUSIC);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -82,7 +82,7 @@ public class Mediacase {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(Constant.pathToMusic);
+            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_MUSIC);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this.musiccase);
             out.flush();
@@ -96,7 +96,7 @@ public class Mediacase {
     public void readMediacase(){
         ObjectInputStream ois = null;
         try {
-            FileInputStream fichier = new FileInputStream(Constant.pathToVideo);
+            FileInputStream fichier = new FileInputStream(Constant.PATH_TO_VIDEO);
             ois = new ObjectInputStream(fichier);
             this.videocase = (ArrayList<Media>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
@@ -111,7 +111,7 @@ public class Mediacase {
             }
         }
         try {
-            FileInputStream fichier = new FileInputStream(Constant.pathToMusic);
+            FileInputStream fichier = new FileInputStream(Constant.PATH_TO_MUSIC);
             ois = new ObjectInputStream(fichier);
             this.musiccase = (ArrayList<Media>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {

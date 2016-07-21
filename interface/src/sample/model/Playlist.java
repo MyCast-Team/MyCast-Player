@@ -30,7 +30,7 @@ public class Playlist implements Serializable {
 
     public void writePlaylist(){
         try {
-            File file = new File(Constant.pathToPlaylist);
+            File file = new File(Constant.PATH_TO_PLAYLIST);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -42,7 +42,7 @@ public class Playlist implements Serializable {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(Constant.pathToPlaylist);
+            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_PLAYLIST);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this.playlist);
             out.flush();
@@ -56,7 +56,7 @@ public class Playlist implements Serializable {
     public void readPlaylist(){
         ObjectInputStream ois = null;
         try {
-            FileInputStream fichier = new FileInputStream(Constant.pathToPlaylist);
+            FileInputStream fichier = new FileInputStream(Constant.PATH_TO_PLAYLIST);
             ois = new ObjectInputStream(fichier);
             this.playlist = (ArrayList<Media>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {

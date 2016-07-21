@@ -325,7 +325,7 @@ public class MediacaseController {
 
     public void writeMediacase(ArrayList<JSONObject> list){
         try {
-            File file = new File(Constant.pathToMediacase);
+            File file = new File(Constant.PATH_TO_MEDIACASE);
             if(!file.exists()){
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -337,7 +337,7 @@ public class MediacaseController {
                     e.printStackTrace();
                 }
             }
-            FileOutputStream fileOut = new FileOutputStream(Constant.pathToMediacase, true);
+            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_MEDIACASE, true);
             byte[] comma = ",".getBytes();
             boolean first = true;
             for(JSONObject object : list) {
