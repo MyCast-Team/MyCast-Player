@@ -5,3 +5,4 @@
 /interface/plugin/*
 /backoffice/node_modules
 /testAnnotation/src/*.class
+/*/src/META-INF/*

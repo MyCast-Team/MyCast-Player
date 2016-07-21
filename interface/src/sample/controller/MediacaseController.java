@@ -297,9 +297,7 @@ public class MediacaseController {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                     writer.write("");
                     writer.close();
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -332,7 +330,7 @@ public class MediacaseController {
 
     public static boolean audioExtensionIsSupported(String extension){
         for(String str: Constant.EXTENSIONS_AUDIO){
-            if(extension.compareTo(str) == 0){
+            if(extension.toLowerCase().compareTo(str.toLowerCase()) == 0){
                 return true;
             }
         }
@@ -341,7 +339,7 @@ public class MediacaseController {
 
     public static boolean videoExtensionIsSupported(String extension) {
         for (String str : Constant.EXTENSIONS_VIDEO) {
-            if (extension.compareTo(str) == 0) {
+            if (extension.toLowerCase().compareTo(str.toLowerCase()) == 0) {
                 return true;
             }
         }

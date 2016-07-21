@@ -75,6 +75,7 @@ public class PlaylistController {
     @FXML
     public void initialize() {
         this.playlist = new Playlist();
+        System.out.println("eeeee");
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());
@@ -124,7 +125,7 @@ public class PlaylistController {
 
         musicTable.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2){
-                if(musicTable.getSelectionModel().getSelectedIndex() != -1)
+                if(musicTable.getSelectionModel().getSelectedIndex() != -1 && mediaListPlayer != null)
                     mediaListPlayer.playItem(musicTable.getSelectionModel().getSelectedIndex());
             }
             if (event.isSecondaryButtonDown()) {
@@ -155,6 +156,9 @@ public class PlaylistController {
                         if(this.mediaListPlayer != null) {
                             this.mediaListPlayer.getMediaList().addMedia(file.getPath());
                         }
+                        if(this.streamingPlayer != null && this.streamingPlayer.getMediaList() != null) {
+                            this.streamingPlayer.getMediaList().addMedia(file.getPath());
+                        }
                     }
                 }
             } else {
@@ -166,7 +170,12 @@ public class PlaylistController {
                     ArrayList<Media> list = (ArrayList<Media>) db.getContent(dataFormat);
                     for (Media m: list){
                         this.playlist.addMedia(m);
-                        this.mediaListPlayer.getMediaList().addMedia(m.getPath());
+                        if(this.mediaListPlayer != null && this.mediaListPlayer.getMediaList() != null) {
+                            this.mediaListPlayer.getMediaList().addMedia(m.getPath());
+                        }
+                        if(this.streamingPlayer != null && this.streamingPlayer.getMediaList() != null) {
+                            this.streamingPlayer.getMediaList().addMedia(m.getPath());
+                        }
                     }
                 }
             }

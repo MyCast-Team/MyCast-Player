@@ -4,7 +4,10 @@ import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vincent on 28/04/2016.
@@ -59,7 +62,9 @@ public class Playlist implements Serializable {
             FileInputStream fichier = new FileInputStream(Constant.PATH_TO_PLAYLIST);
             ois = new ObjectInputStream(fichier);
             this.playlist = (ArrayList<Media>) ois.readObject();
+            Mediacase.checkExistingFile(this.playlist);
         } catch (IOException | ClassNotFoundException e) {
+            this.playlist = new ArrayList<>();
             writePlaylist();
         } finally {
             try {
