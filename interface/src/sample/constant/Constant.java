@@ -11,62 +11,62 @@ public class Constant {
     /**
      * Define the path of the main view of the app
      */
-    public static final String pathToMainView = "/sample/view/mainFrame.fxml";
+    public static final String PATH_TO_MAIN_VIEW = "/sample/view/mainFrame.fxml";
 
     /**
      * Define the path where all the plugins are stored
      */
-    public static final String pathToPlugin = "plugin";
+    public static final String PATH_TO_PLUGIN = "plugin";
 
     /**
      * Define the path to the resource directory
      */
-    public static final String pathToResources = "./res";
+    public static final String PATH_TO_RESOURCES = "./res";
 
     /**
      * Define the path where the plugin file to communicate with the server is stored
      */
-    public static final String pathToPluginFile = "./res/plugin.json";
+    public static final String PATH_TO_PLUGIN_FILE = "./res/plugin.json";
 
     /**
      * Define the path where the interface configuration is stored
      */
-    public static final String pathToInterfaceConf = "./res/interface.csv";
+    public static final String PATH_TO_INTERFACE_CONF = "./res/interface.csv";
 
     /**
      * Define the path where the Id of the user is stored
      */
-    public static final String pathToId = "./res/id.json";
+    public static final String PATH_TO_ID = "./res/id.json";
 
     /**
      * Define the path where the mediacase file to communicate with the server is stored
      */
-    public static final String pathToMediacase = "./res/mediacase.json";
+    public static final String PATH_TO_MEDIACASE = "./res/mediacase.json";
 
     /**
      * Define the path where the playlist is stored
      */
-    public static final String pathToPlaylist = "./res/playlist.ser";
+    public static final String PATH_TO_PLAYLIST = "./res/playlist.ser";
 
     /**
      * Define the path where the video library is stored
      */
-    public static final String pathToVideo = "./res/videocase.ser";
+    public static final String PATH_TO_VIDEO = "./res/videocase.ser";
 
     /**
      * Define the path where the music library is stored
      */
-    public static final String pathToMusic = "./res/musiccase.ser";
+    public static final String PATH_TO_MUSIC = "./res/musiccase.ser";
 
     /**
      * Define the package name where the main view of a plugin is stored
      */
-    public static final String packageName = "plugin";
+    public static final String PACKAGE_PLUGIN_NAME = "plugin";
 
     /**
      * Define all default interfaces
      */
-    public static final String[] staticInterfaces = {"/sample/view/suggestions.fxml", "/sample/view/playlist.fxml", "/sample/view/player.fxml", "/sample/view/plugin.fxml", "/sample/view/mediacase.fxml"};
+    public static final String[] STATIC_INTERFACES = {"/sample/view/suggestions.fxml", "/sample/view/playlist.fxml", "/sample/view/player.fxml", "/sample/view/plugin.fxml", "/sample/view/mediacase.fxml"};
 
     /**
      * Define the port number for streaming media between the main application and the client application

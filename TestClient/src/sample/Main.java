@@ -44,7 +44,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constant.pathToMainView));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constant.PATH_TO_MAIN_VIEW));
         AnchorPane rootPane;
         Scene scene;
 

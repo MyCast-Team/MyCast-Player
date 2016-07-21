@@ -105,7 +105,7 @@ public class PluginController {
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
-            String filePath = Constant.pathToPlugin + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String filePath = Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
             FileOutputStream fos = null;
 
             try {
@@ -134,7 +134,7 @@ public class PluginController {
 
     public EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
-            File f1 = new File(Constant.pathToPlugin + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
+            File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
 
             boolean success = f1.delete();
 
@@ -155,7 +155,7 @@ public class PluginController {
             String nameplugin = selectedPlugin.getName();
             boolean present = false;
 
-            String path0 = Constant.pathToPlugin + "/" + nameplugin;
+            String path0 = Constant.PATH_TO_PLUGIN + "/" + nameplugin;
             System.out.println(path0);
             File theDir = new File(path0);
 
@@ -183,7 +183,7 @@ public class PluginController {
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(Constant.pathToPluginFile));
+            fos = new FileOutputStream(new File(Constant.PATH_TO_PLUGIN_FILE));
 
             byte[] buffer = new byte[8 * 1024];
             int bytesRead;
@@ -209,7 +209,7 @@ public class PluginController {
         JSONArray jsonArray;
 
         try {
-            obj = parser.parse(new FileReader(Constant.pathToPluginFile));
+            obj = parser.parse(new FileReader(Constant.PATH_TO_PLUGIN_FILE));
             jsonArray = (JSONArray) obj;
 
             JSONObject jsonObject;

@@ -34,7 +34,7 @@ public class Main extends Application {
     }
 
     private void checkResourceFolder() {
-        File f = new File(Constant.pathToResources);
+        File f = new File(Constant.PATH_TO_RESOURCES);
         if (!f.exists()) {
             boolean result = f.mkdir();
             if(!result) {
@@ -84,7 +84,7 @@ public class Main extends Application {
 
         try {
             // Load root layout from fxml file
-            loader.setLocation(getClass().getResource(Constant.pathToMainView));
+            loader.setLocation(getClass().getResource(Constant.PATH_TO_MAIN_VIEW));
             rootLayout = loader.load();
             mainFrameController = loader.getController();
             scene = new Scene(rootLayout);

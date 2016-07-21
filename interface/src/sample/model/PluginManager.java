@@ -48,7 +48,7 @@ public class PluginManager {
      */
     public List<String> loadJarFiles() {
 
-        File jarDir = new File(Constant.pathToPlugin);
+        File jarDir = new File(Constant.PATH_TO_PLUGIN);
         // Check if the path containing the plugins exists and represents a directory.
         if(jarDir.exists() && jarDir.isDirectory()) {
             String[] dirContent = jarDir.list();
@@ -68,7 +68,7 @@ public class PluginManager {
                     loader = new URLClassLoader(urlList);
 
                     // Get the path of the main fxml to load
-                    String pathToFxml = Constant.packageName + "/mainPluginView.fxml";
+                    String pathToFxml = Constant.PACKAGE_PLUGIN_NAME + "/mainPluginView.fxml";
                     URL urlToFxml = loader.getResource(pathToFxml);
                     if (urlToFxml != null) {
                         // If the loader founds the file, load the component attached to the file.

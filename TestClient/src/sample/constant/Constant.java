@@ -8,7 +8,7 @@ public class Constant {
     /**
      * Define the path of the main view of the app
      */
-    public static final String pathToMainView = "view/mainFrame.fxml";
+    public static final String PATH_TO_MAIN_VIEW = "view/mainFrame.fxml";
 
     /**
      * Define the port to communicate with the server application
