@@ -119,14 +119,15 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
+                System.out.println("here");
                 String id = "";
                 success = true;
-                File idFile = new File(Constant.pathToId);
+                File idFile = new File(Constant.PATH_TO_ID);
                 if(idFile.exists()){
                     JSONParser parser = new JSONParser();
                     try {
                         JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
-                        id = (String) obj.get("id");
+                        id = String.valueOf(obj.get("id"));
                     } catch (IOException | ParseException e) {
                         id = SuggestionController.generateid();
                     }
@@ -196,7 +197,7 @@ public class MediacaseController {
             if (db.hasFiles()) {
                 String id = "";
                 success = true;
-                File idFile = new File(Constant.pathToId);
+                File idFile = new File(Constant.PATH_TO_ID);
                 if(idFile.exists()){
                     JSONParser parser = new JSONParser();
                     try {

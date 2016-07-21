@@ -193,9 +193,6 @@ public class SuggestionController {
         }
     }
 
-
-
-
     public void getList(String path,String http){
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/"+id+"/"+http);
