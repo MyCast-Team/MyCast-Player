@@ -16,7 +16,7 @@ public class Constant {
     /**
      * Define the path where all the plugins are stored
      */
-    public static final String pathToPlugin = "./plugin";
+    public static final String pathToPlugin = "plugin";
 
     /**
      * Define the path to the resource directory
