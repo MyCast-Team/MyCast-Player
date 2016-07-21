@@ -119,7 +119,6 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
-                System.out.println("here");
                 String id = "";
                 success = true;
                 File idFile = new File(Constant.PATH_TO_ID);
@@ -202,7 +201,7 @@ public class MediacaseController {
                     JSONParser parser = new JSONParser();
                     try {
                         JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
-                        id = (String) obj.get("id");
+                        id = String.valueOf(obj.get("id"));
                     } catch (IOException | ParseException e) {
                         id = SuggestionController.generateid();
                     }
@@ -223,7 +222,6 @@ public class MediacaseController {
                                 found = true;
                         }
                         if(!found){
-                            System.out.println("add !");
                             this.mediacase.addMedia(media, 1);
                             JSONObject object = new JSONObject();
                             object.put("type", "video");
@@ -239,14 +237,14 @@ public class MediacaseController {
                 if (!jsonList.isEmpty()) {
                     writeMediacase(jsonList);
                 }
+                filteredMediacase.reset();
+                for (Media m : mediacase.getVideocase()) {
+                    filteredMediacase.addMedia(m, 1);
+                }
+                refreshMediacase();
+                event.setDropCompleted(success);
+                event.consume();
             }
-            filteredMediacase.reset();
-            for (Media m : mediacase.getVideocase()) {
-                filteredMediacase.addMedia(m, 1);
-            }
-            refreshMediacase();
-            event.setDropCompleted(success);
-            event.consume();
         });
 
         videocaseTable.setOnDragDetected(event -> {
