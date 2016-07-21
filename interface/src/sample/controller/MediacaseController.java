@@ -194,7 +194,23 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
+                String id = "";
                 success = true;
+                File idFile = new File(Constant.pathToId);
+                if(idFile.exists()){
+                    JSONParser parser = new JSONParser();
+                    try {
+                        JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
+                        id = (String) obj.get("id");
+                    } catch (IOException | ParseException e) {
+                        id = SuggestionController.getid();
+                    }
+                } else {
+                    id = SuggestionController.getid();
+                }
+                JSONObject idObj = new JSONObject();
+                idObj.put("id", id);
+                jsonList.add(idObj);
                 for (File file : db.getFiles()) {
                     if (videoExtensionIsSupported(getExtension(file.getPath()))) {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
