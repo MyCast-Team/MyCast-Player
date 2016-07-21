@@ -1,5 +1,6 @@
 package sample.controller;
 
+import com.sun.org.apache.bcel.internal.util.ClassLoader;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -141,16 +142,17 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
-    private AnchorPane loadComponent(String path){
+    private AnchorPane loadComponent(String filename) {
         AnchorPane pane;
         FXMLLoader loader = new FXMLLoader();
+        File file;
 
         try {
-            if(path.startsWith("jar:file:")) {
-                loader.setLocation(new URL(path));
-                pane = loader.load();
+            if(filename.endsWith(".jar")) {
+                file = new File(Constant.PATH_TO_PLUGIN+"/"+filename);
+                pane = (AnchorPane) PluginManager.loadPlugin(file);
             } else {
-                loader.setLocation(getClass().getResource(path));
+                loader.setLocation(getClass().getResource(filename));
                 pane = loader.load();
 
                 if (pane.getId().equals("player")) {
