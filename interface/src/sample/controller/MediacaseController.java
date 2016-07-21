@@ -128,10 +128,10 @@ public class MediacaseController {
                         JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
                         id = (String) obj.get("id");
                     } catch (IOException | ParseException e) {
-                        id = SuggestionController.getid();
+                        id = SuggestionController.generateid();
                     }
                 } else {
-                    id = SuggestionController.getid();
+                    id = SuggestionController.generateid();
                 }
                 JSONObject idObj = new JSONObject();
                 idObj.put("id", id);
@@ -203,10 +203,10 @@ public class MediacaseController {
                         JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
                         id = (String) obj.get("id");
                     } catch (IOException | ParseException e) {
-                        id = SuggestionController.getid();
+                        id = SuggestionController.generateid();
                     }
                 } else {
-                    id = SuggestionController.getid();
+                    id = SuggestionController.generateid();
                 }
                 JSONObject idObj = new JSONObject();
                 idObj.put("id", id);

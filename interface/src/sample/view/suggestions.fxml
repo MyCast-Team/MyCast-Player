@@ -61,8 +61,7 @@
                               <TableColumn fx:id="titleColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Title" />
                               <TableColumn fx:id="authorColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Director" />
                               <TableColumn fx:id="lengthColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Length" />
-                              <TableColumn fx:id="typeColumn" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Musical genre" />
-                              <TableColumn fx:id="directorColumn1" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Film genre" />
+                              <TableColumn fx:id="typeColumn" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Film genre" />
                               <TableColumn fx:id="dateColumn2" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Release date" />
                            </columns>
                            <columnResizePolicy>

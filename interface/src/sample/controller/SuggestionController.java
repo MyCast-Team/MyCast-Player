@@ -91,7 +91,7 @@ public class SuggestionController {
             e.printStackTrace();
         }
         if (id == null) {
-            id = getid();
+            id = generateid();
         }
         SuggestionList = new ArrayList<>();
         SuggestionMusicList=new ArrayList<>();
@@ -113,7 +113,7 @@ public class SuggestionController {
         authorColumn1.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());
     }
 
-    public static String getid(){
+    public static String generateid(){
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/addUser");
         HttpResponse response1;
@@ -198,7 +198,7 @@ public class SuggestionController {
 
     public void getList(String path,String http){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/1/"+http);
+        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/"+id+"/"+http);
         HttpResponse response1;
         HttpEntity entity1;
 
