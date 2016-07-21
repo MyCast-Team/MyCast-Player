@@ -4,51 +4,61 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
+import uk.co.caprica.vlcj.medialist.MediaList;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.nio.ByteBuffer;
 
 /**
- * Created by thomasfouan on 24/04/2016.
+ * Class of creation and control of the vlcj player.
  */
 public class ResizablePlayer {
 
-    private ImageView imageView;
-
     private DirectMediaPlayerComponent mediaPlayerComponent;
+    private MediaPlayer mediaPlayer;
 
+    private ImageView artworkView;
+    private ImageView imageView;
     private WritableImage writableImage;
-
-    private Pane playerHolder;
-
     private WritablePixelFormat<ByteBuffer> pixelFormat;
 
+    private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
-    public ResizablePlayer() {
+    /* CONSTRUCTOR */
+    public ResizablePlayer(Pane playerHolder, ImageView imageView, ImageView artworkView) {
 
         // Initialisation of the components
-        playerHolder = new Pane();
         pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
+        this.playerHolder = playerHolder;
+        this.imageView = imageView;
+        this.artworkView = artworkView;
+
         initializeImageView();
 
+        // Set the different component of the player (mediaPlayer)
         mediaPlayerComponent = new CanvasPlayerComponent(writableImage, pixelFormat, videoSourceRatioProperty);
+        mediaPlayer = mediaPlayerComponent.getMediaPlayer();
     }
 
-    public DirectMediaPlayerComponent getMediaPlayerComponent() {
-        return mediaPlayerComponent;
-    }
 
-    public Pane getPlayerHolder() {
-        return playerHolder;
+    /* GETTER */
+    public MediaPlayer getMediaPlayer() { return mediaPlayer; }
+
+    public Pane getPlayerHolder() { return playerHolder; }
+
+    /* SETTER */
+
+    public void release() {
+        this.mediaPlayerComponent.release(true);
+        this.mediaPlayer.release();
     }
 
     /**
@@ -56,15 +66,14 @@ public class ResizablePlayer {
      *      - the dimensions of the screen
      *      - and the ratio of the video source
      *
-     * Add listeners on the screen and on the ratio fo the current media.
+     * Add listeners on the screen and on the ratio for the current media.
      */
-    private void initializeImageView() {
+    public void initializeImageView() {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
         writableImage = new WritableImage((int) visualBounds.getWidth(), (int) visualBounds.getHeight());
 
         // Add an imageView in the playerHolder to display each frame of the media
-        imageView = new ImageView(writableImage);
-        playerHolder.getChildren().add(imageView);
+        imageView.setImage(writableImage);
 
         playerHolder.widthProperty().addListener((observable, oldValue, newValue) -> {
             fitImageViewSize(newValue.floatValue(), (float) playerHolder.getHeight());
@@ -99,6 +108,11 @@ public class ResizablePlayer {
                 imageView.setFitHeight(fitHeight);
                 imageView.setY((height - fitHeight) / 2);
                 imageView.setX(0);
+            }
+
+            if(artworkView.getImage() != null) {
+                artworkView.setX(width/2 - artworkView.getImage().getWidth()/2);
+                artworkView.setY(height/2 - artworkView.getImage().getHeight()/2);
             }
         });
     }

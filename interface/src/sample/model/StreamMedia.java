@@ -1,7 +1,10 @@
 package sample.model;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
 import javafx.util.Pair;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -17,7 +20,8 @@ import java.util.Optional;
 /**
  * Created by thomasfouan on 09/03/2016.
  */
-public class StreamMedia {
+@DocumentationAnnotation(author = "Thomas Fouan", date = "09/03/2016", description = "This class is the streaming manager. It creates socket with a client to broadcast medias.")
+public class StreamMedia extends Thread {
 
     private MediaPlayerFactory factory;
     private MediaListPlayer mediaListPlayer;
@@ -31,13 +35,17 @@ public class StreamMedia {
 
     private CONNECTION_STATUS status;
 
-    private final int PORT = 2016;
+    private ClientDataReceiver clientDataReceiver;
+
+    private MenuItem setConnection;
 
     /**
      * CONSTRUCTOR
      */
-    public StreamMedia() {
-        factory = new MediaPlayerFactory("--rtsp-host=127.0.0.1", "--rtsp-caching=200");
+    public StreamMedia(MenuItem setConnection) {
+        this.setConnection = setConnection;
+
+        factory = new MediaPlayerFactory();
         mediaListPlayer = factory.newMediaListPlayer();
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
             @Override
@@ -51,6 +59,7 @@ public class StreamMedia {
 
         status = CONNECTION_STATUS.DISCONNECTED;
         interfacePlaylist = null;
+        clientDataReceiver = null;
         socket = null;
         sendData = null;
     }
@@ -74,11 +83,9 @@ public class StreamMedia {
 
     /**
      * Create and prepare a player for streaming.
-     * @param addr address of the client
      */
-    public void prepareStreamingMedia(String addr) {
-
-        String rtspStream = formatRtspStream("127.0.0.1", PORT, "demo");
+    public void prepareStreamingMedia() {
+        String rtspStream = formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.PORT, "demo");
         System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
@@ -122,8 +129,6 @@ public class StreamMedia {
             // before client starts receiving data
             if (!isAlreadyStarted) {
                 Thread.sleep(100);
-                sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
-                sendData.flush();
                 isAlreadyStarted = true;
             }
         } catch (InterruptedException e) {
@@ -161,7 +166,10 @@ public class StreamMedia {
                 socket.connect(new InetSocketAddress(addr, port), 1000);
 
                 sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
-                prepareStreamingMedia(socket.getInetAddress().getHostAddress());
+                prepareStreamingMedia();
+
+                clientDataReceiver = new ClientDataReceiver(socket, setConnection);
+                clientDataReceiver.start();
 
                 status = CONNECTION_STATUS.CONNECTED;
                 alert.setContentText("The connection with '" + socket.getInetAddress().getCanonicalHostName() + "' has been successfully done !");
@@ -190,14 +198,23 @@ public class StreamMedia {
      */
     public void closeConnection() {
 
+        if(status.equals(CONNECTION_STATUS.DISCONNECTED))
+            return;
+
         try {
             sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
             sendData.flush();
-            sendData.close();
+
+            if(clientDataReceiver != null && clientDataReceiver.isAlive()) {
+                clientDataReceiver.interrupt();
+                clientDataReceiver.join(100);
+            }
+
             socket.close();
+        } catch (InterruptedException e) {
         } catch (IOException e) {
-            e.printStackTrace();
         } finally {
+            clientDataReceiver = null;
             sendData = null;
             socket = null;
             status = CONNECTION_STATUS.DISCONNECTED;
@@ -210,6 +227,8 @@ public class StreamMedia {
      * Release all resources.
      */
     public void release() {
+        closeConnection();
+
         playlist.clear();
         mediaListPlayer.stop();
         playlist.release();

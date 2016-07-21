@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.util.Callback;
@@ -26,6 +23,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.Plugin;
 import sample.model.StreamMedia;
 import sun.plugin2.util.PluginTrace;
@@ -38,6 +37,7 @@ import java.util.Iterator;
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the controller for the plugin panel. You can manage multiple things like search, download or uninstall plugins.")
 public class PluginController {
     @FXML
     private TableView<Plugin> pluginTable;
@@ -58,10 +58,7 @@ public class PluginController {
 
     private ArrayList<Plugin> pluginList;
 
-    final String path = "./res/plugin.json";
-
     public PluginController(){
-
     }
 
     @FXML
@@ -80,6 +77,14 @@ public class PluginController {
         download.setOnAction(getDownloadEventHandler());
         remove.setOnAction(getRemoveEventHandler());
         pluginTable.getSelectionModel().selectedItemProperty().addListener(getSelectedItemChangeListener());
+
+        installTooltips();
+    }
+
+    public void installTooltips(){
+        this.refresh.setTooltip(new Tooltip("Refresh the plugin list"));
+        this.remove.setTooltip(new Tooltip("Remove the selected plugin if it's installed"));
+        this.download.setTooltip(new Tooltip("Download the selected plugin if it's not installed"));
     }
 
     public EventHandler<ActionEvent> getRefreshEventHandler() {
@@ -101,7 +106,7 @@ public class PluginController {
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
-            String filePath = "./plugin/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String filePath = Constant.pathToPlugin + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
             FileOutputStream fos = null;
 
             try {
@@ -131,7 +136,7 @@ public class PluginController {
 
     public EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
-            File f1 = new File("./plugin/"+pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
+            File f1 = new File(Constant.pathToPlugin + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
 
             boolean success = f1.delete();
 
@@ -152,7 +157,7 @@ public class PluginController {
             String nameplugin = selectedPlugin.getName();
             boolean present = false;
 
-            String path0="./plugin/"+nameplugin;
+            String path0 = Constant.pathToPlugin + "/" + nameplugin;
             System.out.println(path0);
             File theDir = new File(path0);
 
@@ -174,14 +179,13 @@ public class PluginController {
         HttpEntity entity1;
         InputStream is;
         FileOutputStream fos;
-        String filePath = "./res/plugin.json";
 
         try {
             response1 = httpclient.execute(httpGet);
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(filePath));
+            fos = new FileOutputStream(new File(Constant.pathToPluginFile));
 
             byte[] buffer = new byte[8 * 1024];
             int bytesRead;
@@ -207,7 +211,7 @@ public class PluginController {
         JSONArray jsonArray;
 
         try {
-            obj = parser.parse(new FileReader(path));
+            obj = parser.parse(new FileReader(Constant.pathToPluginFile));
             jsonArray = (JSONArray) obj;
 
             JSONObject jsonObject;

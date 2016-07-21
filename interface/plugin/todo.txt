@@ -1,1 +1,0 @@
-Error: ENOENT, stat &#39;C:\Users\Pierre\Desktop\coursesgi\backoffice\backoffice\route\uploads\plugin-todo.txt&#39;

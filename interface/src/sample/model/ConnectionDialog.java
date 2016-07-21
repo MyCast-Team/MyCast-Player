@@ -7,6 +7,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.scene.control.*;
 import sample.Main;
+import sample.annotation.DocumentationAnnotation;
 
 import java.io.IOException;
 import java.util.function.UnaryOperator;
@@ -14,6 +15,7 @@ import java.util.function.UnaryOperator;
 /**
  * Class of creation of the connection dialog box.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "10/05/2016", description = "This is a complete GUI for a connection dialog to connect to a distant client.")
 public class ConnectionDialog {
 
     private Dialog<Pair<String, Integer>> dialog;
@@ -63,23 +65,20 @@ public class ConnectionDialog {
     }
 
     private TextField addTextFilter(String id) {
-        UnaryOperator<TextFormatter.Change> filter = new UnaryOperator<TextFormatter.Change>() {
-            @Override
-            public TextFormatter.Change apply(TextFormatter.Change change) {
-                String strValue = change.getControlNewText();
-                boolean hide = false;
-                if(strValue.matches("[0-9]+")) {
-                    int value = Integer.parseInt(strValue);
-                    if(strValue.length() > 1 && value == 0) {
-                        return null;
-                    }
-                    if(value >= 0 && value <= 255) {
-                        return change;
-                    }
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String strValue = change.getControlNewText();
+            boolean hide = false;
+            if(strValue.matches("[0-9]+")) {
+                int value = Integer.parseInt(strValue);
+                if(strValue.length() > 1 && value == 0) {
+                    return null;
                 }
-
-                return null;
+                if(value >= 0 && value <= 255) {
+                    return change;
+                }
             }
+
+            return null;
         };
 
         TextField field = (TextField) this.content.lookup(id);
@@ -89,23 +88,20 @@ public class ConnectionDialog {
     }
 
     private TextField addPortFilter(String id) {
-        UnaryOperator<TextFormatter.Change> filter = new UnaryOperator<TextFormatter.Change>() {
-            @Override
-            public TextFormatter.Change apply(TextFormatter.Change change) {
-                String strValue = change.getControlNewText();
-                boolean hide = false;
-                if(strValue.matches("[0-9]+")) {
-                    int value = Integer.parseInt(strValue);
-                    if(strValue.length() > 1 && value == 0) {
-                        return null;
-                    }
-                    if(value >= 0 && value <= 65535) {
-                        return change;
-                    }
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String strValue = change.getControlNewText();
+            boolean hide = false;
+            if(strValue.matches("[0-9]+")) {
+                int value = Integer.parseInt(strValue);
+                if(strValue.length() > 1 && value == 0) {
+                    return null;
                 }
-
-                return null;
+                if(value >= 0 && value <= 65535) {
+                    return change;
+                }
             }
+
+            return null;
         };
 
         TextField field = (TextField) this.content.lookup(id);

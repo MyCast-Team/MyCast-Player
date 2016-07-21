@@ -12,6 +12,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import sample.Main;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.controller.MainFrameController;
 
 import java.io.*;
@@ -24,49 +26,42 @@ import java.util.Map.Entry;
 /**
  * Created by thomasfouan on 14/06/16.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "14/06/2016", description = "This is a complete GUI to manage the way component are displayed in our application.")
 public class InterfaceDialog {
 
     private Dialog dialog;
     private ScrollPane content;
     private GridPane table;
     private ButtonType validateButton;
-    private final String pathToPlugin = "/plugin";
-    private final String[] staticInterfaces = {"/sample/view/suggestions.fxml", "/sample/view/playlist.fxml", "/sample/view/player.fxml", "/sample/view/plugin.fxml", "/sample/view/mediacase.fxml"};
-    private HashMap<String, Point> currentInterface;
+    private HashMap<String, Point> availableComponents;
 
     /**
      * Constructor
      */
-    public InterfaceDialog() {
+    public InterfaceDialog(HashMap<String, Point> availableComponents) {
 
+        this.availableComponents = availableComponents;
+
+        FXMLLoader loader = new FXMLLoader();
         dialog = new Dialog<>();
+        Node button;
+
         dialog.setTitle("Interface Configurator");
         dialog.setHeaderText("Configure your own interface with available panels");
 
         validateButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(validateButton, ButtonType.CANCEL);
 
-        FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource("/sample/view/interfaceDialog.fxml"));
         try {
             content = loader.load();
             table = (GridPane) content.getContent();
 
-            // Get the interface stored in interface.csv
-            currentInterface = MainFrameController.readComponent();
-            // Make sure staticInterfaces are in the HashMap. Else, put in it.
-            for(String inter : staticInterfaces) {
-                if(currentInterface.get(inter) == null) {
-                    currentInterface.put(inter, new Point(-1, -1));
-                }
-            }
-            getNewPlugins();
-
-            // Create a new line in the GridPane for each interface/plugin in the interface HashMap
+            // Create a new line in the GridPane for each interface/plugin in availableComponents
             addTableRows();
 
             // Bind changes on textfields with control function
-            Node button = dialog.getDialogPane().lookupButton(validateButton);
+            button = dialog.getDialogPane().lookupButton(validateButton);
             button.setDisable(false);
 
             dialog.getDialogPane().setContent(content);
@@ -86,8 +81,8 @@ public class InterfaceDialog {
         Label label;
         int x, y, nbRow = 1;
 
-        for (Entry<String, Point> entry : currentInterface.entrySet()) {
-            label = new Label(entry.getKey().substring(entry.getKey().lastIndexOf("/")+1, entry.getKey().lastIndexOf(".")));
+        for (Entry<String, Point> entry : availableComponents.entrySet()) {
+            label = new Label(getNameByType(entry.getKey()));
             // Save the entire name as ID to get it later
             label.setId(entry.getKey());
 
@@ -117,8 +112,9 @@ public class InterfaceDialog {
     /**
      * Add new plugins in the interface HashMap (In fact, all plugins that a are not in the "interface.csv" file).
      */
+    /*
     private void getNewPlugins() {
-        Path path = Paths.get(pathToPlugin);
+        Path path = Paths.get(Constant.pathToPlugin);
         if(Files.isDirectory(path)) {
             try {
                 for (Path path1 : Files.newDirectoryStream(path)) {
@@ -132,7 +128,7 @@ public class InterfaceDialog {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     /**
      * Return a Callback for the validateButton of the DialogBox.
@@ -142,9 +138,8 @@ public class InterfaceDialog {
         return (param) -> {
             // If the user clicked on the submit button
             if(param == validateButton) {
-                // save the new configuration
+                // update the new configuration in availableComponents
                 updateInterface();
-                saveInterface();
                 return 1;
             }
 
@@ -177,20 +172,29 @@ public class InterfaceDialog {
     }
 
     /**
-     * Update the interface HashMap with the new values.
+     * Get the name of an interface or plugin
+     * @param path
+     * @return
      */
-    private void updateInterface() {
-        Label name;
-        ChoiceBox pos;
-        for(int i=0; i<currentInterface.size(); i++) {
-            name = (Label) getNodeByIndex(i+1, 0);
-            pos = (ChoiceBox) getNodeByIndex(i+1, 1);
-            if(currentInterface.get(name.getId()) != null) {
-                currentInterface.replace(name.getId(), getPointFromPosition((Position) pos.getSelectionModel().getSelectedItem()));
-            }
+    private String getNameByType(String path) {
+
+        String result;
+
+        if(path.startsWith("jar:file:")) {
+            result = path.substring(0, path.indexOf("!"));
+            result = result.substring(result.lastIndexOf("/") + 1, result.lastIndexOf("."));
+        } else {
+            result = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf("."));
         }
+
+        return result;
     }
 
+    /**
+     * Return a Point accordingly to a Position
+     * @param position
+     * @return Point
+     */
     private Point getPointFromPosition(Position position) {
         switch (position) {
             case TOP_LEFT:
@@ -207,53 +211,36 @@ public class InterfaceDialog {
     }
 
     /**
-     * Save the new position of interface in the "interface.csv" file.
+     * Update the interface HashMap with the new values.
      */
-    private void saveInterface() {
-        String csvFile = "./res/interface.csv";
-        BufferedWriter bw = null;
-        String line = "";
-
-        try {
-            bw = new BufferedWriter(new FileWriter(csvFile, false));
-
-            for(Entry<String, Point> entry : currentInterface.entrySet()) {
-                bw.write(entry.getKey()+";"+entry.getValue().getX()+";"+entry.getValue().getY());
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private void updateInterface() {
+        Label name;
+        ChoiceBox pos;
+        for(int i = 0; i < availableComponents.size(); i++) {
+            name = (Label) getNodeByIndex(i+1, 0);
+            pos = (ChoiceBox) getNodeByIndex(i+1, 1);
+            if(availableComponents.get(name.getId()) != null) {
+                availableComponents.replace(name.getId(), getPointFromPosition((Position) pos.getSelectionModel().getSelectedItem()));
             }
         }
     }
 
     private ChangeListener getChangeListener() {
-        return new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                ReadOnlyProperty rop = (ReadOnlyProperty) observable;
-                SelectionModel sourceNode = (SelectionModel) rop.getBean();
+        return (observable, oldValue, newValue) -> {
+            ReadOnlyProperty rop = (ReadOnlyProperty) observable;
+            SelectionModel sourceNode = (SelectionModel) rop.getBean();
 
-                for(Node node : table.getChildren()) {
-                    if (node instanceof ChoiceBox) {
-                        ChoiceBox box = (ChoiceBox) node;
+            // If another ChoiceBox has already this new value, set the value of this ChoiceBox at None
+            table.getChildren().stream().filter(node -> node instanceof ChoiceBox).forEach(node -> {
+                ChoiceBox box = (ChoiceBox) node;
 
-                        // If another ChoiceBox has already this new value, set the value of this ChoiceBox at None
-                        if (GridPane.getColumnIndex(box) == 1
-                                && box.getSelectionModel() != sourceNode
-                                && box.getSelectionModel().getSelectedItem().equals(newValue)) {
-                            box.getSelectionModel().select(0);
-                        }
-                    }
+                // If another ChoiceBox has already this new value, set the value of this ChoiceBox at None
+                if (GridPane.getColumnIndex(box) == 1
+                        && box.getSelectionModel() != sourceNode
+                        && box.getSelectionModel().getSelectedItem().equals(newValue)) {
+                    box.getSelectionModel().select(0);
                 }
-            }
+            });
         };
     }
 
