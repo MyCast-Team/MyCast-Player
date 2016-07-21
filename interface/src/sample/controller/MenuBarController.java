@@ -8,12 +8,19 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.util.EntityUtils;
 import sample.annotation.DocumentationAnnotation;
 import sample.model.InterfaceDialog;
 import sample.model.Point;
@@ -91,6 +98,7 @@ public class MenuBarController {
     /**
      * Return an EventHandler for the connection button.
      * Show a window to set the connection with a client or disconnect with client if already connected.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
@@ -99,7 +107,7 @@ public class MenuBarController {
                 streamMedia.closeConnection();
                 updateStreamMenu(true, null);
             } else {
-                if(streamMedia.setClientConnection()) {
+                if (streamMedia.setClientConnection()) {
                     String host = streamMedia.getSocket().getInetAddress().getCanonicalHostName();
                     updateStreamMenu(false, host);
                 }
@@ -109,6 +117,7 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the Interface Configuration button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
@@ -119,12 +128,13 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the play/pause button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPlayEventHandler() {
         return (event) -> {
-            if(streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
-                if(streamMedia.getMediaListPlayer().isPlaying() || streamMedia.getMediaListPlayer().getMediaList().size() == 0) {
+            if (streamMedia != null && streamMedia.getStatus().equals(StreamMedia.CONNECTION_STATUS.CONNECTED)) {
+                if (streamMedia.getMediaListPlayer().isPlaying() || streamMedia.getMediaListPlayer().getMediaList().size() == 0) {
                     streamMedia.pauseStreamingMedia();
                     play.setText("Play");
                 } else {
@@ -137,6 +147,7 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the previous item button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPreviousEventHandler() {
@@ -154,6 +165,7 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the next item button.
+     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getNextEventHandler() {
@@ -194,7 +206,37 @@ public class MenuBarController {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open File");
             File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
-            InputStream inStream;
+            HttpClient httpclient = new DefaultHttpClient();
+            httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+
+            HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
+            try {
+            MultipartEntity mpEntity = new MultipartEntity();
+            ContentBody cbFile = new FileBody(file);
+            ContentBody author = new StringBody("testname");
+            mpEntity.addPart("plugin", cbFile);
+            mpEntity.addPart("author",author);
+
+
+                httppost.setEntity(mpEntity);
+
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity resEntity = response.getEntity();
+
+                System.out.println(response.getStatusLine());
+                if (resEntity != null) {
+                    System.out.println(EntityUtils.toString(resEntity));
+                }
+                if (resEntity != null) {
+                    resEntity.consumeContent();
+                }
+
+                httpclient.getConnectionManager().shutdown();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            /*InputStream inStream;
+
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
@@ -204,13 +246,17 @@ public class MenuBarController {
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
             params.add(new BasicNameValuePair("author", "testname"));
             params.add(new BasicNameValuePair("originalname", file.getName()));
+            params.add(new BasicNameValuePair("plugin",file));
+
 
             try {
                 httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
                 //Execute and get the response.
+
                 response = httpclient.execute(httppost);
                 System.out.println(response.getEntity());
+
 
                 entity = response.getEntity();
                 if (entity != null) {
@@ -221,7 +267,8 @@ public class MenuBarController {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         };
     }
+
 }

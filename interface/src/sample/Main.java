@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import sample.constant.Constant;
 import sample.annotation.DocumentationAnnotation;
 import sample.controller.MainFrameController;
+import sample.controller.SuggestionController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 import java.io.File;
@@ -64,6 +65,7 @@ public class Main extends Application {
                     mainFrameController.getIncludedMenuBarController().getStreamMedia().release();
                 }
             }
+            SuggestionController.sendData();
         } catch (Exception e) {
             System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
             e.printStackTrace();

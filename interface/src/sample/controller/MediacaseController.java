@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Media;
@@ -117,7 +119,24 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
+                System.out.println("here");
+                String id = "";
                 success = true;
+                File idFile = new File(Constant.PATH_TO_ID);
+                if(idFile.exists()){
+                    JSONParser parser = new JSONParser();
+                    try {
+                        JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
+                        id = String.valueOf(obj.get("id"));
+                    } catch (IOException | ParseException e) {
+                        id = SuggestionController.generateid();
+                    }
+                } else {
+                    id = SuggestionController.generateid();
+                }
+                JSONObject idObj = new JSONObject();
+                idObj.put("id", id);
+                jsonList.add(idObj);
                 for (File file:db.getFiles()) {
                     if(audioExtensionIsSupported(getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
@@ -176,7 +195,23 @@ public class MediacaseController {
             ArrayList<JSONObject> jsonList = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
+                String id = "";
                 success = true;
+                File idFile = new File(Constant.PATH_TO_ID);
+                if(idFile.exists()){
+                    JSONParser parser = new JSONParser();
+                    try {
+                        JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
+                        id = (String) obj.get("id");
+                    } catch (IOException | ParseException e) {
+                        id = SuggestionController.generateid();
+                    }
+                } else {
+                    id = SuggestionController.generateid();
+                }
+                JSONObject idObj = new JSONObject();
+                idObj.put("id", id);
+                jsonList.add(idObj);
                 for (File file : db.getFiles()) {
                     if (videoExtensionIsSupported(getExtension(file.getPath()))) {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();

@@ -97,11 +97,12 @@ public class PluginController {
         };
     }
 
+
     public EventHandler<ActionEvent> getDownloadEventHandler() {
         return (event) -> {
             System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("http://localhost:3000/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
@@ -122,6 +123,7 @@ public class PluginController {
                         fos.write(buffer, 0, bytesRead);
                     }
                     is.close();
+
                 }
 
                 fos.close();
@@ -172,7 +174,7 @@ public class PluginController {
 
     public void getList(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://localhost:3000/Listepluginjava");
+        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/Listepluginjava");
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;
