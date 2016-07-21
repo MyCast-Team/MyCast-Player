@@ -75,7 +75,6 @@ public class PlaylistController {
     @FXML
     public void initialize() {
         this.playlist = new Playlist();
-        System.out.println("eeeee");
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorColumn.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty());

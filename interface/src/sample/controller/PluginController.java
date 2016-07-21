@@ -100,9 +100,8 @@ public class PluginController {
 
     public EventHandler<ActionEvent> getDownloadEventHandler() {
         return (event) -> {
-            System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
@@ -174,7 +173,7 @@ public class PluginController {
 
     public void getList(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/Listepluginjava");
+        HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/Listepluginjava");
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;
