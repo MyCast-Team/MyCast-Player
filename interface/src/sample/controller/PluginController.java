@@ -197,7 +197,6 @@ public class PluginController {
             boolean present = false;
 
             String path0 = Constant.PATH_TO_PLUGIN + "/" + nameplugin;
-            System.out.println(path0);
             File theDir = new File(path0);
 
             // if the directory does not exist, create it
@@ -211,7 +210,7 @@ public class PluginController {
         };
     }
 
-    public void getList(){
+    private void getList(){
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/Listepluginjava");
         HttpResponse response1;
@@ -243,11 +242,10 @@ public class PluginController {
             e.printStackTrace();
         }
 
-        for(Plugin p : pluginList)
-            filteredPluginList.add(p);
+        filteredPluginList.addAll(pluginList);
     }
 
-    public void readPlugin() {
+    private void readPlugin() {
         JSONParser parser = new JSONParser();
         Object obj;
         JSONArray jsonArray;
@@ -274,7 +272,7 @@ public class PluginController {
         }
     }
 
-    public void refreshPlugin(){
+    private void refreshPlugin(){
         ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
         pluginTable.setItems(list);
     }

@@ -24,6 +24,7 @@ import org.apache.http.util.EntityUtils;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.InterfaceDialog;
+import sample.model.PluginManager;
 import sample.model.Point;
 import sample.model.StreamMedia;
 
@@ -202,40 +203,46 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Return an event handler for the upload button. It handles the upload of plugins from java app to the server
+     * @return EventHandler
+     */
     private EventHandler<ActionEvent> getAddEventHandler() {
         return (event) -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open File");
             File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
-            HttpClient httpclient = new DefaultHttpClient();
-            httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-            HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS+"/plugin");
-            try {
-                MultipartEntity mpEntity = new MultipartEntity();
-                ContentBody cbFile = new FileBody(file);
-                ContentBody author = new StringBody("testname");
-                mpEntity.addPart("plugin", cbFile);
-                mpEntity.addPart("author",author);
+            if(PluginManager.checkPluginValidity(file)) {
+                HttpClient httpclient = new DefaultHttpClient();
+                httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-                httppost.setEntity(mpEntity);
+                HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS + "/plugin");
+                try {
+                    MultipartEntity mpEntity = new MultipartEntity();
+                    ContentBody cbFile = new FileBody(file);
+                    ContentBody author = new StringBody("testname");
+                    mpEntity.addPart("plugin", cbFile);
+                    mpEntity.addPart("author", author);
 
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity resEntity = response.getEntity();
+                    httppost.setEntity(mpEntity);
 
-                System.out.println(response.getStatusLine());
-                if (resEntity != null) {
-                    System.out.println(EntityUtils.toString(resEntity));
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity resEntity = response.getEntity();
+
+                    System.out.println(response.getStatusLine());
+                    if (resEntity != null) {
+                        System.out.println(EntityUtils.toString(resEntity));
+                    }
+                    if (resEntity != null) {
+                        resEntity.consumeContent();
+                    }
+
+                    httpclient.getConnectionManager().shutdown();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (resEntity != null) {
-                    resEntity.consumeContent();
-                }
-
-                httpclient.getConnectionManager().shutdown();
-            }catch (Exception e){
-                e.printStackTrace();
             }
         };
     }
-
 }

@@ -3,6 +3,7 @@ package sample.model;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
@@ -93,7 +94,6 @@ public class PluginManager {
      * Load the main component of a fxml file with its URL.
      * @param urlToFxml
      */
-
     private void loadComponent(@NotNull URL urlToFxml) {
 
         FXMLLoader loader = new FXMLLoader();
@@ -106,5 +106,55 @@ public class PluginManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Check the validity of a new plugin added by the user for the community. See below all the constraints that must be respect.
+     * A plugin must :
+     *  - be a jar file (.jar extension)
+     *  - contain a package name "plugin"
+     *  - contain a main view name "mainPluginView.fxml" inside the "plugin" package, and with AnchorPane as root pane
+     * @param file representing the plugin
+     * @return true if the plugin respects all of the constraints. Otherwise, return false
+     */
+    public static boolean checkPluginValidity(File file) {
+        URL[] urls;
+        URL res;
+        ClassLoader classLoader;
+        FXMLLoader loader;
+        Pane pane;
+        boolean isValid = false;
+        String filename = file.getName();
+
+        try {
+            if(filename.substring(filename.lastIndexOf(".")).equals(".jar")) {
+
+                urls = new URL[]{file.toURI().toURL()};
+                classLoader = new URLClassLoader(urls, PluginManager.class.getClassLoader());
+                res = classLoader.getResource("plugin/mainPluginView.fxml");
+
+                if (res != null) {
+                    loader = new FXMLLoader(res);
+                    pane = loader.load();
+                    /*
+                    if (pane != null) {
+                        isValid = true;
+                    } else {
+                        System.out.println("UPLOAD PLUGIN ERROR : The pane haven't could be load. Check your fxml file or the path to your attached controller.");
+                    }*/
+                } else {
+                    System.out.println("UPLOAD PLUGIN ERROR : The main view haven't could be found");
+                }
+            } else {
+                System.out.println("UPLOAD PLUGIN ERROR : The selected file is not a jar file (.jar extension).");
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("UPLOAD PLUGIN ERROR : The pane haven't could be load. Check your fxml file or the path to your attached controller.");
+            e.printStackTrace();
+        }
+
+        return isValid;
     }
 }
