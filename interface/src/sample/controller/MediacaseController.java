@@ -338,7 +338,10 @@ public class MediacaseController {
             }
             FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_MEDIACASE, true);
             byte[] comma = ",".getBytes();
+            byte[] begin = "[".getBytes();
+            byte[] end = "]".getBytes();
             boolean first = true;
+            fileOut.write(begin);
             for(JSONObject object : list) {
                 if(!first)
                     fileOut.write(comma);
@@ -346,6 +349,7 @@ public class MediacaseController {
                 fileOut.write(byteArray);
                 first = false;
             }
+            fileOut.write(end);
             fileOut.close();
         } catch(IOException i) {
             i.printStackTrace();
