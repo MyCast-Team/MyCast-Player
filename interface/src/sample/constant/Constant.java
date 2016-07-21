@@ -73,6 +73,8 @@ public class Constant {
      */
     public static final int PORT = 5555;
 
+    public static final String SERVER_ADDRESS = "http://backoffice-client.herokuapp.com";
+
     /**
      * Define all audio extensions that can be used with the player
      */

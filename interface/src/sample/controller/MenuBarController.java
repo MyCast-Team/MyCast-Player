@@ -22,6 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.InterfaceDialog;
 import sample.model.Point;
 import sample.model.StreamMedia;
@@ -209,14 +210,13 @@ public class MenuBarController {
             HttpClient httpclient = new DefaultHttpClient();
             httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-            HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
+            HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS+"/plugin");
             try {
-            MultipartEntity mpEntity = new MultipartEntity();
-            ContentBody cbFile = new FileBody(file);
-            ContentBody author = new StringBody("testname");
-            mpEntity.addPart("plugin", cbFile);
-            mpEntity.addPart("author",author);
-
+                MultipartEntity mpEntity = new MultipartEntity();
+                ContentBody cbFile = new FileBody(file);
+                ContentBody author = new StringBody("testname");
+                mpEntity.addPart("plugin", cbFile);
+                mpEntity.addPart("author",author);
 
                 httppost.setEntity(mpEntity);
 
@@ -235,39 +235,6 @@ public class MenuBarController {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            /*InputStream inStream;
-
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
-            HttpResponse response;
-            HttpEntity entity;
-
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("author", "testname"));
-            params.add(new BasicNameValuePair("originalname", file.getName()));
-            params.add(new BasicNameValuePair("plugin",file));
-
-
-            try {
-                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-
-                //Execute and get the response.
-
-                response = httpclient.execute(httppost);
-                System.out.println(response.getEntity());
-
-
-                entity = response.getEntity();
-                if (entity != null) {
-                    inStream = entity.getContent();
-                    inStream.close();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
         };
     }
 
