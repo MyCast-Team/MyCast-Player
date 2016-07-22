@@ -4,10 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import sample.constant.Constant;
 import sample.annotation.DocumentationAnnotation;
 import sample.controller.MainFrameController;
@@ -45,7 +47,12 @@ public class Main extends Application {
             if (!f.exists()) {
                 result = f.mkdir();
                 if (!result) {
-                    System.out.println("No permission for creating resource directory necessary to run the application.");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.initStyle(StageStyle.UTILITY);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("No permission");
+                    alert.setContentText("No permission for creating resource directory necessary to run the application.");
+                    alert.show();
                     exitApp();
                 }
             }
@@ -68,8 +75,12 @@ public class Main extends Application {
             }
             SuggestionController.sendData();
         } catch (Exception e) {
-            System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Error");
+            alert.setHeaderText("Exit error");
+            alert.setContentText("An error occurred when the application tried to exit. Send the following report to the dev team.");
+            alert.show();
         } finally {
             releaseMainFrameController();
             Platform.exit();
@@ -106,8 +117,12 @@ public class Main extends Application {
                 scene.setRoot(rootLayout);
             }
         } catch (IOException e) {
-            System.out.println("An error occurred when the application try to start. Wait for it to close.");
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Error");
+            alert.setHeaderText("Start error");
+            alert.setContentText("An error occurred when the application try to start. Wait for it to close.");
+            alert.show();
             exitApp();
         }
     }

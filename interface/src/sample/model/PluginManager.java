@@ -2,8 +2,10 @@ package sample.model;
 
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
@@ -58,12 +60,17 @@ public class PluginManager {
             for(String filepath : dirContent) {
                 file = new File(jarDir.getAbsolutePath() + "/" + filepath);
                 // Check if the current file in jarDir is a file with the ".jar" extension
-                if (checkPluginValidity(file)) {
+                if (checkPluginValidity(file, false)) {
                     listPlugin.add(file.getName());
                 }
             }
         } else {
-            System.out.println("The path to directory containing all plugins hasn't been found...");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Path to plugin");
+            alert.setContentText("The path to directory containing all plugins hasn't been found...");
+            alert.show();
         }
 
         return listPlugin;
@@ -91,10 +98,20 @@ public class PluginManager {
                 loader.setClassLoader(classLoader);
                 pane = loader.load();
             } else {
-                System.out.println("LOAD PLUGIN ERROR : The main view haven't could be found.");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setTitle("Plugin load");
+                alert.setHeaderText("Load plugin error");
+                alert.setContentText("The main view haven't could be found.");
+                alert.show();
             }
         } catch (IOException e) {
-            System.out.println("UPLOAD PLUGIN ERROR : The pane haven't could be load. Check your fxml file or the path to its attached controller.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Plugin load");
+            alert.setHeaderText("Load plugin error");
+            alert.setContentText("The pane haven't could be load. Check your fxml file or the path to its attached controller.\"");
+            alert.show();
             pane = null;
             e.printStackTrace();
         }
@@ -111,11 +128,16 @@ public class PluginManager {
      * @param file representing the plugin
      * @return true if the plugin respects all of the constraints. Otherwise, return false
      */
-    public static boolean checkPluginValidity(@NotNull File file) {
+    public static boolean checkPluginValidity(@NotNull File file, boolean isAlertShowing) {
 
         Pane pane;
         String filename = file.getName();
         boolean isValid = false;
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Plugin");
+        alert.setHeaderText("Plugin load error");
 
         if(file.exists()) {
             if (filename.endsWith(".jar")) {
@@ -124,17 +146,26 @@ public class PluginManager {
                     if (pane instanceof AnchorPane) {
                         isValid = true;
                     } else {
-                        System.out.println("LOAD PLUGIN ERROR '" + filename + "' : The root pane of the plugin is not an AnchorPane.");
+                        alert.setContentText("The root pane of the plugin is not an AnchorPane.");
                     }
                 } else {
-                    System.out.println("LOAD PLUGIN ERROR '" + filename + "' : The pane haven't could be load. Check your fxml file or the path to your attached controller.");
+                    alert.setContentText("The pane haven't could be load. Check your fxml file or the path to your attached controller.");
                 }
             } else {
-                System.out.println("UPLOAD PLUGIN ERROR '" + filename + "' : The selected file is not a jar file (.jar extension).");
+                alert.setContentText("The selected file is not a jar file (.jar extension).");
             }
         } else {
-            System.out.println("UPLOAD PLUGIN ERROR '" + filename + "' : The selected file doesn't exist.");
+            alert.setContentText("The selected file doesn't exist.");
         }
+
+        if(alert.getContentText() != null){
+            alert.setAlertType(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Plugin load success");
+            alert.setContentText("The plugin has been validated ! Well done !");
+        }
+
+        if(isAlertShowing)
+            alert.show();
 
         return isValid;
     }

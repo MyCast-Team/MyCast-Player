@@ -13,7 +13,7 @@
         <MenuItem fx:id="interfaceConf" text="Configure interface"/>
     </Menu>
     <Menu fx:id="plugin" text="Plugin">
-        <MenuItem fx:id="add" text="Add Plugin"/>
+        <MenuItem fx:id="add" text="Add a plugin"/>
         <MenuItem fx:id="documentation" text="How to develop a plugin ?"/>
     </Menu>
 </MenuBar>

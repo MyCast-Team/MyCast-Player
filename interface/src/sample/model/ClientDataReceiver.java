@@ -71,8 +71,7 @@ public class ClientDataReceiver extends Thread {
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle("Streaming message");
         alert.setHeaderText("Client disconnected");
-        String s = "The connection has been lost with the client. Check if the client is still opened or check your network connection.";
-        alert.setContentText(s);
+        alert.setContentText("The connection has been lost with the client. Check if the client is still opened or check your network connection.");
         alert.show();
     }
 }
