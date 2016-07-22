@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import sample.constant.Constant;
 import sample.annotation.DocumentationAnnotation;
 import sample.controller.MainFrameController;
+import sample.controller.SuggestionController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 import java.io.File;
@@ -34,12 +35,18 @@ public class Main extends Application {
     }
 
     private void checkResourceFolder() {
-        File f = new File(Constant.PATH_TO_RESOURCES);
-        if (!f.exists()) {
-            boolean result = f.mkdir();
-            if(!result) {
-                System.out.println("No permission for creating resource directory necessary to run the application");
-                stop();
+        String[] paths = new String[]{Constant.PATH_TO_RESOURCES, Constant.PATH_TO_PLUGIN};
+        File f;
+        boolean result;
+
+        for(String path : paths) {
+            f = new File(path);
+            if (!f.exists()) {
+                result = f.mkdir();
+                if (!result) {
+                    System.out.println("No permission for creating resource directory necessary to run the application.");
+                    stop();
+                }
             }
         }
     }
@@ -56,6 +63,10 @@ public class Main extends Application {
             if(mainFrameController != null) {
                 // Save the current interface in the interface.csv file
                 mainFrameController.saveInterface();
+                if(mainFrameController.getMediacaseController() != null){
+                    System.out.println("here");
+                    mainFrameController.getMediacaseController().writeMediacase();
+                }
 
                 if (mainFrameController.getPlayerController() != null) {
                     mainFrameController.getPlayerController().getResizablePlayer().release();
@@ -64,6 +75,7 @@ public class Main extends Application {
                     mainFrameController.getIncludedMenuBarController().getStreamMedia().release();
                 }
             }
+            //SuggestionController.sendData();
         } catch (Exception e) {
             System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
             e.printStackTrace();

@@ -94,8 +94,10 @@ public class StreamMedia extends Thread {
                 ":sout-keep");
 
         mediaListPlayer.setMediaList(playlist);
-        for(Media m : interfacePlaylist.getPlaylist()) {
-            this.playlist.addMedia(m.getPath());
+        if(interfacePlaylist != null) {
+            for (Media m : interfacePlaylist.getPlaylist()) {
+                this.playlist.addMedia(m.getPath());
+            }
         }
         isAlreadyStarted = false;
     }

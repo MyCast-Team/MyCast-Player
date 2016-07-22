@@ -55,8 +55,16 @@ public class PluginController {
     private Button download;
     @FXML
     private Button remove;
+    @FXML
+    private Button search;
+    @FXML
+    private Button reset;
+    @FXML
+    private TextField filter;
 
     private ArrayList<Plugin> pluginList;
+
+    private ArrayList<Plugin> filteredPluginList;
 
     public PluginController(){
     }
@@ -64,8 +72,11 @@ public class PluginController {
     @FXML
     public void initialize(){
         pluginList = new ArrayList<>();
+        filteredPluginList = new ArrayList<>();
+
         getList();
-        ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
         pluginTable.setItems(list);
 
         nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -78,7 +89,34 @@ public class PluginController {
         remove.setOnAction(getRemoveEventHandler());
         pluginTable.getSelectionModel().selectedItemProperty().addListener(getSelectedItemChangeListener());
 
+        setSearchManagement();
+
         installTooltips();
+    }
+
+    public void setSearchManagement() {
+        search.setOnAction(event -> {
+            if (!filter.getText().equals("")) {
+                String filterString = filter.getText().toLowerCase();
+                filteredPluginList.clear();
+                for (Plugin p : pluginList) {
+                    if (p.getAuthor().toLowerCase().contains(filterString) ||
+                            p.getDate().toLowerCase().contains(filterString) ||
+                            p.getName().toLowerCase().contains(filterString)) {
+                        filteredPluginList.add(p);
+                    }
+                }
+                refreshPlugin();
+            }
+        });
+
+        reset.setOnAction(event -> {
+            filteredPluginList.clear();
+            for (Plugin p : pluginList) {
+                filteredPluginList.add(p);
+            }
+            refreshPlugin();
+        });
     }
 
     public void installTooltips(){
@@ -91,17 +129,17 @@ public class PluginController {
         return (event) -> {
             pluginList.clear();
             getList();
-            ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+            ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
 
             pluginTable.setItems(list);
         };
     }
 
+
     public EventHandler<ActionEvent> getDownloadEventHandler() {
         return (event) -> {
-            System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("http://localhost:3000/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
@@ -122,6 +160,7 @@ public class PluginController {
                         fos.write(buffer, 0, bytesRead);
                     }
                     is.close();
+
                 }
 
                 fos.close();
@@ -135,14 +174,11 @@ public class PluginController {
     public EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
             File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
-
             boolean success = f1.delete();
 
-            if (!success){
+            if (!success) {
                 System.out.println("Deletion failed.");
-                //System.exit(0);
-            }
-            else{
+            } else {
                 System.out.println("File deleted.");
             }
             getRefreshEventHandler();
@@ -156,7 +192,6 @@ public class PluginController {
             boolean present = false;
 
             String path0 = Constant.PATH_TO_PLUGIN + "/" + nameplugin;
-            System.out.println(path0);
             File theDir = new File(path0);
 
             // if the directory does not exist, create it
@@ -170,9 +205,9 @@ public class PluginController {
         };
     }
 
-    public void getList(){
+    private void getList(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://localhost:3000/Listepluginjava");
+        HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/Listepluginjava");
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;
@@ -201,9 +236,11 @@ public class PluginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        filteredPluginList.addAll(pluginList);
     }
 
-    public void readPlugin() {
+    private void readPlugin() {
         JSONParser parser = new JSONParser();
         Object obj;
         JSONArray jsonArray;
@@ -228,5 +265,10 @@ public class PluginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void refreshPlugin(){
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
+        pluginTable.setItems(list);
     }
 }

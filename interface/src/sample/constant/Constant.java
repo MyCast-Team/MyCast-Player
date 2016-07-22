@@ -61,7 +61,12 @@ public class Constant {
     /**
      * Define the package name where the main view of a plugin is stored
      */
-    public static final String PACKAGE_PLUGIN_NAME = "plugin";
+    private static final String PACKAGE_PLUGIN_NAME = "plugin";
+
+    /**
+     * Define the location of the main view of all plugins
+     */
+    public static final String MAIN_PLUGIN_VIEW_LOCATION = PACKAGE_PLUGIN_NAME+"/mainPluginView.fxml";
 
     /**
      * Define all default interfaces
@@ -72,6 +77,8 @@ public class Constant {
      * Define the port number for streaming media between the main application and the client application
      */
     public static final int PORT = 5555;
+
+    public static final String SERVER_ADDRESS = "http://backoffice-client.herokuapp.com";
 
     /**
      * Define all audio extensions that can be used with the player

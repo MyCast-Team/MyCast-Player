@@ -1,5 +1,6 @@
 package sample.controller;
 
+import com.sun.org.apache.bcel.internal.util.ClassLoader;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -46,6 +47,7 @@ public class MainFrameController extends AnchorPane {
 
     private PlayerController playerController;
     private PlaylistController playlistController;
+    private MediacaseController mediacaseController;
 
     public MainFrameController() {
     }
@@ -57,6 +59,7 @@ public class MainFrameController extends AnchorPane {
         pluginManager = new PluginManager();
         playerController = null;
         playlistController = null;
+        mediacaseController = null;
         availableComponents = new HashMap<>();
 
         includedMenuBarController.setAvailableComponents(availableComponents);
@@ -96,6 +99,10 @@ public class MainFrameController extends AnchorPane {
 
     public PlayerController getPlayerController() {
         return playerController;
+    }
+
+    public MediacaseController getMediacaseController() {
+        return mediacaseController;
     }
 
     private static HashMap<String, Point> readComponent(){
@@ -141,22 +148,25 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
-    private AnchorPane loadComponent(String path){
+    private AnchorPane loadComponent(String filename) {
         AnchorPane pane;
         FXMLLoader loader = new FXMLLoader();
+        File file;
 
         try {
-            if(path.startsWith("jar:file:")) {
-                loader.setLocation(new URL(path));
-                pane = loader.load();
+            if(filename.endsWith(".jar")) {
+                file = new File(Constant.PATH_TO_PLUGIN+"/"+filename);
+                pane = (AnchorPane) PluginManager.loadPlugin(file);
             } else {
-                loader.setLocation(getClass().getResource(path));
+                loader.setLocation(getClass().getResource(filename));
                 pane = loader.load();
 
                 if (pane.getId().equals("player")) {
                     playerController = loader.getController();
                 } else if (pane.getId().equals("playlist")) {
                     playlistController = loader.getController();
+                } else if (pane.getId().equals("mediacase")) {
+                    mediacaseController = loader.getController();
                 }
             }
         } catch (IOException e) {
