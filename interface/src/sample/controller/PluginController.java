@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Plugin;
+import sample.model.Point;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -115,9 +116,7 @@ public class PluginController {
     private EventHandler<ActionEvent> getResetEventHandler() {
         return (event) -> {
             filteredPluginList.clear();
-            for (Plugin p : pluginList) {
-                filteredPluginList.add(p);
-            }
+            filteredPluginList.addAll(pluginList);
             refreshPlugin();
         };
     }
@@ -147,7 +146,8 @@ public class PluginController {
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
-            String filePath = Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String filePath = Constant.PATH_TO_PLUGIN + "/" + pluginName;
             FileOutputStream fos = null;
 
             try {
@@ -164,11 +164,11 @@ public class PluginController {
                         fos.write(buffer, 0, bytesRead);
                     }
                     is.close();
-
                 }
 
                 fos.close();
                 EntityUtils.consume(entity1);
+                MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
                 alert(1);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -229,6 +229,9 @@ public class PluginController {
      */
     private ChangeListener<Plugin> getSelectedItemChangeListener() {
         return (ObservableValue<? extends Plugin> observable, Plugin oldValue, Plugin newValue) -> {
+            if(newValue == null)
+                return;
+
             Plugin selectedPlugin = newValue;
             String nameplugin = selectedPlugin.getName();
             String path0 = Constant.PATH_TO_PLUGIN + "/" + nameplugin;
@@ -289,6 +292,7 @@ public class PluginController {
             e.printStackTrace();
         }
 
+        filteredPluginList.clear();
         filteredPluginList.addAll(pluginList);
     }
 

@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -58,7 +57,7 @@ public class PluginManager {
 
             for(String filepath : dirContent) {
                 file = new File(jarDir.getAbsolutePath() + "/" + filepath);
-                // Check if the current file in jarDir is a file with the ".jar" extension
+                // Add the name of the current file in the list of plugin if it is a valid plugin
                 if (checkPluginValidity(file, false)) {
                     listPlugin.add(file.getName());
                 }
@@ -101,7 +100,7 @@ public class PluginManager {
                 alert.initStyle(StageStyle.UTILITY);
                 alert.setTitle("Plugin load");
                 alert.setHeaderText("Load plugin error");
-                alert.setContentText("The main view haven't could be found.");
+                alert.setContentText("The main view hasn't could be found.");
                 alert.showAndWait();
             }
         } catch (IOException e) {
@@ -109,7 +108,7 @@ public class PluginManager {
             alert.initStyle(StageStyle.UTILITY);
             alert.setTitle("Plugin load");
             alert.setHeaderText("Load plugin error");
-            alert.setContentText("The pane haven't could be load. Check your fxml file or the path to its attached controller.\"");
+            alert.setContentText("The pane hasn't could be load. Check your fxml file or the path to its attached controller.\"");
             alert.showAndWait();
             pane = null;
             e.printStackTrace();
