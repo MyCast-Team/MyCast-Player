@@ -76,7 +76,6 @@ public class MenuBarController {
         previous.setOnAction(getPreviousEventHandler());
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
-
         add.setOnAction(getAddEventHandler());
         documentation.setOnAction(getDocumentationEventHandler());
 
@@ -109,7 +108,7 @@ public class MenuBarController {
                     "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
                     "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
             alert.setContentText(s);
-            alert.show();
+            alert.showAndWait();
         };
     }
 
@@ -224,7 +223,7 @@ public class MenuBarController {
             chooser.setTitle("Open File");
             File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
 
-            if(PluginManager.checkPluginValidity(file)) {
+            if(PluginManager.checkPluginValidity(file, true)) {
                 HttpClient httpclient = new DefaultHttpClient();
                 httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
@@ -241,10 +240,6 @@ public class MenuBarController {
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity resEntity = response.getEntity();
 
-                    System.out.println(response.getStatusLine());
-                    if (resEntity != null) {
-                        System.out.println(EntityUtils.toString(resEntity));
-                    }
                     if (resEntity != null) {
                         resEntity.consumeContent();
                     }

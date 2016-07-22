@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.StageStyle;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -168,6 +169,7 @@ public class PluginController {
 
                 fos.close();
                 EntityUtils.consume(entity1);
+                alert(1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -184,12 +186,41 @@ public class PluginController {
             boolean success = f1.delete();
 
             if (!success) {
-                System.out.println("Deletion failed.");
+                alert(-1);
             } else {
-                System.out.println("File deleted.");
+                alert(2);
             }
             getRefreshEventHandler();
         };
+    }
+
+    /**
+     * Show an alert accordingly of the type of the alert
+     * @param type
+     */
+    public void alert(int type){
+        Alert alert;
+        if(type > 0){
+            alert = new Alert(Alert.AlertType.INFORMATION);
+        } else {
+            alert = new Alert(Alert.AlertType.WARNING);
+        }
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Plugin message");
+        switch (type) {
+            case -1:
+                alert.setHeaderText("Plugin not deleted");
+                alert.setContentText("An error occurred, the plugin was not deleted !");
+                break;
+            case 1:
+                alert.setHeaderText("Plugin downloaded");
+                alert.setContentText("The plugin was downloaded without trouble ! You can now configure where you want to place it via Interface -> Configure interface.");
+                break;
+            case 2:
+                alert.setHeaderText("Plugin deleted");
+                alert.setContentText("The plugin was deleted without trouble !");
+        }
+        alert.showAndWait();
     }
 
     /**
@@ -277,10 +308,6 @@ public class PluginController {
             for (Object JsonItem : jsonArray) {
                 jsonObject = (JSONObject) JsonItem;
                 pluginList.add(new Plugin(jsonObject.get("name").toString(), jsonObject.get("author").toString(), jsonObject.get("created_at").toString(),jsonObject.get("id").toString()));
-            }
-
-            for (Plugin plugin : pluginList) {
-                System.out.println(plugin.getName());
             }
         } catch (ParseException e) {
             e.printStackTrace();

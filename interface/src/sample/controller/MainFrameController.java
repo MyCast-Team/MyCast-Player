@@ -3,7 +3,9 @@ package sample.controller;
 import com.sun.org.apache.bcel.internal.util.ClassLoader;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
+import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.PluginManager;
@@ -141,7 +143,12 @@ public class MainFrameController extends AnchorPane {
                 list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
             }
         } catch (IOException e) {
-            System.out.println("Interface configuration not found... Empty interface will load.");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Interface");
+            alert.setHeaderText("Empty configuration");
+            alert.setContentText("Interface configuration not found... Empty interface will load.");
+            alert.showAndWait();
         } finally {
             if (br != null) {
                 try {

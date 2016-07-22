@@ -87,7 +87,6 @@ public class SuggestionController {
             JSONObject jsonObject = (JSONObject) obj;
 
             id = jsonObject.get("id").toString();
-            System.out.println(id);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -239,11 +238,9 @@ public class SuggestionController {
             JSONObject jsonObject;
             for (Object JsonItem : jsonArray) {
                 jsonObject = (JSONObject) JsonItem;
-                //System.out.println(jsonObject.get("film").toString());
                 if (path.equals("filmuser.json")) {
                     SuggestionList.add(new Suggestion(jsonObject.get("film").toString(), jsonObject.get("director").toString(), jsonObject.get("length").toString(), jsonObject.get("date").toString(),jsonObject.get("type").toString(),"NULL"));
                 } else {
-                    System.out.println(jsonObject.get("type").toString());
                     SuggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), jsonObject.get("singer").toString(), jsonObject.get("length").toString(),jsonObject.get("date").toString(),jsonObject.get("type").toString(),jsonObject.get("producer").toString()));
                 }
             }

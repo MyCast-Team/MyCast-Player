@@ -2,6 +2,7 @@ package sample.model;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
@@ -52,7 +53,6 @@ public class StreamMedia extends Thread {
             public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
                 sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
                 sendData.flush();
-                System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
             }
         });
         playlist = factory.newMediaList();
@@ -86,7 +86,6 @@ public class StreamMedia extends Thread {
      */
     public void prepareStreamingMedia() {
         String rtspStream = formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.PORT, "demo");
-        System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
