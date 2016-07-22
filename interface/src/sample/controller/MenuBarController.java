@@ -222,6 +222,7 @@ public class MenuBarController {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open File");
             File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
+            Alert alert;
 
             if(PluginManager.checkPluginValidity(file, true)) {
                 HttpClient httpclient = new DefaultHttpClient();
@@ -240,11 +241,27 @@ public class MenuBarController {
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity resEntity = response.getEntity();
 
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    if(response.getStatusLine().getStatusCode() != 500) {
+                        System.out.println("coucou");
+                        alert.initStyle(StageStyle.UTILITY);
+                        alert.setTitle("Plugin");
+                        alert.setHeaderText("Plugin load success");
+                        alert.setContentText("The plugin has been validated ! Well done !");
+                    } else {
+                        alert.setAlertType(Alert.AlertType.ERROR);
+                        alert.initStyle(StageStyle.UTILITY);
+                        alert.setTitle("Plugin");
+                        alert.setHeaderText("Plugin load error");
+                        alert.setContentText("The plugin could not be uploaded. Maybe a plugin with the same name already exists in the server.");
+                    }
+
                     if (resEntity != null) {
                         resEntity.consumeContent();
                     }
 
                     httpclient.getConnectionManager().shutdown();
+                    alert.showAndWait();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

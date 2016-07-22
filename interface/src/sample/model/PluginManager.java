@@ -85,6 +85,10 @@ public class PluginManager {
         ClassLoader classLoader;
         FXMLLoader loader;
         Pane pane = null;
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Plugin load");
+        alert.setHeaderText("Load plugin error");
 
         try {
             urls = new URL[]{plugin.toURI().toURL()};
@@ -96,18 +100,10 @@ public class PluginManager {
                 loader.setClassLoader(classLoader);
                 pane = loader.load();
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.initStyle(StageStyle.UTILITY);
-                alert.setTitle("Plugin load");
-                alert.setHeaderText("Load plugin error");
                 alert.setContentText("The main view hasn't could be found.");
                 alert.showAndWait();
             }
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.initStyle(StageStyle.UTILITY);
-            alert.setTitle("Plugin load");
-            alert.setHeaderText("Load plugin error");
             alert.setContentText("The pane hasn't could be load. Check your fxml file or the path to its attached controller.\"");
             alert.showAndWait();
             pane = null;
@@ -156,14 +152,9 @@ public class PluginManager {
             alert.setContentText("The selected file doesn't exist.");
         }
 
-        if(alert.getContentText() != null){
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Plugin load success");
-            alert.setContentText("The plugin has been validated ! Well done !");
-        }
-
-        if(isAlertShowing)
+        if(!isValid && isAlertShowing) {
             alert.showAndWait();
+        }
 
         return isValid;
     }

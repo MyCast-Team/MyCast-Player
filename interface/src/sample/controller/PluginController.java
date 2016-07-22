@@ -141,6 +141,9 @@ public class PluginController {
      */
     public EventHandler<ActionEvent> getDownloadEventHandler() {
         return (event) -> {
+            if(pluginTable.getSelectionModel().selectedItemProperty().getValue() == null)
+                return;
+
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpResponse response1;
@@ -182,6 +185,9 @@ public class PluginController {
      */
     private EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
+            if(pluginTable.getSelectionModel().selectedItemProperty().getValue() == null)
+                return;
+
             File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
             boolean success = f1.delete();
 
