@@ -51,6 +51,13 @@ public class StreamMedia extends Thread {
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
             @Override
             public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
+                try {
+                    // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
+                    // before client starts receiving data
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
                 sendData.flush();
             }
@@ -124,17 +131,8 @@ public class StreamMedia extends Thread {
      * Start the streaming at the address and port set with the prepareStreamingMedia function.
      */
     public void startStreamingMedia() {
-        try {
             mediaListPlayer.play();
-            // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
-            // before client starts receiving data
-            if (!isAlreadyStarted) {
-                Thread.sleep(100);
-                isAlreadyStarted = true;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            isAlreadyStarted = true;
     }
 
     /**
