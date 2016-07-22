@@ -123,25 +123,38 @@ public class ResizablePlayer {
      */
     private void fitImageViewSize(float width, float height) {
         Platform.runLater(() -> {
-            float fitHeight = videoSourceRatioProperty.get() * width;
+            double fitHeight = videoSourceRatioProperty.get() * width;
             if (fitHeight > height) {
-                imageView.setFitHeight(height);
                 double fitWidth = height / videoSourceRatioProperty.get();
                 imageView.setFitWidth(fitWidth);
+                imageView.setFitHeight(height);
                 imageView.setX((width - fitWidth) / 2);
                 imageView.setY(0);
-            }
-            else {
+            } else {
                 imageView.setFitWidth(width);
                 imageView.setFitHeight(fitHeight);
                 imageView.setY((height - fitHeight) / 2);
                 imageView.setX(0);
             }
 
-            if(artworkView.getImage() != null) {
-                artworkView.setX(width/2 - artworkView.getImage().getWidth()/2);
-                artworkView.setY(height/2 - artworkView.getImage().getHeight()/2);
-            }
+            fitArtworkViewSize(artworkView, width, height);
         });
+    }
+
+    public static void fitArtworkViewSize(ImageView artworkView, double width, double height) {
+        if(artworkView.getImage() != null) {
+            double ratio =  artworkView.getImage().getHeight() / artworkView.getImage().getWidth();
+            double fitHeight = ratio * width;
+            if(fitHeight > height) {
+                double fitWidth = height / ratio;
+                artworkView.setFitWidth(fitWidth);
+                artworkView.setX((width - fitWidth) / 2);
+                artworkView.setY(0);
+            } else {
+                artworkView.setFitHeight(fitHeight);
+                artworkView.setY((height - fitHeight) / 2);
+                artworkView.setX(0);
+            }
+        }
     }
 }
