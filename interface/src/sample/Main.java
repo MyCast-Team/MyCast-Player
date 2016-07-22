@@ -57,6 +57,9 @@ public class Main extends Application {
             if(mainFrameController != null) {
                 // Save the current interface in the interface.csv file
                 mainFrameController.saveInterface();
+                if(mainFrameController.getMediacaseController() != null){
+                    mainFrameController.getMediacaseController().writeMediacase();
+                }
 
                 if (mainFrameController.getPlayerController() != null) {
                     mainFrameController.getPlayerController().getResizablePlayer().release();
