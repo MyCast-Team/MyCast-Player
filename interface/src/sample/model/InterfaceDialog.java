@@ -200,6 +200,10 @@ public class InterfaceDialog {
         Main.loadMainFrameController();
     }
 
+    /**
+     * Return a ChangeListener for the choicebox of the alert popup
+     * @return
+     */
     private ChangeListener getChangeListener() {
         return (observable, oldValue, newValue) -> {
             ReadOnlyProperty rop = (ReadOnlyProperty) observable;

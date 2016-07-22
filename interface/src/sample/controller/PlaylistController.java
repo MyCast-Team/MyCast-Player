@@ -69,7 +69,7 @@ public class PlaylistController {
     }
 
     /**
-     * Initializes the sample.controller class. This method is automatically called
+     * Initializes the sample.PlaylistController class. This method is automatically called
      * after the fxml file has been loaded.
      */
     @FXML
@@ -97,9 +97,7 @@ public class PlaylistController {
             refreshPlaylist();
         });
 
-        musicTable.getSelectionModel().setSelectionMode(
-                SelectionMode.MULTIPLE
-        );
+        musicTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem delete = new MenuItem("Delete from playlist");
@@ -133,7 +131,10 @@ public class PlaylistController {
         });
     }
 
-    public void setDragAndDrop(){
+    /**
+     * Set drag'n'drop functionality in the playlist to add media in it
+     */
+    private void setDragAndDrop() {
         musicTable.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.ANY);
             event.consume();
@@ -148,8 +149,8 @@ public class PlaylistController {
             if (db.hasFiles()) {
                 success = true;
                 for (File file:db.getFiles()) {
-                    if(MediacaseController.audioExtensionIsSupported(getExtension(file.getPath()))
-                            || MediacaseController.videoExtensionIsSupported(getExtension(file.getPath()))){
+                    if(MediacaseController.audioExtensionIsSupported(MediacaseController.getExtension(file.getPath()))
+                            || MediacaseController.videoExtensionIsSupported(MediacaseController.getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         if(this.mediaListPlayer != null) {
@@ -184,18 +185,10 @@ public class PlaylistController {
         });
     }
 
-    public String getExtension(String fileName){
-        String extension = "";
-
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            extension = fileName.substring(i+1);
-        }
-
-        return extension;
-    }
-
-    public void refreshPlaylist(){
+    /**
+     * Refresh the playlist, for example after a drag'n'drop
+     */
+    private void refreshPlaylist() {
         ObservableList<Media> list = FXCollections.observableArrayList(playlist.getPlaylist());
         musicTable.setItems(list);
         this.playlist.writePlaylist();

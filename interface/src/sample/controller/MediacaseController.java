@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.util.Callback;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -115,6 +114,9 @@ public class MediacaseController {
         refreshMediacase(0);
     }
 
+    /**
+     * Add EventHandler for drag'n'drop music/video in the mediacase
+     */
     public void setDragAndDrop(){
         musiccaseTable.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.ANY);
@@ -263,6 +265,9 @@ public class MediacaseController {
         });
     }
 
+    /**
+     * Set tooltips on each button
+     */
     public void installTooltips(){
         search.setTooltip(new Tooltip("Enter the filter for the music search in your mediacase"));
         search2.setTooltip(new Tooltip("Enter the filter for the video search in your mediacase"));
@@ -272,6 +277,9 @@ public class MediacaseController {
         resetButton2.setTooltip(new Tooltip("Reset the search filter"));
     }
 
+    /**
+     * Manage the search functionality in the mediacase
+     */
     public void setSearchManagement() {
         searchButton.setOnAction(event -> {
             if (!search.getText().equals("")) {
@@ -325,6 +333,9 @@ public class MediacaseController {
         });
     }
 
+    /**
+     * Save the current list of new media in a file to export to the server
+     */
     public void writeMediacase(){
         if(!list.isEmpty()){
             try {
@@ -359,7 +370,12 @@ public class MediacaseController {
         }
     }
 
-    public String getExtension(String fileName){
+    /**
+     * Get file extension
+     * @param fileName
+     * @return extension
+     */
+    public static String getExtension(String fileName){
         String extension = "";
 
         int i = fileName.lastIndexOf('.');
@@ -370,6 +386,11 @@ public class MediacaseController {
         return extension;
     }
 
+    /**
+     * Check if the audio extension given in parameter is supported by the player
+     * @param extension
+     * @return True if it is supported. Otherwise, return false
+     */
     public static boolean audioExtensionIsSupported(String extension){
         for(String str: Constant.EXTENSIONS_AUDIO){
             if(extension.toLowerCase().compareTo(str.toLowerCase()) == 0){
@@ -379,6 +400,11 @@ public class MediacaseController {
         return false;
     }
 
+    /**
+     * Check if the video extension given in parameter is supported by the player
+     * @param extension
+     * @return
+     */
     public static boolean videoExtensionIsSupported(String extension) {
         for (String str : Constant.EXTENSIONS_VIDEO) {
             if (extension.toLowerCase().compareTo(str.toLowerCase()) == 0) {
@@ -388,6 +414,10 @@ public class MediacaseController {
         return false;
     }
 
+    /**
+     * Refresh the mediacase after a search
+     * @param type
+     */
     public void refreshMediacase(int type){
         if(type != 2){
             ObservableList<Media> musiclist = FXCollections.observableArrayList(filteredMediacase.getMusiccase());

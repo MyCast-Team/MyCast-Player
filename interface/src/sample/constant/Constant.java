@@ -213,6 +213,9 @@ public class Constant {
             "xesc"
     };
 
+    /**
+     * Define a DataFormat for send data in a drag'n'drop
+     */
     public static final DataFormat MEDIA_LIST_FORMAT = new DataFormat("ObservableList<Media>");
 }
 
