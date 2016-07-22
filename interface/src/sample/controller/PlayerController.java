@@ -22,20 +22,22 @@ import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Control the player and bind the buttons of the player with functions
  */
 public class PlayerController implements MediaPlayerEventListener {
 
+    private ResizablePlayer resizablePlayer;
     private MediaListPlayer mediaListPlayer;
     private MediaPlayer mediaPlayer;
-    private Stage stage;
 
+    private Stage stage;
     private Scene lastScene;
+
     private long lastTimeDisplayed;
     private String fullTime;
-    private ResizablePlayer resizablePlayer;
     private boolean isFullscreenPlayer;
 
     @FXML
@@ -81,18 +83,17 @@ public class PlayerController implements MediaPlayerEventListener {
 
     /* CONSTRUCTOR */
     public PlayerController() {
-
     }
 
     @FXML
     public void initialize() {
-
         this.stage = null;
 
         this.resizablePlayer = new ResizablePlayer(this.playerHolder, this.imageView, this.artworkView);
         this.mediaListPlayer = resizablePlayer.getMediaListPlayer();
         this.mediaPlayer = resizablePlayer.getMediaPlayer();
         this.mediaPlayer.addMediaPlayerEventListener(this);
+        this.mediaPlayer.setRepeat(true);
 
         this.artworkView.setPreserveRatio(true);
         this.artworkView.setSmooth(true);
@@ -181,10 +182,10 @@ public class PlayerController implements MediaPlayerEventListener {
         repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
-                repeat.setGraphic(new ImageView(new Image("./img/noRepeat.png")));
+                repeat.setGraphic(new ImageView(new Image("img/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
-                repeat.setGraphic(new ImageView(new Image("./img/repeat.png")));
+                repeat.setGraphic(new ImageView(new Image("img/repeat.png")));
             }
         });
     }
@@ -203,7 +204,7 @@ public class PlayerController implements MediaPlayerEventListener {
                 stage.setFullScreen(isFullscreenStage);
             } else {
                 mediaListPlayer.play();
-                play.setGraphic(new ImageView(new Image("./img/pause.png")));
+                play.setGraphic(new ImageView(new Image("img/pause.png")));
                 lastScene = stage.getScene();
                 stage.setScene(new Scene(new AnchorPane(playerContainer)));
                 stage.show();
@@ -226,20 +227,17 @@ public class PlayerController implements MediaPlayerEventListener {
     /* OVERRIDE MediaPlayerEventListener methods */
     @Override
     public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
-        String url = mrl.substring(mrl.indexOf("/"));
+
+        File file = new File(mrl);
+        String url = file.getPath().replaceAll("%20", " ");
+        if(url.startsWith("file:")) {
+            url = url.substring(5);
+        }
 
         MediaMeta metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
         String artworkUrl = metaInfo.getArtworkUrl();
 
-        boolean isMusic = false;
-        for(String ext : Constant.EXTENSIONS_AUDIO) {
-            if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
-                isMusic = true;
-                break;
-            }
-        }
-
-        if(isMusic) {
+        if(MediacaseController.audioExtensionIsSupported(url.substring(url.lastIndexOf(".")+1))) {
             if (artworkUrl != null) {
                 artworkView.setImage(new Image(artworkUrl));
                 artworkView.setX(playerHolder.getWidth()/2 - artworkView.getImage().getWidth()/2);
@@ -273,14 +271,14 @@ public class PlayerController implements MediaPlayerEventListener {
     @Override
     public void playing(MediaPlayer mediaPlayer) {
         Platform.runLater(()-> {
-            play.setGraphic(new ImageView(new Image("./img/pause.png")));
+            play.setGraphic(new ImageView(new Image("img/pause.png")));
         });
     }
 
     @Override
     public void paused(MediaPlayer mediaPlayer) {
         Platform.runLater(()-> {
-            play.setGraphic(new ImageView(new Image("./img/play.png")));
+            play.setGraphic(new ImageView(new Image("img/play.png")));
         });
     }
 
@@ -290,7 +288,7 @@ public class PlayerController implements MediaPlayerEventListener {
             timeSlider.setValue(0.0);
             timeLabel.setText(getStringTime(mediaPlayer));
             setLastTimeDisplayed(0);
-            play.setGraphic(new ImageView(new Image("./img/play.png")));
+            play.setGraphic(new ImageView(new Image("img/play.png")));
 
             statusLabel.setText("No playing item");
         });
