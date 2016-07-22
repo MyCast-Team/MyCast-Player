@@ -123,7 +123,6 @@ public class MediacaseController {
 
         musiccaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
-            ArrayList<JSONObject> list = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
                 if(list.isEmpty()){
@@ -197,7 +196,6 @@ public class MediacaseController {
 
         videocaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
-            ArrayList<JSONObject> list = new ArrayList<>();
             boolean success = false;
             if (db.hasFiles()) {
                 if(list.isEmpty()){
@@ -329,6 +327,7 @@ public class MediacaseController {
 
     public void writeMediacase(){
         if(!list.isEmpty()){
+            System.out.println("in");
             try {
                 File file = new File(Constant.PATH_TO_MEDIACASE);
                 if(!file.exists()){
