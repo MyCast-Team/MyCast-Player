@@ -86,12 +86,12 @@ public class SuggestionController {
 
             JSONObject jsonObject = (JSONObject) obj;
 
-            id=jsonObject.get("id").toString();
+            id = jsonObject.get("id").toString();
             System.out.println(id);
-
-        } catch (Exception e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
+
         if (id == null) {
             id = generateid();
         }
