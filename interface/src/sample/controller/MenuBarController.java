@@ -3,9 +3,11 @@ package sample.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
+import javafx.stage.StageStyle;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -44,10 +46,6 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem openMedia;
-    @FXML
-    private MenuItem openMediaAndAdd;
-    @FXML
     private MenuItem setConnection;
     @FXML
     private MenuItem play;
@@ -59,6 +57,8 @@ public class MenuBarController {
     private MenuItem interfaceConf;
     @FXML
     private MenuItem add;
+    @FXML
+    private MenuItem documentation;
 
     private StreamMedia streamMedia;
 
@@ -76,7 +76,21 @@ public class MenuBarController {
         previous.setOnAction(getPreviousEventHandler());
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
+
         add.setOnAction(getAddEventHandler());
+        documentation.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("How to develop a plugin ?");
+            alert.setHeaderText("How to develop a plugin ?");
+            String s ="A plugin in MyCast is a JavaFX Pane. You need to develop it and export it to a .jar. Your plugin must respect the following properties :\n" +
+                    "       - be a jar file (.jar extension)\n" +
+                    "       - contain the package name \"plugin\"\n" +
+                    "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
+                    "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
+            alert.setContentText(s);
+            alert.show();
+        });
 
         play.setDisable(true);
         previous.setDisable(true);
