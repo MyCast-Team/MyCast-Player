@@ -243,7 +243,6 @@ public class MenuBarController {
 
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     if(response.getStatusLine().getStatusCode() != 500) {
-                        System.out.println("coucou");
                         alert.initStyle(StageStyle.UTILITY);
                         alert.setTitle("Plugin");
                         alert.setHeaderText("Plugin load success");

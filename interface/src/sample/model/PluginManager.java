@@ -8,8 +8,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -75,34 +77,62 @@ public class PluginManager {
     }
 
     /**
+     * Check if the classLoader of a plugin finds the main plugin view
+     * @param classLoader
+     * @return True if it found. Otherwise, return false.
+     */
+    private static boolean isMainViewPresent(ClassLoader classLoader) {
+        return (classLoader.getResource(Constant.MAIN_PLUGIN_VIEW_LOCATION) != null);
+    }
+
+    /**
+     * Get a ClassLoadez plugin
+     * @param plugin
+     * @return ClassLoader
+     */
+    private static ClassLoader getPluginClassLoader(File plugin) {
+        URL[] urls;
+        ClassLoader classLoader;
+
+        try {
+            urls = new URL[]{plugin.toURI().toURL()};
+            classLoader = new URLClassLoader(urls, PluginManager.class.getClassLoader());
+        } catch (MalformedURLException e) {
+            classLoader = null;
+            e.printStackTrace();
+        }
+
+        return classLoader;
+    }
+
+    /**
      * Load the root pane of a fxml file to a plugin, and return it.
      * @param plugin
      */
     public static Pane loadPlugin(@NotNull File plugin) {
 
-        URL[] urls;
         URL res;
-        ClassLoader classLoader;
         FXMLLoader loader;
+        ClassLoader classLoader;
         Pane pane = null;
+
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle("Plugin load");
         alert.setHeaderText("Load plugin error");
 
         try {
-            urls = new URL[]{plugin.toURI().toURL()};
-            classLoader = new URLClassLoader(urls, PluginManager.class.getClassLoader());
+            classLoader = getPluginClassLoader(plugin);
             res = classLoader.getResource(Constant.MAIN_PLUGIN_VIEW_LOCATION);
-
             if (res != null) {
                 loader = new FXMLLoader(res);
                 loader.setClassLoader(classLoader);
                 pane = loader.load();
             } else {
-                alert.setContentText("The main view hasn't could be found.");
+                alert.setContentText("The main view of the '" + plugin.getName() + "' plugin hasn't could be found.");
                 alert.showAndWait();
             }
+
         } catch (IOException e) {
             alert.setContentText("The pane hasn't could be load. Check your fxml file or the path to its attached controller.\"");
             alert.showAndWait();
@@ -122,28 +152,25 @@ public class PluginManager {
      * @param file representing the plugin
      * @return true if the plugin respects all of the constraints. Otherwise, return false
      */
-    public static boolean checkPluginValidity(@NotNull File file, boolean isAlertShowing) {
+    public static boolean checkPluginValidity(File file, boolean isAlertShowing) {
 
-        Pane pane;
+        if(file == null)
+            return false;
+
         String filename = file.getName();
         boolean isValid = false;
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle("Plugin");
-        alert.setHeaderText("Plugin load error");
+        alert.setHeaderText("Plugin validity error");
 
         if(file.exists()) {
             if (filename.endsWith(".jar")) {
-                pane = loadPlugin(file);
-                if (pane != null) {
-                    if (pane instanceof AnchorPane) {
-                        isValid = true;
-                    } else {
-                        alert.setContentText("The root pane of the plugin is not an AnchorPane.");
-                    }
+                if (isMainViewPresent(getPluginClassLoader(file))) {
+                    isValid = true;
                 } else {
-                    alert.setContentText("The pane haven't could be load. Check your fxml file or the path to your attached controller.");
+                    alert.setContentText("The main view of the '" + file.getName() + "' plugin hasn't could be found.");
                 }
             } else {
                 alert.setContentText("The selected file is not a jar file (.jar extension).");

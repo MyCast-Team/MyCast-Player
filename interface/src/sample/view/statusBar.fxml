@@ -5,7 +5,7 @@
     <padding>
         <Insets top="0.0" bottom="0.0" left="5.0" right="5.0"></Insets>
     </padding>
-    <Label fx:id="leftContent" text="A GAUCHE" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_LEFT"/>
+    <Label fx:id="leftContent" text="" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_LEFT"/>
     <Label fx:id="centerContent" text="No playing item" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="ALWAYS" alignment="CENTER"/>
     <Label fx:id="rightContent" text="Not connected" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_RIGHT"/>
 </HBox>

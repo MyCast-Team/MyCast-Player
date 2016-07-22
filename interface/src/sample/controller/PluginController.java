@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Plugin;
+import sample.model.PluginManager;
 import sample.model.Point;
 
 import java.io.*;
@@ -150,7 +151,7 @@ public class PluginController {
             HttpEntity entity1;
             InputStream is;
             String pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
-            String filePath = Constant.PATH_TO_PLUGIN + "/" + pluginName;
+            File file = new File(Constant.PATH_TO_PLUGIN + "/" + pluginName);
             FileOutputStream fos = null;
 
             try {
@@ -158,7 +159,7 @@ public class PluginController {
                 entity1 = response1.getEntity();
                 is = entity1.getContent();
 
-                fos = new FileOutputStream(new File(filePath));
+                fos = new FileOutputStream(file);
 
                 byte[] buffer = new byte[8 * 1024];
                 int bytesRead;
@@ -171,8 +172,14 @@ public class PluginController {
 
                 fos.close();
                 EntityUtils.consume(entity1);
-                MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
-                alert(1);
+                if(PluginManager.checkPluginValidity(file, true)) {
+                    MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
+                    alert(1);
+                } else {
+                    if(file.delete()) {
+                        alert(3);
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -189,9 +196,8 @@ public class PluginController {
                 return;
 
             File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
-            boolean success = f1.delete();
 
-            if (!success) {
+            if (!f1.delete()) {
                 alert(-1);
             } else {
                 alert(2);
@@ -225,6 +231,10 @@ public class PluginController {
             case 2:
                 alert.setHeaderText("Plugin deleted");
                 alert.setContentText("The plugin was deleted without trouble !");
+                break;
+            case 3:
+                alert.setHeaderText("Plugin not valid");
+                alert.setContentText("The downloaded plugin is not valid. It has been removed from your computer.");
         }
         alert.showAndWait();
     }
