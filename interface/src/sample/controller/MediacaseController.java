@@ -81,7 +81,7 @@ public class MediacaseController {
         this.filteredMediacase = new Mediacase();
         this.list = new ArrayList<>();
 
-        dataFormat =  new DataFormat("ObservableList<Media>");
+        dataFormat = Constant.MEDIA_LIST_FORMAT;
 
         titleMusic.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         authorMusic.setCellValueFactory(cellData -> cellData.getValue().authorProperty());
@@ -327,7 +327,6 @@ public class MediacaseController {
 
     public void writeMediacase(){
         if(!list.isEmpty()){
-            System.out.println("in");
             try {
                 File file = new File(Constant.PATH_TO_MEDIACASE);
                 if(!file.exists()){

@@ -17,11 +17,12 @@ import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 import java.io.File;
 import java.io.IOException;
 
-@DocumentationAnnotation(author = "Vincent Rossignol, Thomas Fouan and Pierre Lochouarn", date = "01/03/2016", description = "MyShare is a media players with many functionality like suggestions, plugins, mediacase, playlist and even more !")
+@DocumentationAnnotation(author = "Vincent Rossignol, Thomas Fouan and Pierre Lochouarn", date = "01/03/2016", description = "MyCast is a media players with many functionality like suggestions, plugins, mediacase, playlist and even more !")
 public class Main extends Application {
 
     private Stage primaryStage;
-    private MainFrameController mainFrameController;
+    private static Scene scene;
+    private static MainFrameController mainFrameController;
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,7 +46,7 @@ public class Main extends Application {
                 result = f.mkdir();
                 if (!result) {
                     System.out.println("No permission for creating resource directory necessary to run the application.");
-                    stop();
+                    exitApp();
                 }
             }
         }
@@ -55,33 +56,59 @@ public class Main extends Application {
      * Prepare the application to stop. Release resources and save useful info
      * @throws Exception
      */
-    @Override
-    public void stop() {
+    public static void exitApp() {
         try {
-            super.stop();
-
             if(mainFrameController != null) {
                 // Save the current interface in the interface.csv file
-                mainFrameController.saveInterface();
+                MainFrameController.saveInterface();
+
                 if(mainFrameController.getMediacaseController() != null){
-                    System.out.println("here");
                     mainFrameController.getMediacaseController().writeMediacase();
                 }
-
-                if (mainFrameController.getPlayerController() != null) {
-                    mainFrameController.getPlayerController().getResizablePlayer().release();
-                }
-                if (mainFrameController.getIncludedMenuBarController() != null) {
-                    mainFrameController.getIncludedMenuBarController().getStreamMedia().release();
-                }
             }
-            //SuggestionController.sendData();
+            SuggestionController.sendData();
         } catch (Exception e) {
             System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
             e.printStackTrace();
         } finally {
+            releaseMainFrameController();
             Platform.exit();
             System.exit(0);
+        }
+    }
+
+    private static void releaseMainFrameController() {
+        if(mainFrameController != null) {
+            if (mainFrameController.getPlayerController() != null) {
+                mainFrameController.getPlayerController().getResizablePlayer().release();
+            }
+            if (mainFrameController.getIncludedMenuBarController() != null) {
+                mainFrameController.getIncludedMenuBarController().getStreamMedia().release();
+            }
+            mainFrameController = null;
+        }
+    }
+
+    public static void loadMainFrameController() {
+        VBox rootLayout = null;
+        FXMLLoader loader = new FXMLLoader();
+
+        releaseMainFrameController();
+
+        try {
+            // Load root layout from fxml file
+            loader.setLocation(Main.class.getResource(Constant.PATH_TO_MAIN_VIEW));
+            rootLayout = loader.load();
+            mainFrameController = loader.getController();
+            if(scene == null) {
+                scene = new Scene(rootLayout);
+            } else {
+                scene.setRoot(rootLayout);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred when the application try to start. Wait for it to close.");
+            e.printStackTrace();
+            exitApp();
         }
     }
 
@@ -89,34 +116,20 @@ public class Main extends Application {
      * Initializes the root layout, the main frame skeleton.
      */
     private void initRootLayout() {
-        Scene scene;
-        VBox rootLayout;
-        mainFrameController = null;
-        FXMLLoader loader = new FXMLLoader();
+        scene = null;
+        loadMainFrameController();
 
-        try {
-            // Load root layout from fxml file
-            loader.setLocation(getClass().getResource(Constant.PATH_TO_MAIN_VIEW));
-            rootLayout = loader.load();
-            mainFrameController = loader.getController();
-            scene = new Scene(rootLayout);
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
+            if (event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
+        });
 
-            scene.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.D) mainFrameController.disableDragAndDrop();
-                if (event.getCode() == KeyCode.E) mainFrameController.enableDragAndDrop();
-            });
+        this.primaryStage.setOnCloseRequest(event -> {
+            exitApp();
+        });
 
-            primaryStage.setOnCloseRequest(event -> {
-                stop();
-            });
-
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            System.out.println("An error occurred when the application try to start. Wait for it to close.");
-            e.printStackTrace();
-            stop();
-        }
+        this.primaryStage.setScene(scene);
+        this.primaryStage.show();
     }
 
     public static void main(String[] args) {

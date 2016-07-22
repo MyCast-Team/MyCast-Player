@@ -33,14 +33,11 @@ public class InterfaceDialog {
     private ScrollPane content;
     private GridPane table;
     private ButtonType validateButton;
-    private HashMap<String, Point> availableComponents;
 
     /**
      * Constructor
      */
-    public InterfaceDialog(HashMap<String, Point> availableComponents) {
-
-        this.availableComponents = availableComponents;
+    public InterfaceDialog() {
 
         FXMLLoader loader = new FXMLLoader();
         dialog = new Dialog<>();
@@ -74,14 +71,14 @@ public class InterfaceDialog {
     }
 
     /**
-     * Add a row in the GridPane for each plugins.
+     * Add a row in the GridPane for each plugin.
      */
     private void addTableRows() {
         ChoiceBox select;
         Label label;
         int x, y, nbRow = 1;
 
-        for (Entry<String, Point> entry : availableComponents.entrySet()) {
+        for (Entry<String, Point> entry : MainFrameController.availableComponents.entrySet()) {
             label = new Label(getNameByType(entry.getKey()));
             // Save the entire name as ID to get it later
             label.setId(entry.getKey());
@@ -108,27 +105,6 @@ public class InterfaceDialog {
             nbRow++;
         }
     }
-
-    /**
-     * Add new plugins in the interface HashMap (In fact, all plugins that a are not in the "interface.csv" file).
-     */
-    /*
-    private void getNewPlugins() {
-        Path path = Paths.get(Constant.pathToPlugin);
-        if(Files.isDirectory(path)) {
-            try {
-                for (Path path1 : Files.newDirectoryStream(path)) {
-                    String filename = path1.getFileName().toString();
-                    // Add the plugin in the interface HashMap if the plugin is not in it.
-                    if(filename.endsWith(".jar") && currentInterface.get(filename) == null) {
-                        currentInterface.put(filename, new Point(-1, -1));
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 
     /**
      * Return a Callback for the validateButton of the DialogBox.
@@ -177,14 +153,10 @@ public class InterfaceDialog {
      * @return
      */
     private String getNameByType(String path) {
+        String result = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf("."));
 
-        String result;
-
-        if(path.startsWith("jar:file:")) {
-            result = path.substring(0, path.indexOf("!"));
-            result = result.substring(result.lastIndexOf("/") + 1, result.lastIndexOf("."));
-        } else {
-            result = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf("."));
+        if(path.endsWith(".fxml")) {
+            result = result + " (Default)";
         }
 
         return result;
@@ -216,13 +188,16 @@ public class InterfaceDialog {
     private void updateInterface() {
         Label name;
         ChoiceBox pos;
-        for(int i = 0; i < availableComponents.size(); i++) {
+        for(int i = 0; i < MainFrameController.availableComponents.size(); i++) {
             name = (Label) getNodeByIndex(i+1, 0);
             pos = (ChoiceBox) getNodeByIndex(i+1, 1);
-            if(availableComponents.get(name.getId()) != null) {
-                availableComponents.replace(name.getId(), getPointFromPosition((Position) pos.getSelectionModel().getSelectedItem()));
+            if(MainFrameController.availableComponents.get(name.getId()) != null) {
+                MainFrameController.availableComponents.replace(name.getId(), getPointFromPosition((Position) pos.getSelectionModel().getSelectedItem()));
             }
         }
+
+        MainFrameController.saveInterface();
+        Main.loadMainFrameController();
     }
 
     private ChangeListener getChangeListener() {

@@ -186,7 +186,7 @@ public class PluginController {
     }
 
     private ChangeListener<Plugin> getSelectedItemChangeListener() {
-        return (ObservableValue<? extends Plugin> observale, Plugin oldValue, Plugin newValue) -> {
+        return (ObservableValue<? extends Plugin> observable, Plugin oldValue, Plugin newValue) -> {
             Plugin selectedPlugin = newValue;
             String nameplugin = selectedPlugin.getName();
             boolean present = false;

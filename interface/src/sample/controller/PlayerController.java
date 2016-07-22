@@ -182,10 +182,10 @@ public class PlayerController implements MediaPlayerEventListener {
         repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
-                repeat.setGraphic(new ImageView(new Image("img/noRepeat.png")));
+                repeat.setGraphic(new ImageView(new Image("icons/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
-                repeat.setGraphic(new ImageView(new Image("img/repeat.png")));
+                repeat.setGraphic(new ImageView(new Image("icons/repeat.png")));
             }
         });
     }
@@ -204,7 +204,7 @@ public class PlayerController implements MediaPlayerEventListener {
                 stage.setFullScreen(isFullscreenStage);
             } else {
                 mediaListPlayer.play();
-                play.setGraphic(new ImageView(new Image("img/pause.png")));
+                play.setGraphic(new ImageView(new Image("icons/pause.png")));
                 lastScene = stage.getScene();
                 stage.setScene(new Scene(new AnchorPane(playerContainer)));
                 stage.show();
@@ -271,14 +271,14 @@ public class PlayerController implements MediaPlayerEventListener {
     @Override
     public void playing(MediaPlayer mediaPlayer) {
         Platform.runLater(()-> {
-            play.setGraphic(new ImageView(new Image("img/pause.png")));
+            play.setGraphic(new ImageView(new Image("icons/pause.png")));
         });
     }
 
     @Override
     public void paused(MediaPlayer mediaPlayer) {
         Platform.runLater(()-> {
-            play.setGraphic(new ImageView(new Image("img/play.png")));
+            play.setGraphic(new ImageView(new Image("icons/play.png")));
         });
     }
 
@@ -288,7 +288,7 @@ public class PlayerController implements MediaPlayerEventListener {
             timeSlider.setValue(0.0);
             timeLabel.setText(getStringTime(mediaPlayer));
             setLastTimeDisplayed(0);
-            play.setGraphic(new ImageView(new Image("img/play.png")));
+            play.setGraphic(new ImageView(new Image("icons/play.png")));
 
             statusLabel.setText("No playing item");
         });
