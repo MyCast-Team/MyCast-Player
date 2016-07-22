@@ -142,7 +142,6 @@ public class Mediacase {
     public static void checkExistingFile(List<Media> list) {
         List<Media> found = new ArrayList<>();
         for(Media media : list){
-            System.out.println(media.getPath());
             if(!Files.exists(Paths.get(media.getPath()))) {
                 found.add(media);
             }
