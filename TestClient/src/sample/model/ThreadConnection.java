@@ -66,6 +66,7 @@ public class ThreadConnection extends Thread {
             try {
                 System.out.println("Waiting for another connection");
                 socket = serverSocket.accept();
+                System.out.println("Connected with "+socket.getInetAddress().getCanonicalHostName());
 
                 mrl = new RtspMrl().host(socket.getInetAddress()
                                     .getHostAddress())

@@ -65,7 +65,7 @@ public class Main extends Application {
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
             primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
-            primaryStage.setFullScreen(true);
+            primaryStage.setFullScreen(false);
             primaryStage.show();
         } catch (IOException e) {
             System.out.println("Error while starting the application. Wait for it to close.");
