@@ -142,7 +142,7 @@ public class MainFrameController extends AnchorPane {
             alert.setTitle("Interface");
             alert.setHeaderText("Empty configuration");
             alert.setContentText("Interface configuration not found... Empty interface will load.");
-            alert.show();
+            alert.showAndWait();
         } finally {
             if (br != null) {
                 try {

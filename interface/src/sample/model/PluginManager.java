@@ -70,7 +70,7 @@ public class PluginManager {
             alert.setTitle("Warning");
             alert.setHeaderText("Path to plugin");
             alert.setContentText("The path to directory containing all plugins hasn't been found...");
-            alert.show();
+            alert.showAndWait();
         }
 
         return listPlugin;
@@ -103,7 +103,7 @@ public class PluginManager {
                 alert.setTitle("Plugin load");
                 alert.setHeaderText("Load plugin error");
                 alert.setContentText("The main view haven't could be found.");
-                alert.show();
+                alert.showAndWait();
             }
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -111,7 +111,7 @@ public class PluginManager {
             alert.setTitle("Plugin load");
             alert.setHeaderText("Load plugin error");
             alert.setContentText("The pane haven't could be load. Check your fxml file or the path to its attached controller.\"");
-            alert.show();
+            alert.showAndWait();
             pane = null;
             e.printStackTrace();
         }
@@ -165,7 +165,7 @@ public class PluginManager {
         }
 
         if(isAlertShowing)
-            alert.show();
+            alert.showAndWait();
 
         return isValid;
     }

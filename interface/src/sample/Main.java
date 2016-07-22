@@ -52,7 +52,7 @@ public class Main extends Application {
                     alert.setTitle("Error");
                     alert.setHeaderText("No permission");
                     alert.setContentText("No permission for creating resource directory necessary to run the application.");
-                    alert.show();
+                    alert.showAndWait();
                     exitApp();
                 }
             }
@@ -80,7 +80,7 @@ public class Main extends Application {
             alert.setTitle("Error");
             alert.setHeaderText("Exit error");
             alert.setContentText("An error occurred when the application tried to exit. Send the following report to the dev team.");
-            alert.show();
+            alert.showAndWait();
         } finally {
             releaseMainFrameController();
             Platform.exit();
@@ -122,7 +122,7 @@ public class Main extends Application {
             alert.setTitle("Error");
             alert.setHeaderText("Start error");
             alert.setContentText("An error occurred when the application try to start. Wait for it to close.");
-            alert.show();
+            alert.showAndWait();
             exitApp();
         }
     }

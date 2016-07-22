@@ -209,7 +209,7 @@ public class PluginController {
                 alert.setHeaderText("Plugin deleted");
                 alert.setContentText("The plugin was deleted without trouble !");
         }
-        alert.show();
+        alert.showAndWait();
     }
 
     private ChangeListener<Plugin> getSelectedItemChangeListener() {

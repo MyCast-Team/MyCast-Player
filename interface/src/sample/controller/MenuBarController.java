@@ -89,7 +89,7 @@ public class MenuBarController {
                     "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
                     "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
             alert.setContentText(s);
-            alert.show();
+            alert.showAndWait();
         });
 
         play.setDisable(true);
