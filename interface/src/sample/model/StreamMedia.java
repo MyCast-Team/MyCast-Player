@@ -2,6 +2,7 @@ package sample.model;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
