@@ -62,8 +62,6 @@ public class MenuBarController {
 
     private StreamMedia streamMedia;
 
-    private HashMap<String, Point> availableComponents;
-
     private static Label statusLabel;
 
     public MenuBarController() {
@@ -83,10 +81,6 @@ public class MenuBarController {
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
-    }
-
-    public void setAvailableComponents(HashMap<String, Point> availableComponents) {
-        this.availableComponents = availableComponents;
     }
 
     public StreamMedia getStreamMedia() {
@@ -124,7 +118,7 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
         return (event) -> {
-            InterfaceDialog interfaceDialog = new InterfaceDialog(availableComponents);
+            InterfaceDialog interfaceDialog = new InterfaceDialog();
         };
     }
 

@@ -61,19 +61,6 @@ public class PluginManager {
                 if (checkPluginValidity(file)) {
                     listPlugin.add(file.getName());
                 }
-                /*
-                urlList = new URL[]{file.toURI().toURL()};
-                loader = new URLClassLoader(urlList);
-
-                // Get the path of the main fxml to load
-                URL urlToFxml = loader.getResource(Constant.MAIN_PLUGIN_VIEW_LOCATION);
-                if (urlToFxml != null) {
-                    // If the loader founds the file, load the component attached to the file.
-                    //loadComponent(urlToFxml);
-                    listPlugin.add(urlToFxml.toString());
-                } else {
-                    System.out.println("No file '" + Constant.MAIN_PLUGIN_VIEW_LOCATION + "' has been found in jar '" + file.getName() + "'");
-                }*/
             }
         } else {
             System.out.println("The path to directory containing all plugins hasn't been found...");

@@ -1,5 +1,6 @@
 package sample.constant;
 
+import javafx.scene.input.DataFormat;
 import sample.annotation.DocumentationAnnotation;
 
 /**
@@ -211,5 +212,7 @@ public class Constant {
             "wtv",
             "xesc"
     };
+
+    public static final DataFormat MEDIA_LIST_FORMAT = new DataFormat("ObservableList<Media>");
 }
 
