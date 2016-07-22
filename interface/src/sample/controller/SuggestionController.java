@@ -36,6 +36,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -100,12 +101,14 @@ public class SuggestionController {
         getList("musiqueuser.json","ListeMusique");
         ObservableList<Suggestion> list = FXCollections.observableArrayList(SuggestionList);
         ObservableList<Suggestion> listMusic = FXCollections.observableArrayList(SuggestionMusicList);
+
         filmtable1.setItems(list);
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         typeColumn.setCellValueFactory(cellData->cellData.getValue().TypeProperty());
-        dateColumn2.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
         lengthColumn.setCellValueFactory(cellData->cellData.getValue().LengthProperty());
+        dateColumn2.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
         authorColumn.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());
+
         musicTable1.setItems(listMusic);
         titleColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         typeColumn1.setCellValueFactory(cellData->cellData.getValue().TypeProperty());
@@ -228,20 +231,18 @@ public class SuggestionController {
     public void readPlugin(String path) {
 
         JSONParser parser = new JSONParser();
-        Object obj;
         JSONArray jsonArray;
 
         try {
-            obj = parser.parse(new FileReader("./res/"+path));
-            jsonArray = (JSONArray) obj;
+            jsonArray = (JSONArray) parser.parse(new FileReader("./res/"+path));
 
             JSONObject jsonObject;
             for (Object JsonItem : jsonArray) {
                 jsonObject = (JSONObject) JsonItem;
                 if (path.equals("filmuser.json")) {
-                    SuggestionList.add(new Suggestion(jsonObject.get("film").toString(), jsonObject.get("director").toString(), jsonObject.get("length").toString(), jsonObject.get("date").toString(),jsonObject.get("type").toString(),"NULL"));
+                    SuggestionList.add(new Suggestion(jsonObject.get("film").toString(), jsonObject.get("date").toString(), jsonObject.get("director").toString(), jsonObject.get("length").toString(),jsonObject.get("type").toString()));
                 } else {
-                    SuggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), jsonObject.get("singer").toString(), jsonObject.get("length").toString(),jsonObject.get("date").toString(),jsonObject.get("type").toString(),jsonObject.get("producer").toString()));
+                    SuggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), jsonObject.get("date").toString(), jsonObject.get("singer").toString(),jsonObject.get("length").toString(),jsonObject.get("type").toString()));
                 }
             }
         } catch (ParseException e) {

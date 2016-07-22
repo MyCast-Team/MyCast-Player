@@ -20,6 +20,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
+import uk.co.caprica.vlcj.player.list.MediaListPlayerMode;
 
 import java.io.File;
 import java.io.IOException;
@@ -182,9 +183,11 @@ public class PlayerController implements MediaPlayerEventListener {
         repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
+                mediaListPlayer.setMode(MediaListPlayerMode.DEFAULT);
                 repeat.setGraphic(new ImageView(new Image("icons/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
+                mediaListPlayer.setMode(MediaListPlayerMode.LOOP);
                 repeat.setGraphic(new ImageView(new Image("icons/repeat.png")));
             }
         });

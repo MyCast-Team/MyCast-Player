@@ -15,17 +15,16 @@ public class Suggestion {
     String Date;
     String Director;
     String Length;
-    String Producer;
 
 
-    public Suggestion(String name, String date, String director, String len, String type, String prod){
+
+    public Suggestion(String name, String date, String director, String len, String type){
 
         this.Name=name;
         this.Type=type;
         this.Date=date;
         this.Director=director;
         this.Length=len;
-        this.Producer=prod;
 
     }
 
@@ -33,9 +32,7 @@ public class Suggestion {
         return new SimpleStringProperty(Name);
     }
 
-    public StringProperty producerProperty() {
-        return new SimpleStringProperty(Producer);
-    }
+
 
     public StringProperty DateProperty() {
         return new SimpleStringProperty(Date);
@@ -56,8 +53,6 @@ public class Suggestion {
         return Type;
     }
     public String getDirector(){return Director ;}
-    public String getProducer() {
-        return Producer;
-    }
+
     public String getLength(){return Length;}
 }
