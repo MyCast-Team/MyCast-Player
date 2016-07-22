@@ -56,8 +56,6 @@ public class MainFrameController extends AnchorPane {
 
     @FXML
     public void initialize() {
-        AnchorPane pane;
-
         pluginManager = new PluginManager();
         playerController = null;
         playlistController = null;
@@ -88,7 +86,8 @@ public class MainFrameController extends AnchorPane {
     }
 
     /**
-     * Initialize
+     * Initialize the position of available components with previous interface.csv file.
+     * If the file doesn't exist, load an empty interface
      */
     private void initComponentsPosition() {
         // Init the hashmap of available interfaces by default interfaces and valid plugins. Set their position to (-1;-1)
@@ -112,6 +111,9 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
+    /**
+     * Set each interface at its position in the GridPane of the application
+     */
     private void loadGridPane() {
         AnchorPane pane;
         grid.getChildren().clear();
@@ -125,13 +127,17 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
+    /**
+     * Get previous interface configuration from interface.csv
+     * @return HashMap<String, Point>
+     */
     private HashMap<String, Point> readComponent(){
         HashMap<String, Point> list = new HashMap<>();
         BufferedReader br = null;
         String line;
+
         try {
             br = new BufferedReader(new FileReader(Constant.PATH_TO_INTERFACE_CONF));
-
             while ((line = br.readLine()) != null) {
                 String array[] = line.split(";");
                 list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
@@ -173,6 +179,11 @@ public class MainFrameController extends AnchorPane {
         grid.getColumnConstraints().add(columnConstraints);
     }
 
+    /**
+     * Load a component by its name. Return an AnchorPane representing the main Pane of the interface
+     * @param filename
+     * @return AnchorPane
+     */
     private AnchorPane loadComponent(String filename) {
         AnchorPane pane;
         FXMLLoader loader = new FXMLLoader();
@@ -202,6 +213,10 @@ public class MainFrameController extends AnchorPane {
         return pane;
     }
 
+    /**
+     * Set the drag'n'drop on an AnchorPane
+     * @param pane
+     */
     private void initDragAndDrop(AnchorPane pane){
         pane.setOnDragDetected(event -> {
             Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
@@ -219,14 +234,10 @@ public class MainFrameController extends AnchorPane {
         pane.setOnDragDropped(event -> swap(event.getDragboard().getString(), pane));
     }
 
-    public void enableDragAndDrop() {
-        grid.getChildren().forEach((node) -> initDragAndDrop((AnchorPane) node));
-    }
-
-    public void disableDragAndDrop() {
-        grid.getChildren().forEach((node) -> disableDragAndDropPane((AnchorPane) node));
-    }
-
+    /**
+     * Disable the drag'n'drop on an AnchorPane
+     * @param pane
+     */
     private void disableDragAndDropPane(AnchorPane pane){
         pane.setOnDragDetected(MouseEvent::consume);
         pane.setOnDragOver(DragEvent::consume);
@@ -235,6 +246,21 @@ public class MainFrameController extends AnchorPane {
         });
     }
 
+    /**
+     * Enable the drag'n'drop functionality of each interface in the GridPane
+     */
+    public void enableDragAndDrop() { grid.getChildren().forEach((node) -> initDragAndDrop((AnchorPane) node)); }
+
+    /**
+     *  Disable the drag'n'drop functionality of each interface in the GridPane
+     */
+    public void disableDragAndDrop() { grid.getChildren().forEach((node) -> disableDragAndDropPane((AnchorPane) node)); }
+
+    /**
+     * Swap 2 interfaces in the GridPane after a drag'n'drop
+     * @param sourceStr
+     * @param target
+     */
     private void swap(String sourceStr, AnchorPane target) {
         String[] sourcePosition = sourceStr.split(";");
         Point sourcePoint = new Point(Integer.parseInt(sourcePosition[1]), Integer.parseInt(sourcePosition[0]));
@@ -255,6 +281,11 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
+    /**
+     * Return the name of an interface by its position in availableComponents
+     * @param point
+     * @return Key
+     */
     private String getKeyByValue(Point point) {
         for(Entry<String, Point> entry : availableComponents.entrySet()) {
             if(entry.getValue().equals(point)) {
@@ -264,6 +295,12 @@ public class MainFrameController extends AnchorPane {
         return null;
     }
 
+    /**
+     * Get a node in the GridPane by its coordinates
+     * @param row
+     * @param column
+     * @return Node
+     */
     private Node getNodeByRowColumnIndex(int row, int column) {
         for(Node node : grid.getChildren()) {
             if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
@@ -299,6 +336,9 @@ public class MainFrameController extends AnchorPane {
         }
     }
 
+    /**
+     * Bind Controllers to communicate in each other
+     */
     private void bindControllers() {
         if(playlistController != null) {
             if (playerController != null) {

@@ -1,7 +1,10 @@
 package sample.controller;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -104,13 +107,13 @@ public class PlayerController implements MediaPlayerEventListener {
 
         installTooltips();
 
-        addPreviousListener();
-        addStopListener();
-        addPlayListener();
-        addNextListener();
-        addTimeSliderListener();
-        addRepeatListener();
-        addResizeListener();
+        previous.setOnAction(getPreviousEventHandler());
+        stop.setOnAction(getStopEventHandler());
+        play.setOnAction(getPlayEventHandler());
+        next.setOnAction(getNextEventHandler());
+        timeSlider.valueProperty().addListener(getTimeSliderListener());
+        repeat.setOnAction(getRepeatEventHandler());
+        resize.setOnAction(getResizeEventHandler());
     }
 
     /* GETTER */
@@ -139,48 +142,69 @@ public class PlayerController implements MediaPlayerEventListener {
     public void setStatusLabel(Label statusLabel) { this.statusLabel = statusLabel; }
 
 
-    /* BUTTON CONTROLLER */
-    public void addPreviousListener() {
-        previous.addEventHandler(ActionEvent.ACTION, (event) -> {
-            mediaListPlayer.playPrevious();
-        });
+    /************************************************************************************
+     *                                  BUTTON CONTROLLER                               *
+     ************************************************************************************/
+
+    /**
+     * Return an EventHandler for the Previous button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getPreviousEventHandler() {
+        return (event) -> mediaListPlayer.playPrevious();
     }
 
-    public void addStopListener() {
-        stop.addEventHandler(ActionEvent.ACTION, (event) -> {
-            mediaListPlayer.stop();
-        });
+    /**
+     * Return an EventHandler for the Stop button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getStopEventHandler() {
+        return (event) -> mediaListPlayer.stop();
     }
 
-    public void addPlayListener() {
-        play.addEventHandler(ActionEvent.ACTION, (event) -> {
-            if(mediaListPlayer.isPlaying()) {
+    /**
+     * Return an EventHandler for the Play button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getPlayEventHandler() {
+        return (event) -> {
+            if (mediaListPlayer.isPlaying()) {
                 mediaListPlayer.pause();
             } else {
                 mediaListPlayer.play();
             }
-        });
+        };
     }
 
-    public void addNextListener() {
-        next.addEventHandler(ActionEvent.ACTION, (event) -> {
-            mediaListPlayer.playNext();
-        });
+    /**
+     * Return an EventHandler for the Next button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getNextEventHandler() {
+        return (event) -> mediaListPlayer.playNext();
     }
 
-    public void addTimeSliderListener() {
-        timeSlider.valueProperty().addListener((ov) -> {
+    /**
+     * Return a ChangeListener for the Time slider
+     * @return ChangeListener
+     */
+    public ChangeListener<Number> getTimeSliderListener() {
+        return (observableValue, oldValue, newValue) -> {
             if (timeSlider.isValueChanging()) {
                 // multiply duration by percentage calculated by slider position
                 mediaPlayer.setPosition((float)(timeSlider.getValue()/100.0));
                 timeLabel.setText(getStringTime(mediaPlayer));
                 setLastTimeDisplayed(0);
             }
-        });
+        };
     }
 
-    public void addRepeatListener() {
-        repeat.addEventHandler(ActionEvent.ACTION, (event) -> {
+    /**
+     * Return an EventHandler for the Repeat button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getRepeatEventHandler() {
+        return (event) -> {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
                 mediaListPlayer.setMode(MediaListPlayerMode.DEFAULT);
@@ -190,11 +214,15 @@ public class PlayerController implements MediaPlayerEventListener {
                 mediaListPlayer.setMode(MediaListPlayerMode.LOOP);
                 repeat.setGraphic(new ImageView(new Image("icons/repeat.png")));
             }
-        });
+        };
     }
 
-    public void addResizeListener() {
-        resize.addEventHandler(ActionEvent.ACTION, (event)-> {
+    /**
+     * Return an EventHandler for the Resize button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getResizeEventHandler() {
+        return (event)-> {
             if(stage == null) {
                 stage = (Stage) play.getScene().getWindow();
             }
@@ -214,9 +242,12 @@ public class PlayerController implements MediaPlayerEventListener {
                 isFullscreenPlayer = true;
                 stage.setFullScreen(isFullscreenStage);
             }
-        });
+        };
     }
 
+    /**
+     * Set tooltips on each button
+     */
     public void installTooltips(){
         this.play.setTooltip(new Tooltip("Play/Pause the current media"));
         this.previous.setTooltip(new Tooltip("Play the previous media"));
@@ -227,19 +258,26 @@ public class PlayerController implements MediaPlayerEventListener {
         this.timeSlider.setTooltip(new Tooltip("Set the media time location"));
     }
 
-    /* OVERRIDE MediaPlayerEventListener methods */
+    /************************************************************************************
+     *                  IMPLEMENTS MediaPlayerEventListener METHODS                     *
+     ************************************************************************************/
+
     @Override
     public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
 
         File file = new File(mrl);
         String url = file.getPath().replaceAll("%20", " ");
+        MediaMeta metaInfo;
+        String artworkUrl;
+
         if(url.startsWith("file:")) {
             url = url.substring(5);
         }
 
-        MediaMeta metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
-        String artworkUrl = metaInfo.getArtworkUrl();
+        metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
+        artworkUrl = metaInfo.getArtworkUrl();
 
+        // Print the album image of the current media if it is a music
         if(MediacaseController.audioExtensionIsSupported(url.substring(url.lastIndexOf(".")+1))) {
             if (artworkUrl != null) {
                 artworkView.setImage(new Image(artworkUrl));
@@ -253,14 +291,13 @@ public class PlayerController implements MediaPlayerEventListener {
             imageView.setVisible(true);
         }
 
+        // Reinitialize the time slider and the time label, and print the title of the current media in the status bar
         Platform.runLater(() -> {
             timeSlider.setValue(0.0);
             timeLabel.setText(getStringTime(mediaPlayer));
             setLastTimeDisplayed(0);
 
-            String path = new File(mrl).getPath();
-            MediaMeta meta = new MediaPlayerFactory().getMediaMeta(path.substring(path.indexOf(":")+1), true);
-            String text = ((meta.getArtist() != null) ? meta.getArtist() + " - " : "") + meta.getTitle();
+            String text = ((metaInfo.getArtist() != null) ? metaInfo.getArtist() + " - " : "") + metaInfo.getTitle();
             statusLabel.setText(text);
         });
     }
@@ -273,16 +310,12 @@ public class PlayerController implements MediaPlayerEventListener {
 
     @Override
     public void playing(MediaPlayer mediaPlayer) {
-        Platform.runLater(()-> {
-            play.setGraphic(new ImageView(new Image("icons/pause.png")));
-        });
+        Platform.runLater(()-> play.setGraphic(new ImageView(new Image("icons/pause.png"))));
     }
 
     @Override
     public void paused(MediaPlayer mediaPlayer) {
-        Platform.runLater(()-> {
-            play.setGraphic(new ImageView(new Image("icons/play.png")));
-        });
+        Platform.runLater(()-> play.setGraphic(new ImageView(new Image("icons/play.png"))));
     }
 
     @Override
@@ -393,12 +426,24 @@ public class PlayerController implements MediaPlayerEventListener {
     @Override
     public void endOfSubItems(MediaPlayer mediaPlayer) {}
 
+    /************************************************************************************
+     *                                      UTILITIES                                   *
+     ************************************************************************************/
 
-    /* UTILITIES */
+    /**
+     * Return a String representing the current time progression of the player
+     * @param mediaPlayer
+     * @return String
+     */
     public String getStringTime(MediaPlayer mediaPlayer) {
         return formatTime(mediaPlayer.getTime())+" / "+ fullTime;
     }
 
+    /**
+     * Represents a time in milliseconds into a String formatted as "HH:mm:ss"
+     * @param time
+     * @return String
+     */
     public static String formatTime(long time) {
 
         int hours, minutes;

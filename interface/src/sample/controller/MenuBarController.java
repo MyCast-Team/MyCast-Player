@@ -76,21 +76,8 @@ public class MenuBarController {
         previous.setOnAction(getPreviousEventHandler());
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
-
         add.setOnAction(getAddEventHandler());
-        documentation.setOnAction(event -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UTILITY);
-            alert.setTitle("How to develop a plugin ?");
-            alert.setHeaderText("How to develop a plugin ?");
-            String s ="A plugin in MyCast is a JavaFX Pane. You need to develop it and export it to a .jar. Your plugin must respect the following properties :\n" +
-                    "       - be a jar file (.jar extension)\n" +
-                    "       - contain the package name \"plugin\"\n" +
-                    "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
-                    "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
-            alert.setContentText(s);
-            alert.showAndWait();
-        });
+        documentation.setOnAction(getDocumentationEventHandler());
 
         play.setDisable(true);
         previous.setDisable(true);
@@ -106,9 +93,28 @@ public class MenuBarController {
     }
 
     /**
+     * Return an EventHandler for the documentation button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getDocumentationEventHandler() {
+        return (event) -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("How to develop a plugin ?");
+            alert.setHeaderText("How to develop a plugin ?");
+            String s ="A plugin in MyCast is a JavaFX Pane. You need to develop it and export it to a .jar. Your plugin must respect the following properties :\n" +
+                    "       - be a jar file (.jar extension)\n" +
+                    "       - contain the package name \"plugin\"\n" +
+                    "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
+                    "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
+            alert.setContentText(s);
+            alert.showAndWait();
+        };
+    }
+
+    /**
      * Return an EventHandler for the connection button.
      * Show a window to set the connection with a client or disconnect with client if already connected.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
@@ -127,7 +133,6 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the Interface Configuration button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
@@ -138,7 +143,6 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the play/pause button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPlayEventHandler() {
@@ -157,7 +161,6 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the previous item button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPreviousEventHandler() {
@@ -175,7 +178,6 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the next item button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getNextEventHandler() {
