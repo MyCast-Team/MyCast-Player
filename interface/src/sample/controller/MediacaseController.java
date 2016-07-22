@@ -121,7 +121,7 @@ public class MediacaseController {
             if (db.hasFiles()) {
                 String id = "";
                 success = true;
-                File idFile = new File(Constant.pathToId);
+                File idFile = new File(Constant.PATH_TO_ID);
                 if(idFile.exists()){
                     JSONParser parser = new JSONParser();
                     try {
@@ -196,7 +196,7 @@ public class MediacaseController {
             if (db.hasFiles()) {
                 String id = "";
                 success = true;
-                File idFile = new File(Constant.pathToId);
+                File idFile = new File(Constant.PATH_TO_ID);
                 if(idFile.exists()){
                     JSONParser parser = new JSONParser();
                     try {
