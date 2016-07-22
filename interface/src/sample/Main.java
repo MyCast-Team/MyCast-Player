@@ -63,6 +63,10 @@ public class Main extends Application {
             if(mainFrameController != null) {
                 // Save the current interface in the interface.csv file
                 mainFrameController.saveInterface();
+                if(mainFrameController.getMediacaseController() != null){
+                    System.out.println("here");
+                    mainFrameController.getMediacaseController().writeMediacase();
+                }
 
                 if (mainFrameController.getPlayerController() != null) {
                     mainFrameController.getPlayerController().getResizablePlayer().release();
@@ -71,7 +75,7 @@ public class Main extends Application {
                     mainFrameController.getIncludedMenuBarController().getStreamMedia().release();
                 }
             }
-            SuggestionController.sendData();
+            //SuggestionController.sendData();
         } catch (Exception e) {
             System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
             e.printStackTrace();

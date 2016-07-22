@@ -33,6 +33,8 @@ import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Suggestion;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,7 +158,7 @@ public class SuggestionController {
         return null;
     }
 
-    public static void sendData(){
+    public static void sendData() throws IOException {
         File file=new File("./res/mediacase.json");
         if(file.exists()){
             HttpClient httpclient = new DefaultHttpClient();
@@ -169,25 +171,22 @@ public class SuggestionController {
 
                 mpEntity.addPart("mediacase", cbFile);
 
-
-
-
                 httppost.setEntity(mpEntity);
-
 
                 HttpResponse response = httpclient.execute(httppost);
                 HttpEntity resEntity = response.getEntity();
 
-                System.out.println(response.getStatusLine());
-                if (resEntity != null) {
-                    System.out.println(EntityUtils.toString(resEntity));
-                }
                 if (resEntity != null) {
                     resEntity.consumeContent();
                 }
 
                 httpclient.getConnectionManager().shutdown();
             } catch (Exception e){
+                e.printStackTrace();
+            }
+            try {
+                Files.delete(Paths.get("./res/mediacase.json"));
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

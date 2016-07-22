@@ -47,6 +47,7 @@ public class MainFrameController extends AnchorPane {
 
     private PlayerController playerController;
     private PlaylistController playlistController;
+    private MediacaseController mediacaseController;
 
     public MainFrameController() {
     }
@@ -58,6 +59,7 @@ public class MainFrameController extends AnchorPane {
         pluginManager = new PluginManager();
         playerController = null;
         playlistController = null;
+        mediacaseController = null;
         availableComponents = new HashMap<>();
 
         includedMenuBarController.setAvailableComponents(availableComponents);
@@ -97,6 +99,10 @@ public class MainFrameController extends AnchorPane {
 
     public PlayerController getPlayerController() {
         return playerController;
+    }
+
+    public MediacaseController getMediacaseController() {
+        return mediacaseController;
     }
 
     private static HashMap<String, Point> readComponent(){
@@ -159,6 +165,8 @@ public class MainFrameController extends AnchorPane {
                     playerController = loader.getController();
                 } else if (pane.getId().equals("playlist")) {
                     playlistController = loader.getController();
+                } else if (pane.getId().equals("mediacase")) {
+                    mediacaseController = loader.getController();
                 }
             }
         } catch (IOException e) {
