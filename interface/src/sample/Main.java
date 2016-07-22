@@ -17,7 +17,7 @@ import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 import java.io.File;
 import java.io.IOException;
 
-@DocumentationAnnotation(author = "Vincent Rossignol, Thomas Fouan and Pierre Lochouarn", date = "01/03/2016", description = "MyShare is a media players with many functionality like suggestions, plugins, mediacase, playlist and even more !")
+@DocumentationAnnotation(author = "Vincent Rossignol, Thomas Fouan and Pierre Lochouarn", date = "01/03/2016", description = "MyCast is a media players with many functionality like suggestions, plugins, mediacase, playlist and even more !")
 public class Main extends Application {
 
     private Stage primaryStage;

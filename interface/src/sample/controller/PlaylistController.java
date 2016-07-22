@@ -22,7 +22,7 @@ import java.util.Iterator;
 /**
  * Class of control of the music.
  */
-@DocumentationAnnotation(author = "Vincent Rossignol", date = "25/04/2016", description = "This is the controller of the playlist component. The playlist is a list of medias that will be played in order. You can delete medias or reset the playlist. The playlist is saved in a file between two MyShare use.")
+@DocumentationAnnotation(author = "Vincent Rossignol", date = "25/04/2016", description = "This is the controller of the playlist component. The playlist is a list of medias that will be played in order. You can delete medias or reset the playlist. The playlist is saved in a file between two MyCast use.")
 public class PlaylistController {
     @FXML
     private TableView<Media> musicTable;
