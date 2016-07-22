@@ -3,9 +3,11 @@ package sample.controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
+import javafx.stage.StageStyle;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -22,7 +24,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.InterfaceDialog;
+import sample.model.PluginManager;
 import sample.model.Point;
 import sample.model.StreamMedia;
 
@@ -42,10 +46,6 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem openMedia;
-    @FXML
-    private MenuItem openMediaAndAdd;
-    @FXML
     private MenuItem setConnection;
     @FXML
     private MenuItem play;
@@ -57,10 +57,10 @@ public class MenuBarController {
     private MenuItem interfaceConf;
     @FXML
     private MenuItem add;
+    @FXML
+    private MenuItem documentation;
 
     private StreamMedia streamMedia;
-
-    private HashMap<String, Point> availableComponents;
 
     private static Label statusLabel;
 
@@ -77,14 +77,11 @@ public class MenuBarController {
         next.setOnAction(getNextEventHandler());
         interfaceConf.setOnAction(getInterfaceConfEventHandler());
         add.setOnAction(getAddEventHandler());
+        documentation.setOnAction(getDocumentationEventHandler());
 
         play.setDisable(true);
         previous.setDisable(true);
         next.setDisable(true);
-    }
-
-    public void setAvailableComponents(HashMap<String, Point> availableComponents) {
-        this.availableComponents = availableComponents;
     }
 
     public StreamMedia getStreamMedia() {
@@ -96,9 +93,28 @@ public class MenuBarController {
     }
 
     /**
+     * Return an EventHandler for the documentation button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getDocumentationEventHandler() {
+        return (event) -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("How to develop a plugin ?");
+            alert.setHeaderText("How to develop a plugin ?");
+            String s ="A plugin in MyCast is a JavaFX Pane. You need to develop it and export it to a .jar. Your plugin must respect the following properties :\n" +
+                    "       - be a jar file (.jar extension)\n" +
+                    "       - contain the package name \"plugin\"\n" +
+                    "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
+                    "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
+            alert.setContentText(s);
+            alert.showAndWait();
+        };
+    }
+
+    /**
      * Return an EventHandler for the connection button.
      * Show a window to set the connection with a client or disconnect with client if already connected.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getConnectionEventHandler() {
@@ -117,18 +133,16 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the Interface Configuration button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getInterfaceConfEventHandler() {
         return (event) -> {
-            InterfaceDialog interfaceDialog = new InterfaceDialog(availableComponents);
+            InterfaceDialog interfaceDialog = new InterfaceDialog();
         };
     }
 
     /**
      * Return an EventHandler for the play/pause button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPlayEventHandler() {
@@ -147,7 +161,6 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the previous item button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getPreviousEventHandler() {
@@ -165,7 +178,6 @@ public class MenuBarController {
 
     /**
      * Return an EventHandler for the next item button.
-     *
      * @return EventHandler
      */
     private EventHandler<ActionEvent> getNextEventHandler() {
@@ -201,74 +213,42 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Return an event handler for the upload button. It handles the upload of plugins from java app to the server
+     * @return EventHandler
+     */
     private EventHandler<ActionEvent> getAddEventHandler() {
         return (event) -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open File");
             File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
-            HttpClient httpclient = new DefaultHttpClient();
-            httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-            HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
-            try {
-            MultipartEntity mpEntity = new MultipartEntity();
-            ContentBody cbFile = new FileBody(file);
-            ContentBody author = new StringBody("testname");
-            mpEntity.addPart("plugin", cbFile);
-            mpEntity.addPart("author",author);
+            if(PluginManager.checkPluginValidity(file, true)) {
+                HttpClient httpclient = new DefaultHttpClient();
+                httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
+                HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS + "/plugin");
+                try {
+                    MultipartEntity mpEntity = new MultipartEntity();
+                    ContentBody cbFile = new FileBody(file);
+                    ContentBody author = new StringBody("testname");
+                    mpEntity.addPart("plugin", cbFile);
+                    mpEntity.addPart("author", author);
 
-                httppost.setEntity(mpEntity);
+                    httppost.setEntity(mpEntity);
 
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity resEntity = response.getEntity();
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity resEntity = response.getEntity();
 
-                System.out.println(response.getStatusLine());
-                if (resEntity != null) {
-                    System.out.println(EntityUtils.toString(resEntity));
+                    if (resEntity != null) {
+                        resEntity.consumeContent();
+                    }
+
+                    httpclient.getConnectionManager().shutdown();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (resEntity != null) {
-                    resEntity.consumeContent();
-                }
-
-                httpclient.getConnectionManager().shutdown();
-            }catch (Exception e){
-                e.printStackTrace();
             }
-            /*InputStream inStream;
-
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://localhost:3000/plugin");
-            HttpResponse response;
-            HttpEntity entity;
-
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("author", "testname"));
-            params.add(new BasicNameValuePair("originalname", file.getName()));
-            params.add(new BasicNameValuePair("plugin",file));
-
-
-            try {
-                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-
-                //Execute and get the response.
-
-                response = httpclient.execute(httppost);
-                System.out.println(response.getEntity());
-
-
-                entity = response.getEntity();
-                if (entity != null) {
-                    inStream = entity.getContent();
-                    inStream.close();
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
         };
     }
-
 }

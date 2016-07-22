@@ -1,7 +1,5 @@
 package sample.controller;
 
-import com.sun.prism.impl.Disposer;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -10,9 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.util.Callback;
+import javafx.stage.StageStyle;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -26,13 +22,10 @@ import org.json.simple.parser.ParseException;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Plugin;
-import sample.model.StreamMedia;
-import sun.plugin2.util.PluginTrace;
+import sample.model.Point;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Pierre on 30/05/2016.
@@ -55,8 +48,16 @@ public class PluginController {
     private Button download;
     @FXML
     private Button remove;
+    @FXML
+    private Button search;
+    @FXML
+    private Button reset;
+    @FXML
+    private TextField filter;
 
     private ArrayList<Plugin> pluginList;
+
+    private ArrayList<Plugin> filteredPluginList;
 
     public PluginController(){
     }
@@ -64,8 +65,11 @@ public class PluginController {
     @FXML
     public void initialize(){
         pluginList = new ArrayList<>();
+        filteredPluginList = new ArrayList<>();
+
         getList();
-        ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
         pluginTable.setItems(list);
 
         nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -78,35 +82,72 @@ public class PluginController {
         remove.setOnAction(getRemoveEventHandler());
         pluginTable.getSelectionModel().selectedItemProperty().addListener(getSelectedItemChangeListener());
 
+        search.setOnAction(getSearchEventHandler());
+        reset.setOnAction(getResetEventHandler());
+
         installTooltips();
     }
 
-    public void installTooltips(){
-        this.refresh.setTooltip(new Tooltip("Refresh the plugin list"));
-        this.remove.setTooltip(new Tooltip("Remove the selected plugin if it's installed"));
-        this.download.setTooltip(new Tooltip("Download the selected plugin if it's not installed"));
+    /**
+     * Return an EventHandler for the Search button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getSearchEventHandler() {
+        return (event) -> {
+            if (!filter.getText().equals("")) {
+                String filterString = filter.getText().toLowerCase();
+                filteredPluginList.clear();
+                for (Plugin p : pluginList) {
+                    if (p.getAuthor().toLowerCase().contains(filterString) ||
+                            p.getDate().toLowerCase().contains(filterString) ||
+                            p.getName().toLowerCase().contains(filterString)) {
+                        filteredPluginList.add(p);
+                    }
+                }
+                refreshPlugin();
+            }
+        };
     }
 
-    public EventHandler<ActionEvent> getRefreshEventHandler() {
+    /**
+     * Return an EventHandler for the Reset button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getResetEventHandler() {
+        return (event) -> {
+            filteredPluginList.clear();
+            filteredPluginList.addAll(pluginList);
+            refreshPlugin();
+        };
+    }
+
+    /**
+     * Return an EventHandler for the Refresh button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getRefreshEventHandler() {
         return (event) -> {
             pluginList.clear();
             getList();
-            ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
+            ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
 
             pluginTable.setItems(list);
         };
     }
 
-
+    /**
+     * Return an EventHandler for the Download button
+     * @return EventHandler
+     */
     public EventHandler<ActionEvent> getDownloadEventHandler() {
         return (event) -> {
-            System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
-            String filePath = Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String filePath = Constant.PATH_TO_PLUGIN + "/" + pluginName;
             FileOutputStream fos = null;
 
             try {
@@ -123,45 +164,80 @@ public class PluginController {
                         fos.write(buffer, 0, bytesRead);
                     }
                     is.close();
-
                 }
 
                 fos.close();
                 EntityUtils.consume(entity1);
+                MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
+                alert(1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         };
     }
 
-    public EventHandler<ActionEvent> getRemoveEventHandler() {
+    /**
+     * Return an EventHandler for the Remove button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
             File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
-
             boolean success = f1.delete();
 
-            if (!success){
-                System.out.println("Deletion failed.");
-                //System.exit(0);
-            }
-            else{
-                System.out.println("File deleted.");
+            if (!success) {
+                alert(-1);
+            } else {
+                alert(2);
             }
             getRefreshEventHandler();
         };
     }
 
+    /**
+     * Show an alert accordingly of the type of the alert
+     * @param type
+     */
+    public void alert(int type){
+        Alert alert;
+        if(type > 0){
+            alert = new Alert(Alert.AlertType.INFORMATION);
+        } else {
+            alert = new Alert(Alert.AlertType.WARNING);
+        }
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Plugin message");
+        switch (type) {
+            case -1:
+                alert.setHeaderText("Plugin not deleted");
+                alert.setContentText("An error occurred, the plugin was not deleted !");
+                break;
+            case 1:
+                alert.setHeaderText("Plugin downloaded");
+                alert.setContentText("The plugin was downloaded without trouble ! You can now configure where you want to place it via Interface -> Configure interface.");
+                break;
+            case 2:
+                alert.setHeaderText("Plugin deleted");
+                alert.setContentText("The plugin was deleted without trouble !");
+        }
+        alert.showAndWait();
+    }
+
+    /**
+     * Return a ChangeListener on the plugin table
+     * @return ChangeListener
+     */
     private ChangeListener<Plugin> getSelectedItemChangeListener() {
-        return (ObservableValue<? extends Plugin> observale, Plugin oldValue, Plugin newValue) -> {
+        return (ObservableValue<? extends Plugin> observable, Plugin oldValue, Plugin newValue) -> {
+            if(newValue == null)
+                return;
+
             Plugin selectedPlugin = newValue;
             String nameplugin = selectedPlugin.getName();
-            boolean present = false;
-
             String path0 = Constant.PATH_TO_PLUGIN + "/" + nameplugin;
-            System.out.println(path0);
             File theDir = new File(path0);
 
-            // if the directory does not exist, create it
+            // if the directory does not exist, set download on true and remove on false
             if (theDir.exists()) {
                 remove.setDisable(false);
                 download.setDisable(true);
@@ -172,9 +248,21 @@ public class PluginController {
         };
     }
 
-    public void getList(){
+    /**
+     * Set tooltips on each button
+     */
+    private void installTooltips(){
+        this.refresh.setTooltip(new Tooltip("Refresh the plugin list"));
+        this.remove.setTooltip(new Tooltip("Remove the selected plugin if it's installed"));
+        this.download.setTooltip(new Tooltip("Download the selected plugin if it's not installed"));
+    }
+
+    /**
+     * Get the list of plugin from the server
+     */
+    private void getList(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/Listepluginjava");
+        HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/Listepluginjava");
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;
@@ -203,9 +291,15 @@ public class PluginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        filteredPluginList.clear();
+        filteredPluginList.addAll(pluginList);
     }
 
-    public void readPlugin() {
+    /**
+     * Add each plugin received from the server in the table view
+     */
+    private void readPlugin() {
         JSONParser parser = new JSONParser();
         Object obj;
         JSONArray jsonArray;
@@ -219,10 +313,6 @@ public class PluginController {
                 jsonObject = (JSONObject) JsonItem;
                 pluginList.add(new Plugin(jsonObject.get("name").toString(), jsonObject.get("author").toString(), jsonObject.get("created_at").toString(),jsonObject.get("id").toString()));
             }
-
-            for (Plugin plugin : pluginList) {
-                System.out.println(plugin.getName());
-            }
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -230,5 +320,13 @@ public class PluginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Refresh the plugin table view
+     */
+    private void refreshPlugin(){
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
+        pluginTable.setItems(list);
     }
 }

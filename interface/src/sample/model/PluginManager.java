@@ -2,13 +2,14 @@ package sample.model;
 
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -52,59 +53,118 @@ public class PluginManager {
         // Check if the path containing the plugins exists and represents a directory.
         if(jarDir.exists() && jarDir.isDirectory()) {
             String[] dirContent = jarDir.list();
-            File file = null;
-            URL urlList[];
-            ClassLoader loader;
+            File file;
 
-            try {
-                for(String filepath : dirContent) {
-                    file = new File(jarDir.getAbsolutePath() + "/" + filepath);
-                    // Check if the current file in jarDir is a file with the ".jar" extension
-                    if (file.isDirectory() || !file.getPath().endsWith(".jar")) {
-                        continue;
-                    }
-
-                    urlList = new URL[]{file.toURI().toURL()};
-                    loader = new URLClassLoader(urlList);
-
-                    // Get the path of the main fxml to load
-                    String pathToFxml = Constant.PACKAGE_PLUGIN_NAME + "/mainPluginView.fxml";
-                    URL urlToFxml = loader.getResource(pathToFxml);
-                    if (urlToFxml != null) {
-                        // If the loader founds the file, load the component attached to the file.
-                        //loadComponent(urlToFxml);
-                        listPlugin.add(urlToFxml.toString());
-                    } else {
-                        System.out.println("No file '" + pathToFxml + "' has been found in jar '" + file.getName() + "'");
-                    }
+            for(String filepath : dirContent) {
+                file = new File(jarDir.getAbsolutePath() + "/" + filepath);
+                // Add the name of the current file in the list of plugin if it is a valid plugin
+                if (checkPluginValidity(file, false)) {
+                    listPlugin.add(file.getName());
                 }
-            } catch (MalformedURLException e) {
-                System.out.println("URL is malformed for the file '" + file.getPath() + "'");
-                e.printStackTrace();
             }
         } else {
-            System.out.println("The path to directory containing all plugins hasn't been found...");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Path to plugin");
+            alert.setContentText("The path to directory containing all plugins hasn't been found...");
+            alert.showAndWait();
         }
 
         return listPlugin;
     }
 
     /**
-     * Load the main component of a fxml file with its URL.
-     * @param urlToFxml
+     * Load the root pane of a fxml file to a plugin, and return it.
+     * @param plugin
      */
+    public static Pane loadPlugin(@NotNull File plugin) {
 
-    private void loadComponent(@NotNull URL urlToFxml) {
+        URL[] urls;
+        URL res;
+        ClassLoader classLoader;
+        FXMLLoader loader;
+        Pane pane = null;
 
-        FXMLLoader loader = new FXMLLoader();
         try {
-            loader.setLocation(urlToFxml);
-            AnchorPane pane = loader.load();
-            System.out.println(pane);
-            //listPlugin.add(loader.load());
-            //listControllerPlugin.add(loader.getController());
+            urls = new URL[]{plugin.toURI().toURL()};
+            classLoader = new URLClassLoader(urls, PluginManager.class.getClassLoader());
+            res = classLoader.getResource(Constant.MAIN_PLUGIN_VIEW_LOCATION);
+
+            if (res != null) {
+                loader = new FXMLLoader(res);
+                loader.setClassLoader(classLoader);
+                pane = loader.load();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setTitle("Plugin load");
+                alert.setHeaderText("Load plugin error");
+                alert.setContentText("The main view hasn't could be found.");
+                alert.showAndWait();
+            }
         } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setTitle("Plugin load");
+            alert.setHeaderText("Load plugin error");
+            alert.setContentText("The pane hasn't could be load. Check your fxml file or the path to its attached controller.\"");
+            alert.showAndWait();
+            pane = null;
             e.printStackTrace();
         }
+
+        return pane;
+    }
+
+    /**
+     * Check the validity of a new plugin added by the user for the community. See below all the constraints that must be respect.
+     * A plugin must :
+     *  - be a jar file (.jar extension)
+     *  - contain a package name "plugin"
+     *  - contain a main view name "mainPluginView.fxml" inside the "plugin" package, and with an AnchorPane as root pane
+     * @param file representing the plugin
+     * @return true if the plugin respects all of the constraints. Otherwise, return false
+     */
+    public static boolean checkPluginValidity(@NotNull File file, boolean isAlertShowing) {
+
+        Pane pane;
+        String filename = file.getName();
+        boolean isValid = false;
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setTitle("Plugin");
+        alert.setHeaderText("Plugin load error");
+
+        if(file.exists()) {
+            if (filename.endsWith(".jar")) {
+                pane = loadPlugin(file);
+                if (pane != null) {
+                    if (pane instanceof AnchorPane) {
+                        isValid = true;
+                    } else {
+                        alert.setContentText("The root pane of the plugin is not an AnchorPane.");
+                    }
+                } else {
+                    alert.setContentText("The pane haven't could be load. Check your fxml file or the path to your attached controller.");
+                }
+            } else {
+                alert.setContentText("The selected file is not a jar file (.jar extension).");
+            }
+        } else {
+            alert.setContentText("The selected file doesn't exist.");
+        }
+
+        if(alert.getContentText() != null){
+            alert.setAlertType(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Plugin load success");
+            alert.setContentText("The plugin has been validated ! Well done !");
+        }
+
+        if(isAlertShowing)
+            alert.showAndWait();
+
+        return isValid;
     }
 }

@@ -4,7 +4,10 @@ import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vincent on 14/06/2016.
@@ -95,11 +98,14 @@ public class Mediacase {
 
     public void readMediacase(){
         ObjectInputStream ois = null;
+        FileInputStream fichier;
         try {
-            FileInputStream fichier = new FileInputStream(Constant.PATH_TO_VIDEO);
+            fichier = new FileInputStream(Constant.PATH_TO_VIDEO);
             ois = new ObjectInputStream(fichier);
             this.videocase = (ArrayList<Media>) ois.readObject();
+            checkExistingFile(this.videocase);
         } catch (IOException | ClassNotFoundException e) {
+            this.videocase = new ArrayList<>();
             writeMediacase();
         } finally {
             try {
@@ -111,10 +117,12 @@ public class Mediacase {
             }
         }
         try {
-            FileInputStream fichier = new FileInputStream(Constant.PATH_TO_MUSIC);
+            fichier = new FileInputStream(Constant.PATH_TO_MUSIC);
             ois = new ObjectInputStream(fichier);
             this.musiccase = (ArrayList<Media>) ois.readObject();
+            checkExistingFile(this.musiccase);
         } catch (IOException | ClassNotFoundException e) {
+            this.musiccase = new ArrayList<>();
             writeMediacase();
         } finally {
             try {
@@ -125,6 +133,20 @@ public class Mediacase {
                 ex.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Check if each media in the list still exists
+     * @param list
+     */
+    public static void checkExistingFile(List<Media> list) {
+        List<Media> found = new ArrayList<>();
+        for(Media media : list){
+            if(!Files.exists(Paths.get(media.getPath()))) {
+                found.add(media);
+            }
+        }
+        list.removeAll(found);
     }
 
     public void reset(){

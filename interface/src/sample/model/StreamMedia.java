@@ -2,6 +2,7 @@ package sample.model;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
@@ -50,9 +51,15 @@ public class StreamMedia extends Thread {
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
             @Override
             public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
+                try {
+                    // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
+                    // before client starts receiving data
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
                 sendData.flush();
-                System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
             }
         });
         playlist = factory.newMediaList();
@@ -86,7 +93,6 @@ public class StreamMedia extends Thread {
      */
     public void prepareStreamingMedia() {
         String rtspStream = formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.PORT, "demo");
-        System.out.println("Prepare for streaming at : "+rtspStream);
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
@@ -94,8 +100,10 @@ public class StreamMedia extends Thread {
                 ":sout-keep");
 
         mediaListPlayer.setMediaList(playlist);
-        for(Media m : interfacePlaylist.getPlaylist()) {
-            this.playlist.addMedia(m.getPath());
+        if(interfacePlaylist != null) {
+            for (Media m : interfacePlaylist.getPlaylist()) {
+                this.playlist.addMedia(m.getPath());
+            }
         }
         isAlreadyStarted = false;
     }
@@ -123,17 +131,8 @@ public class StreamMedia extends Thread {
      * Start the streaming at the address and port set with the prepareStreamingMedia function.
      */
     public void startStreamingMedia() {
-        try {
             mediaListPlayer.play();
-            // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
-            // before client starts receiving data
-            if (!isAlreadyStarted) {
-                Thread.sleep(100);
-                isAlreadyStarted = true;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            isAlreadyStarted = true;
     }
 
     /**

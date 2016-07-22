@@ -20,28 +20,28 @@
             <Button fx:id="previous">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/previous.png" />
+                        <Image url="icons/previous.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="stop">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/stop.png" />
+                        <Image url="icons/stop.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="play">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/play.png" />
+                        <Image url="icons/play.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="next">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/next.png" />
+                        <Image url="icons/next.png" />
                     </ImageView>
                 </graphic>
             </Button>
@@ -50,14 +50,14 @@
             <Button fx:id="repeat">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/repeat.png" />
+                        <Image url="icons/repeat.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="resize">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/resize.png" />
+                        <Image url="icons/resize.png" />
                     </ImageView>
                 </graphic>
             </Button>
