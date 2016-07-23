@@ -119,6 +119,7 @@ public class SuggestionController {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS + "/addUser");
+        httppost.addHeader("token",Constant.TOKEN_SERVER);
         HttpResponse response1;
         HttpEntity entity1;
 
@@ -148,7 +149,7 @@ public class SuggestionController {
         }
         return null;
     }
-
+    
     /**
      * Send the mediacase file to the server to update it about the music and film of the user
      */
@@ -164,11 +165,13 @@ public class SuggestionController {
 
         if(file.exists()) {
             httpclient = new DefaultHttpClient();
+
             httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
             httppost = new HttpPost(Constant.SERVER_ADDRESS + "/mediacase");
             mpEntity = new MultipartEntity();
             cbFile = new FileBody(file);
 
+            httppost.addHeader("token",Constant.TOKEN_SERVER);
             try {
                 mpEntity.addPart("mediacase", cbFile);
                 httppost.setEntity(mpEntity);
@@ -204,6 +207,7 @@ public class SuggestionController {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS + "/" + id + "/" + http);
+        httpGet.setHeader("token",Constant.TOKEN_SERVER);
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;
@@ -232,23 +236,24 @@ public class SuggestionController {
         JSONParser parser = new JSONParser();
         JSONArray jsonArray;
         JSONObject jsonObject;
-        Suggestion suggestion;
+        String date;
+        String director;
+        String type;
 
         try {
             jsonArray = (JSONArray) parser.parse(new FileReader(path));
 
             for (Object JsonItem : jsonArray) {
                 jsonObject = (JSONObject) JsonItem;
-                suggestion = new Suggestion(null, jsonObject.get("date").toString(), null, jsonObject.get("length").toString(), jsonObject.get("type").toString());
 
-                if (path.equals(Constant.PATH_TO_SUGGESTED_FILM)) {
-                    suggestion.setName(jsonObject.get("film").toString());
-                    suggestion.setDirector(jsonObject.get("director").toString());
-                    suggestionList.add(suggestion);
+                date = (jsonObject.get("date") == null) ? "" : jsonObject.get("date").toString();
+                director = (jsonObject.get("director") == null) ? "" : jsonObject.get("director").toString();
+                type = (jsonObject.get("type") == null) ? "" : jsonObject.get("type").toString();
+
+                if (path.equals("filmuser.json")) {
+                    suggestionList.add(new Suggestion(jsonObject.get("film").toString(), date, director, jsonObject.get("length").toString(),type));
                 } else {
-                    suggestion.setName(jsonObject.get("title").toString());
-                    suggestion.setDirector(jsonObject.get("singer").toString());
-                    suggestionMusicList.add(suggestion);
+                    suggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), date, jsonObject.get("singer").toString(), jsonObject.get("length").toString(), type));
                 }
             }
         } catch (ParseException | IOException e) {

@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.text.Font?>
 <AnchorPane id="suggestions" xmlns="http://javafx.com/javafx/8.0.65" fx:controller="sample.controller.SuggestionController" xmlns:fx="http://javafx.com/fxml/1">
@@ -25,11 +26,13 @@
          </VBox.margin>
       </Label>
       <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" VBox.vgrow="ALWAYS">
+
          <tabs>
             <Tab closable="false" text="Music">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
+
                         <TableView fx:id="musicTable1" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="titleColumn1" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Title" />
@@ -50,6 +53,8 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
+
+
                         <TableView fx:id="filmtable1" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="titleColumn" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Title" />
@@ -68,5 +73,7 @@
             </Tab>
          </tabs>
       </TabPane>
+
    </VBox>
+
 </AnchorPane>

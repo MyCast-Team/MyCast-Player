@@ -149,7 +149,7 @@ public class AlertManager {
                 break;
             case -3:
                 alert.setHeaderText("Connection fail");
-                alert.setContentText("The connection to the client has been failed ! Make sure the client is already started !");
+                alert.setContentText("The connection to the client has failed ! Make sure the client is already started !");
                 break;
             case -2:
                 alert.setHeaderText("Connection fail");
