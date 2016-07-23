@@ -100,7 +100,7 @@ public class PlayerController implements MediaPlayerEventListener {
         this.mediaPlayer.setRepeat(true);
 
         this.artworkView.setPreserveRatio(true);
-        this.artworkView.setSmooth(true);
+        this.artworkView.setSmooth(false);
 
         this.lastTimeDisplayed = 0;
         this.isFullscreenPlayer = false;
@@ -281,8 +281,8 @@ public class PlayerController implements MediaPlayerEventListener {
         if(MediacaseController.audioExtensionIsSupported(url.substring(url.lastIndexOf(".")+1))) {
             if (artworkUrl != null) {
                 artworkView.setImage(new Image(artworkUrl));
-                artworkView.setX(playerHolder.getWidth()/2 - artworkView.getImage().getWidth()/2);
-                artworkView.setY(playerHolder.getHeight()/2 - artworkView.getImage().getHeight()/2);
+                Pane pane = (Pane) artworkView.getParent();
+                ResizablePlayer.fitArtworkViewSize(artworkView, pane.getWidth(), pane.getHeight());
             }
             imageView.setVisible(false);
             artworkView.setVisible(true);
