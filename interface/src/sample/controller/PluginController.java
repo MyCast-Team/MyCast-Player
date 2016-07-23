@@ -158,20 +158,25 @@ public class PluginController {
 
             try {
                 response1 = httpclient.execute(httpGet);
-                entity1 = response1.getEntity();
-                is = entity1.getContent();
 
-                Utility.writeInFile(is, path);
-                is.close();
+                if(response1.getStatusLine().getStatusCode() == 200) {
+                    entity1 = response1.getEntity();
+                    is = entity1.getContent();
 
-                EntityUtils.consume(entity1);
-                if(PluginManager.checkPluginValidity(file, true)) {
-                    MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
-                    new AlertManager(PluginController.class, 1);
-                } else {
-                    if(file.delete()) {
-                        new AlertManager(PluginController.class, 3);
+                    Utility.writeInFile(is, path);
+                    is.close();
+
+                    EntityUtils.consume(entity1);
+                    if (PluginManager.checkPluginValidity(file, true)) {
+                        MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
+                        new AlertManager(PluginController.class, 1);
+                    } else {
+                        if (file.delete()) {
+                            new AlertManager(PluginController.class, 3);
+                        }
                     }
+                } else {
+                    new AlertManager(PluginController.class, -8);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -248,15 +253,18 @@ public class PluginController {
 
         try {
             response1 = httpclient.execute(httpGet);
-            entity1 = response1.getEntity();
-            is = entity1.getContent();
 
-            Utility.writeInFile(is, Constant.PATH_TO_PLUGIN_FILE);
-            is.close();
+            if(response1.getStatusLine().getStatusCode() == 200) {
+                entity1 = response1.getEntity();
+                is = entity1.getContent();
 
-            EntityUtils.consume(entity1);
+                Utility.writeInFile(is, Constant.PATH_TO_PLUGIN_FILE);
+                is.close();
 
-            readPlugin();
+                EntityUtils.consume(entity1);
+
+                readPlugin();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

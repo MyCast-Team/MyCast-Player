@@ -7,6 +7,7 @@ import sample.constant.Constant;
 import uk.co.caprica.vlcj.mrl.RtspMrl;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -107,21 +108,11 @@ public class ThreadConnection extends Thread {
     }
 
     private void computeImageView() {
+
         boolean isMusic = false;
         MediaMeta metaInfo = mediaPlayer.getMediaMeta();
-        String artworkUrl = metaInfo.getArtworkUrl();
-
-        System.out.println(mediaPlayer.getMediaDetails());
-        System.out.println(mediaPlayer.getMediaMetaData());
-        System.out.println(mediaPlayer.getMediaType());
-        System.out.println(mediaPlayer.userData());
-        System.out.println(metaInfo);
-        System.out.println(metaInfo.getUrl());
-        System.out.println(artworkUrl);
-        System.out.println(metaInfo.getArtist());
-
         String url = metaInfo.getUrl();
-        System.out.println(metaInfo.getEncodedBy());
+        url = url.replaceAll("%20", " ");
 
         for(String ext : Constant.EXTENSIONS_AUDIO) {
             if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
@@ -130,11 +121,15 @@ public class ThreadConnection extends Thread {
             }
         }
 
+        // Print the album image of the current media if it is a music
         if(isMusic) {
+            metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
+            String artworkUrl = metaInfo.getArtworkUrl();
+
             if (artworkUrl != null) {
                 artworkView.setImage(new Image(artworkUrl));
-                artworkView.setX(playerHolder.getWidth()/2 - artworkView.getImage().getWidth()/2);
-                artworkView.setY(playerHolder.getHeight()/2 - artworkView.getImage().getHeight()/2);
+                Pane pane = (Pane) artworkView.getParent();
+                ResizablePlayer.fitArtworkViewSize(artworkView, pane.getWidth(), pane.getHeight());
             }
             imageView.setVisible(false);
             artworkView.setVisible(true);

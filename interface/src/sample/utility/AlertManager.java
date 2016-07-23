@@ -42,6 +42,10 @@ public class AlertManager {
         alert.setTitle("Plugin message");
 
         switch (code) {
+            case -8:
+                alert.setHeaderText("Plugin download error");
+                alert.setContentText("Internal server error ! The server may be unavailable, try to download the plugin later.");
+                break;
             case -7:
                 alert.setHeaderText("Plugin validity error");
                 alert.setContentText("The selected file doesn't exist.");

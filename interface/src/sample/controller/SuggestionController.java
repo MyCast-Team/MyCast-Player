@@ -130,18 +130,21 @@ public class SuggestionController {
 
         try {
             response1 = httpclient.execute(httppost);
-            entity1 = response1.getEntity();
-            is = entity1.getContent();
 
-            Utility.writeInFile(is, Constant.PATH_TO_ID);
-            is.close();
+            if(response1.getStatusLine().getStatusCode() == 200) {
+                entity1 = response1.getEntity();
+                is = entity1.getContent();
 
-            EntityUtils.consume(entity1);
+                Utility.writeInFile(is, Constant.PATH_TO_ID);
+                is.close();
 
-            obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
-            jsonObject = (JSONObject) obj;
+                EntityUtils.consume(entity1);
 
-            return jsonObject.get("id").toString();
+                obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
+                jsonObject = (JSONObject) obj;
+
+                return jsonObject.get("id").toString();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -214,14 +217,17 @@ public class SuggestionController {
 
         try {
             response1 = httpclient.execute(httpGet);
-            entity1 = response1.getEntity();
-            is = entity1.getContent();
 
-            Utility.writeInFile(is, path);
-            is.close();
+            if(response1.getStatusLine().getStatusCode() == 200) {
+                entity1 = response1.getEntity();
+                is = entity1.getContent();
 
-            EntityUtils.consume(entity1);
-            readSuggestionFile(path);
+                Utility.writeInFile(is, path);
+                is.close();
+
+                EntityUtils.consume(entity1);
+                readSuggestionFile(path);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
