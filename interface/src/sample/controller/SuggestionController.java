@@ -120,6 +120,7 @@ public class SuggestionController {
     public static String generateid(){
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/addUser");
+        httppost.addHeader("token",Constant.TOKEN_SERVER);
         HttpResponse response1;
         HttpEntity entity1;
 
@@ -163,10 +164,13 @@ public class SuggestionController {
     public static void sendData() throws IOException {
         File file=new File("./res/mediacase.json");
         if(file.exists()){
+            System.out.println("here");
             HttpClient httpclient = new DefaultHttpClient();
             httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
             HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/mediacase");
+
+            httppost.addHeader("token",Constant.TOKEN_SERVER);
             try {
                 MultipartEntity mpEntity = new MultipartEntity();
                 ContentBody cbFile = new FileBody(file);
@@ -197,6 +201,7 @@ public class SuggestionController {
     public void getList(String path,String http){
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/"+id+"/"+http);
+        httpGet.setHeader("token",Constant.TOKEN_SERVER);
         HttpResponse response1;
         HttpEntity entity1;
 
@@ -222,27 +227,45 @@ public class SuggestionController {
 
             fos.close();
             EntityUtils.consume(entity1);
-            readPlugin(path);
+            readSuggestion(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void readPlugin(String path) {
+    public void readSuggestion(String path) {
 
         JSONParser parser = new JSONParser();
         JSONArray jsonArray;
-
+        String date;
+        String director;
+        String type;
         try {
-            jsonArray = (JSONArray) parser.parse(new FileReader("./res/"+path));
+            jsonArray = (JSONArray) parser.parse(new FileReader("./res/" + path));
 
             JSONObject jsonObject;
             for (Object JsonItem : jsonArray) {
                 jsonObject = (JSONObject) JsonItem;
+                System.out.println(jsonObject);
+                if( jsonObject.get("date")==null){
+                    date="";
+                }else{
+                    date=jsonObject.get("date").toString();
+                }
+                if( jsonObject.get("director")==null){
+                    director="";
+                }else{
+                    director=jsonObject.get("director").toString();
+                }
+                if( jsonObject.get("type")==null){
+                    type="";
+                }else{
+                    type=jsonObject.get("type").toString();
+                }
                 if (path.equals("filmuser.json")) {
-                    SuggestionList.add(new Suggestion(jsonObject.get("film").toString(), jsonObject.get("date").toString(), jsonObject.get("director").toString(), jsonObject.get("length").toString(),jsonObject.get("type").toString()));
+                    SuggestionList.add(new Suggestion(jsonObject.get("film").toString(), date, director, jsonObject.get("length").toString(),type));
                 } else {
-                    SuggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), jsonObject.get("date").toString(), jsonObject.get("singer").toString(),jsonObject.get("length").toString(),jsonObject.get("type").toString()));
+                    SuggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), date, jsonObject.get("singer").toString(), jsonObject.get("length").toString(), type));
                 }
             }
         } catch (ParseException e) {
@@ -250,6 +273,9 @@ public class SuggestionController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+
+        } catch (java.lang.NullPointerException e){
             e.printStackTrace();
         }
     }

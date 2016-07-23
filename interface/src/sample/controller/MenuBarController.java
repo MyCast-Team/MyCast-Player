@@ -228,6 +228,7 @@ public class MenuBarController {
                 httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
                 HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS + "/plugin");
+                httppost.addHeader("token",Constant.TOKEN_SERVER);
                 try {
                     MultipartEntity mpEntity = new MultipartEntity();
                     ContentBody cbFile = new FileBody(file);

@@ -143,6 +143,7 @@ public class PluginController {
         return (event) -> {
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            httpGet.setHeader("token",Constant.TOKEN_SERVER);
             HttpResponse response1;
             HttpEntity entity1;
             InputStream is;
@@ -263,6 +264,7 @@ public class PluginController {
     private void getList(){
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/Listepluginjava");
+        httpGet.setHeader("token",Constant.TOKEN_SERVER);
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;

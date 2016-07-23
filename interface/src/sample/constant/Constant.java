@@ -80,7 +80,10 @@ public class Constant {
     public static final int PORT = 5555;
 
     public static final String SERVER_ADDRESS = "http://backoffice-client.herokuapp.com";
-
+    /**
+     * Define the path where the video library is stored
+     */
+    public static final String TOKEN_SERVER = "eyJhbGciOiJIUzI1NiJ9.OA.22ww3qNZYXhn47qQpbRMHHdoisUVgopBVBt8m7qXN9Y";
     /**
      * Define all audio extensions that can be used with the player
      */
