@@ -3,6 +3,7 @@ package sample.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import sample.annotation.DocumentationAnnotation;
+import sample.utility.Utility;
 
 import java.io.Serializable;
 
@@ -13,15 +14,10 @@ import java.io.Serializable;
 public class Media implements Serializable {
 
     private String path;
-
     private String title;
-
     private String author;
-
     private long duration;
-
     private String genre;
-
     private String release;
 
     public Media(String path, String title, String author, long duration, String release, String genre) {
@@ -49,21 +45,16 @@ public class Media implements Serializable {
 
     /* GETTER */
     public String getPath() { return path; }
-
     public String getTitle() {
         return title;
     }
-
     public String getAuthor() {
         return author;
     }
-
     public long getDuration() { return duration; }
-
     public String getGenre() {
         return genre;
     }
-
     public String getRelease() {
         return release;
     }
@@ -72,23 +63,18 @@ public class Media implements Serializable {
     public void setPath(String path) {
         this.path = path;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public void setAuthor(String author) {
         this.author = author;
     }
-
     public void setDuration(long duration) {
         this.duration = duration;
     }
-
     public void setRelease(String release) {
         this.release = release;
     }
-
     public void setGenre(String genre) {
         this.genre = genre;
     }
@@ -96,53 +82,27 @@ public class Media implements Serializable {
     public StringProperty titleProperty() {
         return new SimpleStringProperty(title);
     }
-
     public StringProperty authorProperty() {
         return new SimpleStringProperty(author);
     }
-
     public StringProperty durationProperty() {
-        return new SimpleStringProperty(createStringFromLong(duration));
+        return new SimpleStringProperty(Utility.formatTime(duration));
     }
-
     public StringProperty genreProperty() { return new SimpleStringProperty(genre); }
-
     public StringProperty dateProperty() { return new SimpleStringProperty(release); }
 
-    public String createStringFromLong(long time){
-        int hours, minutes;
-
-        // milliseconds to seconds
-        time /= 1000;
-
-        hours = (int) time/3600;
-        time -= hours*3600;
-
-        minutes = (int) time/60;
-        time -= minutes*60;
-
-        return String.format("%02d:%02d:%02d", hours, minutes, time);
-    }
-
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Media)) return false;
 
-        if(!(obj instanceof Media))
-            return false;
+        Media media = (Media) o;
 
-        Media m = (Media) obj;
-
-        if(!this.title.equals(m.title))
-            return false;
-        if(!this.author.equals(m.author))
-            return false;
-        if(this.duration != m.duration)
-            return false;
-        if(!this.genre.equals(m.genre))
-            return false;
-        if(!this.release.equals(m.release))
-            return false;
-
-        return true;
+        if (duration != media.duration) return false;
+        if (path != null ? !path.equals(media.path) : media.path != null) return false;
+        if (title != null ? !title.equals(media.title) : media.title != null) return false;
+        if (author != null ? !author.equals(media.author) : media.author != null) return false;
+        if (genre != null ? !genre.equals(media.genre) : media.genre != null) return false;
+        return release != null ? release.equals(media.release) : media.release == null;
     }
 }

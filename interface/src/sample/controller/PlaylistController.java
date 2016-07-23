@@ -11,6 +11,7 @@ import javafx.scene.input.TransferMode;
 import sample.annotation.DocumentationAnnotation;
 import sample.model.Media;
 import sample.model.Playlist;
+import sample.utility.Utility;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
@@ -112,7 +113,6 @@ public class PlaylistController {
                     if (m == mToDelete){
                         iter.remove();
                     }
-
                 }
             }
 
@@ -149,8 +149,8 @@ public class PlaylistController {
             if (db.hasFiles()) {
                 success = true;
                 for (File file:db.getFiles()) {
-                    if(MediacaseController.audioExtensionIsSupported(MediacaseController.getExtension(file.getPath()))
-                            || MediacaseController.videoExtensionIsSupported(MediacaseController.getExtension(file.getPath()))){
+                    if(Utility.audioExtensionIsSupported(Utility.getExtension(file.getPath()))
+                            || Utility.videoExtensionIsSupported(Utility.getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         if(this.mediaListPlayer != null) {

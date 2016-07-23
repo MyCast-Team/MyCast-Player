@@ -15,11 +15,6 @@ public class Constant {
     public static final String PATH_TO_MAIN_VIEW = "/sample/view/mainFrame.fxml";
 
     /**
-     * Define the path where all the plugins are stored
-     */
-    public static final String PATH_TO_PLUGIN = "plugin";
-
-    /**
      * Define the path to the resource directory
      */
     public static final String PATH_TO_RESOURCES = "./res";
@@ -27,37 +22,52 @@ public class Constant {
     /**
      * Define the path where the plugin file to communicate with the server is stored
      */
-    public static final String PATH_TO_PLUGIN_FILE = "./res/plugin.json";
+    public static final String PATH_TO_PLUGIN_FILE = PATH_TO_RESOURCES + "/plugin.json";
 
     /**
      * Define the path where the interface configuration is stored
      */
-    public static final String PATH_TO_INTERFACE_CONF = "./res/interface.csv";
+    public static final String PATH_TO_INTERFACE_CONF = PATH_TO_RESOURCES + "/interface.csv";
 
     /**
      * Define the path where the Id of the user is stored
      */
-    public static final String PATH_TO_ID = "./res/id.json";
+    public static final String PATH_TO_ID = PATH_TO_RESOURCES + "/id.json";
 
     /**
      * Define the path where the mediacase file to communicate with the server is stored
      */
-    public static final String PATH_TO_MEDIACASE = "./res/mediacase.json";
+    public static final String PATH_TO_MEDIACASE = PATH_TO_RESOURCES + "/mediacase.json";
+
+    /**
+     * Define the path where the list of suggested music is stored
+     */
+    public static final String PATH_TO_SUGGESTED_MUSIC = PATH_TO_RESOURCES + "/musiqueuser.json";
+
+    /**
+     * Define the path where the list of suggested film is stored
+     */
+    public static final String PATH_TO_SUGGESTED_FILM = PATH_TO_RESOURCES + "/filmuser.json";
 
     /**
      * Define the path where the playlist is stored
      */
-    public static final String PATH_TO_PLAYLIST = "./res/playlist.ser";
+    public static final String PATH_TO_PLAYLIST = PATH_TO_RESOURCES + "/playlist.ser";
 
     /**
      * Define the path where the video library is stored
      */
-    public static final String PATH_TO_VIDEO = "./res/videocase.ser";
+    public static final String PATH_TO_VIDEO = PATH_TO_RESOURCES + "/videocase.ser";
 
     /**
      * Define the path where the music library is stored
      */
-    public static final String PATH_TO_MUSIC = "./res/musiccase.ser";
+    public static final String PATH_TO_MUSIC = PATH_TO_RESOURCES + "/musiccase.ser";
+
+    /**
+     * Define the path where all the plugins are stored
+     */
+    public static final String PATH_TO_PLUGIN = "plugin";
 
     /**
      * Define the package name where the main view of a plugin is stored
@@ -67,7 +77,7 @@ public class Constant {
     /**
      * Define the location of the main view of all plugins
      */
-    public static final String MAIN_PLUGIN_VIEW_LOCATION = PACKAGE_PLUGIN_NAME+"/mainPluginView.fxml";
+    public static final String MAIN_PLUGIN_VIEW_LOCATION = PACKAGE_PLUGIN_NAME + "/mainPluginView.fxml";
 
     /**
      * Define all default interfaces
@@ -75,10 +85,18 @@ public class Constant {
     public static final String[] STATIC_INTERFACES = {"/sample/view/suggestions.fxml", "/sample/view/playlist.fxml", "/sample/view/player.fxml", "/sample/view/plugin.fxml", "/sample/view/mediacase.fxml"};
 
     /**
+     * Define the port number to communicate with the client
+     */
+    public static final int PORT = 12345;
+
+    /**
      * Define the port number for streaming media between the main application and the client application
      */
-    public static final int PORT = 5555;
+    public static final int STREAMING_PORT = 5555;
 
+    /**
+     * Define the server address
+     */
     public static final String SERVER_ADDRESS = "http://backoffice-client.herokuapp.com";
 
     /**

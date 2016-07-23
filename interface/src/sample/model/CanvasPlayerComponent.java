@@ -41,6 +41,12 @@ public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
         return pixelWriter;
     }
 
+    /**
+     * Write the current image of the media in the buffer
+     * @param mediaPlayer
+     * @param nativeBuffers
+     * @param bufferFormat
+     */
     @Override
     public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, BufferFormat bufferFormat) {
         if (writableImage == null) {

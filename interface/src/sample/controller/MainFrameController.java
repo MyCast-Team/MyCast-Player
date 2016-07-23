@@ -1,10 +1,7 @@
 package sample.controller;
 
-import com.sun.org.apache.bcel.internal.util.ClassLoader;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.MenuBar;
 import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
@@ -14,18 +11,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import sample.utility.AlertManager;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
  * Class to manage our main frame of the application
  */
-@DocumentationAnnotation(author = "Vincent Rossignol et Thomas Fouan", date = "01/02/2016", description = "This is the main class that manage our application. We load the different components and plugins.")
+@DocumentationAnnotation(author = "Vincent Rossignol and Thomas Fouan", date = "01/02/2016", description = "This is the main class that manage our application. We load the different components and plugins.")
 public class MainFrameController extends AnchorPane {
 
     @FXML
@@ -143,12 +138,7 @@ public class MainFrameController extends AnchorPane {
                 list.put(array[0], new Point(Integer.parseInt(array[1]), Integer.parseInt(array[2])));
             }
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UTILITY);
-            alert.setTitle("Interface");
-            alert.setHeaderText("Empty configuration");
-            alert.setContentText("Interface configuration not found... Empty interface will load.");
-            alert.showAndWait();
+            new AlertManager(MainFrameController.class, 1);
         } finally {
             if (br != null) {
                 try {

@@ -7,52 +7,49 @@ import sample.annotation.DocumentationAnnotation;
 /**
  * Created by Pierre on 30/05/2016.
  */
-@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the suggestion model. It's pretty much like a Media but with some additionnal informations.")
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the suggestion model. It's pretty much like a Media but with some additional information.")
 public class Suggestion {
 
-    String Name;
-    String Type;
-    String Date;
-    String Director;
-    String Length;
-
-
+    private String name;
+    private String date;
+    private String director;
+    private String length;
+    private String type;
 
     public Suggestion(String name, String date, String director, String len, String type){
 
-        this.Name=name;
-        this.Type=type;
-        this.Date=date;
-        this.Director=director;
-        this.Length=len;
-
+        this.name = name;
+        this.date = date;
+        this.director = director;
+        this.length = len;
+        this.type = type;
     }
+
+    public void setName(String name) { this.name = name; }
+
+    public void setDirector(String director) { this.director = director; }
 
     public StringProperty nameProperty() {
-        return new SimpleStringProperty(Name);
+        return new SimpleStringProperty(name);
     }
-
-
-
     public StringProperty DateProperty() {
-        return new SimpleStringProperty(Date);
+        return new SimpleStringProperty(date);
     }
     public StringProperty TypeProperty() {
-        return new SimpleStringProperty(Type);
+        return new SimpleStringProperty(type);
     }
-    public StringProperty DirectorProperty(){return new SimpleStringProperty(Director);}
-    public StringProperty LengthProperty(){return new SimpleStringProperty(Length);}
+    public StringProperty DirectorProperty(){return new SimpleStringProperty(director);}
+    public StringProperty LengthProperty(){return new SimpleStringProperty(length);}
 
     public String getName() {
-        return Name;
+        return name;
     }
     public String getDate() {
-        return Date;
+        return date;
     }
     public String getType() {
-        return Type;
+        return type;
     }
-    public String getDirector(){return Director ;}
-
-    public String getLength(){return Length;}
+    public String getDirector(){return director ;}
+    public String getLength(){return length;}
 }

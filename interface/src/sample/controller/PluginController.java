@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.StageStyle;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -24,6 +23,8 @@ import sample.constant.Constant;
 import sample.model.Plugin;
 import sample.model.PluginManager;
 import sample.model.Point;
+import sample.utility.AlertManager;
+import sample.utility.Utility;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -151,33 +152,24 @@ public class PluginController {
             HttpEntity entity1;
             InputStream is;
             String pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
-            File file = new File(Constant.PATH_TO_PLUGIN + "/" + pluginName);
-            FileOutputStream fos = null;
+            String path = Constant.PATH_TO_PLUGIN + "/" + pluginName;
+            File file = new File(path);
 
             try {
                 response1 = httpclient.execute(httpGet);
                 entity1 = response1.getEntity();
                 is = entity1.getContent();
 
-                fos = new FileOutputStream(file);
+                Utility.writeInFile(is, path);
+                is.close();
 
-                byte[] buffer = new byte[8 * 1024];
-                int bytesRead;
-                if (is != null) {
-                    while((bytesRead = is.read(buffer)) != -1) {
-                        fos.write(buffer, 0, bytesRead);
-                    }
-                    is.close();
-                }
-
-                fos.close();
                 EntityUtils.consume(entity1);
                 if(PluginManager.checkPluginValidity(file, true)) {
                     MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
-                    alert(1);
+                    new AlertManager(PluginController.class, 1);
                 } else {
                     if(file.delete()) {
-                        alert(3);
+                        new AlertManager(PluginController.class, 3);
                     }
                 }
             } catch (IOException e) {
@@ -192,51 +184,22 @@ public class PluginController {
      */
     private EventHandler<ActionEvent> getRemoveEventHandler() {
         return (event) -> {
-            if(pluginTable.getSelectionModel().selectedItemProperty().getValue() == null)
-                return;
+            String pluginName;
+            File file;
 
-            File f1 = new File(Constant.PATH_TO_PLUGIN + "/" + pluginTable.getSelectionModel().selectedItemProperty().getValue().getName());
+            if(pluginTable.getSelectionModel().selectedItemProperty().getValue() != null) {
+                pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+                file = new File(Constant.PATH_TO_PLUGIN + "/" + pluginName);
 
-            if (!f1.delete()) {
-                alert(-1);
-            } else {
-                alert(2);
+                if (!file.delete()) {
+                    new AlertManager(PluginController.class, -1);
+                } else {
+                    MainFrameController.availableComponents.remove(pluginName);
+                    new AlertManager(PluginController.class, 2);
+                }
+                getRefreshEventHandler();
             }
-            getRefreshEventHandler();
         };
-    }
-
-    /**
-     * Show an alert accordingly of the type of the alert
-     * @param type
-     */
-    public void alert(int type){
-        Alert alert;
-        if(type > 0){
-            alert = new Alert(Alert.AlertType.INFORMATION);
-        } else {
-            alert = new Alert(Alert.AlertType.WARNING);
-        }
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setTitle("Plugin message");
-        switch (type) {
-            case -1:
-                alert.setHeaderText("Plugin not deleted");
-                alert.setContentText("An error occurred, the plugin was not deleted !");
-                break;
-            case 1:
-                alert.setHeaderText("Plugin downloaded");
-                alert.setContentText("The plugin was downloaded without trouble ! You can now configure where you want to place it via Interface -> Configure interface.");
-                break;
-            case 2:
-                alert.setHeaderText("Plugin deleted");
-                alert.setContentText("The plugin was deleted without trouble !");
-                break;
-            case 3:
-                alert.setHeaderText("Plugin not valid");
-                alert.setContentText("The downloaded plugin is not valid. It has been removed from your computer.");
-        }
-        alert.showAndWait();
     }
 
     /**
@@ -248,10 +211,8 @@ public class PluginController {
             if(newValue == null)
                 return;
 
-            Plugin selectedPlugin = newValue;
-            String nameplugin = selectedPlugin.getName();
-            String path0 = Constant.PATH_TO_PLUGIN + "/" + nameplugin;
-            File theDir = new File(path0);
+            String path = Constant.PATH_TO_PLUGIN + "/" + newValue.getName();
+            File theDir = new File(path);
 
             // if the directory does not exist, set download on true and remove on false
             if (theDir.exists()) {
@@ -282,25 +243,15 @@ public class PluginController {
         HttpResponse response1;
         HttpEntity entity1;
         InputStream is;
-        FileOutputStream fos;
 
         try {
             response1 = httpclient.execute(httpGet);
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(Constant.PATH_TO_PLUGIN_FILE));
+            Utility.writeInFile(is, Constant.PATH_TO_PLUGIN_FILE);
+            is.close();
 
-            byte[] buffer = new byte[8 * 1024];
-            int bytesRead;
-            if (is != null) {
-                while((bytesRead = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, bytesRead);
-                }
-                is.close();
-            }
-
-            fos.close();
             EntityUtils.consume(entity1);
 
             readPlugin();

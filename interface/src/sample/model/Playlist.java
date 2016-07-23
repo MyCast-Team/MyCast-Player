@@ -2,21 +2,20 @@ package sample.model;
 
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
+import sample.utility.Utility;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Vincent on 28/04/2016.
  */
 @DocumentationAnnotation(author = "Vincent Rossignol", date = "28/04/2016", description = "The Playlist model contains an ArrayList of Media. This class contains methods to write/read playlist between two use of MyCast.")
 public class Playlist implements Serializable {
+
     private ArrayList<Media> playlist;
 
-    public Playlist(){
+    public Playlist() {
         playlist = new ArrayList<>();
         readPlaylist();
     }
@@ -31,38 +30,39 @@ public class Playlist implements Serializable {
 
     public void removeMedia(Media media) { playlist.remove(media); }
 
-    public void writePlaylist(){
+    /**
+     * Save the current playlist in file
+     */
+    public void writePlaylist() {
         try {
             File file = new File(Constant.PATH_TO_PLAYLIST);
-            if(!file.exists()){
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                    writer.write("");
-                    writer.close();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+
+            if(!file.exists() && !file.createNewFile()) {
+                return;
             }
-            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_PLAYLIST);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
             out.writeObject(this.playlist);
             out.flush();
             out.close();
-            fileOut.close();
+            fos.close();
         } catch(IOException i) {
             i.printStackTrace();
         }
     }
 
-    public void readPlaylist(){
+    /**
+     * Read previous playlist saved in file
+     */
+    private void readPlaylist(){
         ObjectInputStream ois = null;
+        FileInputStream file;
         try {
-            FileInputStream fichier = new FileInputStream(Constant.PATH_TO_PLAYLIST);
-            ois = new ObjectInputStream(fichier);
+            file = new FileInputStream(Constant.PATH_TO_PLAYLIST);
+            ois = new ObjectInputStream(file);
             this.playlist = (ArrayList<Media>) ois.readObject();
-            Mediacase.checkExistingFile(this.playlist);
+            Utility.checkExistingFile(this.playlist);
         } catch (IOException | ClassNotFoundException e) {
             this.playlist = new ArrayList<>();
             writePlaylist();

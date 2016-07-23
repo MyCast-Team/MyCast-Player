@@ -2,6 +2,7 @@ package sample.model;
 
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
+import sample.utility.Utility;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -18,7 +19,7 @@ public class Mediacase {
     private ArrayList<Media> videocase;
     private ArrayList<Media> musiccase;
 
-    public Mediacase(){
+    public Mediacase() {
         videocase = new ArrayList<>();
         musiccase = new ArrayList<>();
         readMediacase();
@@ -27,15 +28,13 @@ public class Mediacase {
     public ArrayList<Media> getVideocase() {
         return videocase;
     }
-
-    public void setVideocase(ArrayList<Media> videocase) {
-        this.videocase = videocase;
-    }
-
     public ArrayList<Media> getMusiccase() {
         return musiccase;
     }
 
+    public void setVideocase(ArrayList<Media> videocase) {
+        this.videocase = videocase;
+    }
     public void setMusiccase(ArrayList<Media> musiccase) {
         this.musiccase = musiccase;
     }
@@ -49,82 +48,69 @@ public class Mediacase {
 
     public void removeMedia(Media media) { }
 
+    /**
+     * Write musiccase or videocase in file
+     * @param path
+     * @throws IOException
+     */
+    private void writecase(String path) throws IOException {
+
+        File file = new File(path);
+
+        if(!file.exists() && !file.createNewFile()) {
+            return;
+        }
+
+        FileOutputStream fos = new FileOutputStream(file);
+        ObjectOutputStream out = new ObjectOutputStream(fos);
+        if(path.equals(Constant.PATH_TO_VIDEO)) {
+            out.writeObject(this.videocase);
+        } else {
+            out.writeObject(this.musiccase);
+        }
+        out.flush();
+        out.close();
+        fos.close();
+    }
+
+    /**
+     * Save the current mediacase in file
+     */
     public void writeMediacase(){
         try {
-            File file = new File(Constant.PATH_TO_VIDEO);
-            if(!file.exists()){
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                    writer.write("");
-                    writer.close();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_VIDEO);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(this.videocase);
-            out.flush();
-            out.close();
-            fileOut.close();
-        } catch(IOException i) {
-            i.printStackTrace();
-        }
-        try {
-            File file = new File(Constant.PATH_TO_MUSIC);
-            if(!file.exists()){
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                    writer.write("");
-                    writer.close();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            FileOutputStream fileOut = new FileOutputStream(Constant.PATH_TO_MUSIC);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(this.musiccase);
-            out.flush();
-            out.close();
-            fileOut.close();
+            writecase(Constant.PATH_TO_VIDEO);
+            writecase(Constant.PATH_TO_MUSIC);
         } catch(IOException i) {
             i.printStackTrace();
         }
     }
 
-    public void readMediacase(){
+    /**
+     * Read musiccase or videocase from file
+     * @param path
+     */
+    private void readcase(String path) {
+
+        FileInputStream file;
         ObjectInputStream ois = null;
-        FileInputStream fichier;
+        ArrayList<Media> list = new ArrayList<>();
+
         try {
-            fichier = new FileInputStream(Constant.PATH_TO_VIDEO);
-            ois = new ObjectInputStream(fichier);
-            this.videocase = (ArrayList<Media>) ois.readObject();
-            checkExistingFile(this.videocase);
+            file = new FileInputStream(path);
+            ois = new ObjectInputStream(file);
+            list = (ArrayList<Media>) ois.readObject();
+            Utility.checkExistingFile(list);
+        } catch (FileNotFoundException e) {
+            list = new ArrayList<>();
         } catch (IOException | ClassNotFoundException e) {
-            this.videocase = new ArrayList<>();
+            list = new ArrayList<>();
             writeMediacase();
         } finally {
-            try {
-                if (ois != null) {
-                    ois.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if(path.equals(Constant.PATH_TO_VIDEO)) {
+                videocase = list;
+            } else {
+                musiccase = list;
             }
-        }
-        try {
-            fichier = new FileInputStream(Constant.PATH_TO_MUSIC);
-            ois = new ObjectInputStream(fichier);
-            this.musiccase = (ArrayList<Media>) ois.readObject();
-            checkExistingFile(this.musiccase);
-        } catch (IOException | ClassNotFoundException e) {
-            this.musiccase = new ArrayList<>();
-            writeMediacase();
-        } finally {
             try {
                 if (ois != null) {
                     ois.close();
@@ -136,17 +122,12 @@ public class Mediacase {
     }
 
     /**
-     * Check if each media in the list still exists
-     * @param list
+     * Read previous mediacase saved before in file
      */
-    public static void checkExistingFile(List<Media> list) {
-        List<Media> found = new ArrayList<>();
-        for(Media media : list){
-            if(!Files.exists(Paths.get(media.getPath()))) {
-                found.add(media);
-            }
-        }
-        list.removeAll(found);
+    public void readMediacase(){
+
+        readcase(Constant.PATH_TO_VIDEO);
+        readcase(Constant.PATH_TO_MUSIC);
     }
 
     public void reset(){

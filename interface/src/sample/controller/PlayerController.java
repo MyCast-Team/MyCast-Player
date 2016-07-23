@@ -2,7 +2,6 @@ package sample.controller;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,8 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import sample.constant.Constant;
 import sample.model.ResizablePlayer;
+import sample.utility.Utility;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -26,7 +25,6 @@ import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 import uk.co.caprica.vlcj.player.list.MediaListPlayerMode;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Control the player and bind the buttons of the player with functions
@@ -193,7 +191,7 @@ public class PlayerController implements MediaPlayerEventListener {
             if (timeSlider.isValueChanging()) {
                 // multiply duration by percentage calculated by slider position
                 mediaPlayer.setPosition((float)(timeSlider.getValue()/100.0));
-                timeLabel.setText(getStringTime(mediaPlayer));
+                timeLabel.setText(Utility.formatTime(mediaPlayer.getTime()) + " / " + fullTime);
                 setLastTimeDisplayed(0);
             }
         };
@@ -278,7 +276,7 @@ public class PlayerController implements MediaPlayerEventListener {
         artworkUrl = metaInfo.getArtworkUrl();
 
         // Print the album image of the current media if it is a music
-        if(MediacaseController.audioExtensionIsSupported(url.substring(url.lastIndexOf(".")+1))) {
+        if(Utility.audioExtensionIsSupported(url.substring(url.lastIndexOf(".")+1))) {
             if (artworkUrl != null) {
                 artworkView.setImage(new Image(artworkUrl));
                 Pane pane = (Pane) artworkView.getParent();
@@ -294,7 +292,7 @@ public class PlayerController implements MediaPlayerEventListener {
         // Reinitialize the time slider and the time label, and print the title of the current media in the status bar
         Platform.runLater(() -> {
             timeSlider.setValue(0.0);
-            timeLabel.setText(getStringTime(mediaPlayer));
+            timeLabel.setText(Utility.formatTime(mediaPlayer.getTime()) + " / " + fullTime);
             setLastTimeDisplayed(0);
 
             String text = ((metaInfo.getArtist() != null) ? metaInfo.getArtist() + " - " : "") + metaInfo.getTitle();
@@ -322,7 +320,7 @@ public class PlayerController implements MediaPlayerEventListener {
     public void stopped(MediaPlayer mediaPlayer) {
         Platform.runLater(() -> {
             timeSlider.setValue(0.0);
-            timeLabel.setText(getStringTime(mediaPlayer));
+            timeLabel.setText(Utility.formatTime(mediaPlayer.getTime()) + " / " + fullTime);
             setLastTimeDisplayed(0);
             play.setGraphic(new ImageView(new Image("icons/play.png")));
 
@@ -345,7 +343,7 @@ public class PlayerController implements MediaPlayerEventListener {
             long currentTime = mediaPlayer.getTime();
             // Refresh time to display each second
             if (currentTime >= lastTimeDisplayed + 1000) {
-                timeLabel.setText(getStringTime(mediaPlayer));
+                timeLabel.setText(Utility.formatTime(mediaPlayer.getTime()) + " / " + fullTime);
                 lastTimeDisplayed = currentTime;
             }
         });
@@ -372,7 +370,7 @@ public class PlayerController implements MediaPlayerEventListener {
 
     @Override
     public void lengthChanged(MediaPlayer mediaPlayer, long newLength) {
-        this.fullTime = formatTime(newLength);
+        this.fullTime = Utility.formatTime(newLength);
     }
 
     @Override
@@ -425,36 +423,4 @@ public class PlayerController implements MediaPlayerEventListener {
 
     @Override
     public void endOfSubItems(MediaPlayer mediaPlayer) {}
-
-    /************************************************************************************
-     *                                      UTILITIES                                   *
-     ************************************************************************************/
-
-    /**
-     * Return a String representing the current time progression of the player
-     * @param mediaPlayer
-     * @return String
-     */
-    public String getStringTime(MediaPlayer mediaPlayer) {
-        return formatTime(mediaPlayer.getTime())+" / "+ fullTime;
-    }
-
-    /**
-     * Represents a time in milliseconds into a String formatted as "HH:mm:ss"
-     * @param time
-     * @return String
-     */
-    public static String formatTime(long time) {
-
-        int hours, minutes;
-
-        // milliseconds to seconds
-        time /= 1000;
-        hours = (int) time/3600;
-        time -= hours*3600;
-        minutes = (int) time/60;
-        time -= minutes*60;
-
-        return String.format("%02d:%02d:%02d", hours, minutes, time);
-    }
 }

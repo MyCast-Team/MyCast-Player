@@ -3,22 +3,19 @@ package sample.model;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
-import javafx.stage.StageStyle;
-import sample.controller.MenuBarController;
-import uk.co.caprica.vlcj.medialist.MediaList;
-import uk.co.caprica.vlcj.player.list.MediaListPlayer;
+import sample.annotation.DocumentationAnnotation;
+import sample.utility.AlertManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
  * Created by thomasfouan on 18/07/2016.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date="18/07/2016", description = "This class is used in the StreamMedia class to receive message from the client.")
 public class ClientDataReceiver extends Thread {
 
     private Socket socket;
@@ -47,31 +44,24 @@ public class ClientDataReceiver extends Thread {
             // Wait forever for disconnection signal from client
             while((data = bufferedReader.readLine()) != null && !data.trim().equals("")) {
                 if(Integer.parseInt(data) == StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal()) {
-                    // Fire an ActionEvent on the setConnection/Disconnect MenuItem
-                    Platform.runLater(() -> {
-                        Event.fireEvent(setConnection, new ActionEvent(null, setConnection));
-                        alert();
-                    });
+                    disconnect();
                 }
             }
         } catch (IOException e) {
-
             if(socket != null && !socket.isClosed()) {
-                // Fire an ActionEvent on the setConnection/Disconnect MenuItem
-                Platform.runLater(() -> {
-                    Event.fireEvent(setConnection, new ActionEvent(null, setConnection));
-                    alert();
-                });
+                disconnect();
             }
         }
     }
 
-    public void alert(){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setTitle("Streaming message");
-        alert.setHeaderText("Client disconnected");
-        alert.setContentText("The connection has been lost with the client. Check if the client is still opened or check your network connection.");
-        alert.showAndWait();
+    /**
+     * Disconnect the application from the client when the client is unavailable
+     */
+    private void disconnect() {
+        // Fire an ActionEvent on the setConnection/Disconnect MenuItem
+        Platform.runLater(() -> {
+            Event.fireEvent(setConnection, new ActionEvent(null, setConnection));
+            new AlertManager(StreamMedia.class, -1);
+        });
     }
 }

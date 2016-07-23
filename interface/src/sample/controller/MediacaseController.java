@@ -12,6 +12,7 @@ import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Media;
 import sample.model.Mediacase;
+import sample.utility.Utility;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
@@ -137,17 +138,17 @@ public class MediacaseController {
                             JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
                             id = String.valueOf(obj.get("id"));
                         } catch (IOException | ParseException e) {
-                            id = SuggestionController.generateid();
+                            id = SuggestionController.generateId();
                         }
                     } else {
-                        id = SuggestionController.generateid();
+                        id = SuggestionController.generateId();
                     }
                     JSONObject idObj = new JSONObject();
                     idObj.put("id", id);
                     list.add(idObj);
                 }
                 for (File file:db.getFiles()) {
-                    if(audioExtensionIsSupported(getExtension(file.getPath()))){
+                    if(Utility.audioExtensionIsSupported(Utility.getExtension(file.getPath()))){
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
@@ -162,7 +163,7 @@ public class MediacaseController {
                             object.put("type", "audio");
                             object.put("title", metaInfo.getTitle()==null?"":metaInfo.getTitle());
                             object.put("artist", metaInfo.getArtist()==null?"":metaInfo.getTitle());
-                            object.put("length", PlayerController.formatTime(metaInfo.getLength()));
+                            object.put("length", Utility.formatTime(metaInfo.getLength()));
                             object.put("date", metaInfo.getDate()==null?"":metaInfo.getTitle());
                             object.put("genre", metaInfo.getGenre()==null?"":metaInfo.getTitle());
                             list.add(object);
@@ -210,17 +211,17 @@ public class MediacaseController {
                             JSONObject obj = (JSONObject) parser.parse(new FileReader(idFile));
                             id = String.valueOf(obj.get("id"));
                         } catch (IOException | ParseException e) {
-                            id = SuggestionController.generateid();
+                            id = SuggestionController.generateId();
                         }
                     } else {
-                        id = SuggestionController.generateid();
+                        id = SuggestionController.generateId();
                     }
                     JSONObject idObj = new JSONObject();
                     idObj.put("id", id);
                     list.add(idObj);
                 }
                 for (File file : db.getFiles()) {
-                    if (videoExtensionIsSupported(getExtension(file.getPath()))) {
+                    if (Utility.videoExtensionIsSupported(Utility.getExtension(file.getPath()))) {
                         MediaPlayerFactory mpf = new MediaPlayerFactory();
                         MediaMeta metaInfo = mpf.getMediaMeta(file.getPath(), true);
                         Media media = new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre());
@@ -235,7 +236,7 @@ public class MediacaseController {
                             object.put("type", "video");
                             object.put("title", metaInfo.getTitle() == null ? "" : metaInfo.getTitle());
                             object.put("artist", metaInfo.getArtist() == null ? "" : metaInfo.getTitle());
-                            object.put("length", PlayerController.formatTime(metaInfo.getLength()));
+                            object.put("length", Utility.formatTime(metaInfo.getLength()));
                             object.put("date", metaInfo.getDate() == null ? "" : metaInfo.getTitle());
                             object.put("genre", metaInfo.getGenre() == null ? "" : metaInfo.getTitle());
                             list.add(object);
@@ -336,7 +337,7 @@ public class MediacaseController {
     /**
      * Save the current list of new media in a file to export to the server
      */
-    public void writeMediacase(){
+    public void writeMediacase() {
         if(!list.isEmpty()){
             try {
                 File file = new File(Constant.PATH_TO_MEDIACASE);
@@ -368,50 +369,6 @@ public class MediacaseController {
                 i.printStackTrace();
             }
         }
-    }
-
-    /**
-     * Get file extension
-     * @param fileName
-     * @return extension
-     */
-    public static String getExtension(String fileName){
-        String extension = "";
-
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            extension = fileName.substring(i+1);
-        }
-
-        return extension;
-    }
-
-    /**
-     * Check if the audio extension given in parameter is supported by the player
-     * @param extension
-     * @return True if it is supported. Otherwise, return false
-     */
-    public static boolean audioExtensionIsSupported(String extension){
-        for(String str: Constant.EXTENSIONS_AUDIO){
-            if(extension.toLowerCase().compareTo(str.toLowerCase()) == 0){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check if the video extension given in parameter is supported by the player
-     * @param extension
-     * @return
-     */
-    public static boolean videoExtensionIsSupported(String extension) {
-        for (String str : Constant.EXTENSIONS_VIDEO) {
-            if (extension.toLowerCase().compareTo(str.toLowerCase()) == 0) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

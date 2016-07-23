@@ -2,7 +2,6 @@ package sample.model;
 
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -13,14 +12,9 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import sample.Main;
 import sample.annotation.DocumentationAnnotation;
-import sample.constant.Constant;
 import sample.controller.MainFrameController;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
@@ -150,7 +144,7 @@ public class InterfaceDialog {
     /**
      * Get the name of an interface or plugin
      * @param path
-     * @return
+     * @return String
      */
     private String getNameByType(String path) {
         String result = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf("."));
@@ -202,7 +196,7 @@ public class InterfaceDialog {
 
     /**
      * Return a ChangeListener for the choicebox of the alert popup
-     * @return
+     * @return ChangeListener
      */
     private ChangeListener getChangeListener() {
         return (observable, oldValue, newValue) -> {
@@ -223,6 +217,9 @@ public class InterfaceDialog {
         };
     }
 
+    /**
+     * Enumeration of the position of an interface in the application
+     */
     enum Position {
         NONE,
         TOP_LEFT,

@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import javafx.util.Pair;
 import javafx.scene.control.*;
 import sample.Main;
 import sample.annotation.DocumentationAnnotation;
@@ -18,18 +17,17 @@ import java.util.function.UnaryOperator;
 @DocumentationAnnotation(author = "Thomas Fouan", date = "10/05/2016", description = "This is a complete GUI for a connection dialog to connect to a distant client.")
 public class ConnectionDialog {
 
-    private Dialog<Pair<String, Integer>> dialog;
+    private Dialog<String> dialog;
     private HBox content;
     private TextField addr1;
     private TextField addr2;
     private TextField addr3;
     private TextField addr4;
-    private TextField port;
     private ButtonType validateButton;
 
     public ConnectionDialog() {
 
-        dialog = new Dialog<Pair<String, Integer>>();
+        dialog = new Dialog<>();
         dialog.setTitle("Connection to the client");
         dialog.setHeaderText("Enter the IP address of the client");
 
@@ -49,7 +47,6 @@ public class ConnectionDialog {
         addr2 = addTextFilter("#addr2");
         addr3 = addTextFilter("#addr3");
         addr4 = addTextFilter("#addr4");
-        port = addPortFilter("#port");
 
         // Bind changes on textfields with control function
         Node button = dialog.getDialogPane().lookupButton(validateButton);
@@ -60,14 +57,19 @@ public class ConnectionDialog {
         dialog.setResultConverter(getResultCallback());
     }
 
-    public Dialog<Pair<String, Integer>> getDialog() {
+    public Dialog<String> getDialog() {
         return dialog;
     }
 
+    /**
+     * Add filter on textfields to prevent user to type incorrect IP address
+     * @param id
+     * @return TextField
+     */
     private TextField addTextFilter(String id) {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String strValue = change.getControlNewText();
-            boolean hide = false;
+
             if(strValue.matches("[0-9]+")) {
                 int value = Integer.parseInt(strValue);
                 if(strValue.length() > 1 && value == 0) {
@@ -87,42 +89,16 @@ public class ConnectionDialog {
         return field;
     }
 
-    private TextField addPortFilter(String id) {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String strValue = change.getControlNewText();
-            boolean hide = false;
-            if(strValue.matches("[0-9]+")) {
-                int value = Integer.parseInt(strValue);
-                if(strValue.length() > 1 && value == 0) {
-                    return null;
-                }
-                if(value >= 0 && value <= 65535) {
-                    return change;
-                }
-            }
-
-            return null;
-        };
-
-        TextField field = (TextField) this.content.lookup(id);
-        field.setTextFormatter(new TextFormatter<>(filter));
-
-        return field;
-    }
-
-    private Callback<ButtonType, Pair<String, Integer>> getResultCallback() {
+    /**
+     * Get a Callback for the dialog box
+     * @return Callback
+     */
+    private Callback<ButtonType, String> getResultCallback() {
         // Return the values of the fields on submitButton event
         return (param) -> {
             // If the user clicked on the submit button
             if(param == validateButton) {
-                String address = addr1.getText()+"."+addr2.getText()+"."+addr3.getText()+"."+addr4.getText();
-                int portNb = -1;
-                try {
-                    portNb = Integer.parseInt(port.getText());
-                } catch (NumberFormatException e) {
-                }
-
-                return new Pair<>(address, portNb);
+                return addr1.getText() + "." + addr2.getText() + "." + addr3.getText()+ "." + addr4.getText();
             }
 
             return null;

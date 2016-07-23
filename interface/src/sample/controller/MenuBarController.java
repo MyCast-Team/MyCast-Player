@@ -29,6 +29,7 @@ import sample.model.InterfaceDialog;
 import sample.model.PluginManager;
 import sample.model.Point;
 import sample.model.StreamMedia;
+import sample.utility.AlertManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,17 +99,7 @@ public class MenuBarController {
      */
     private EventHandler<ActionEvent> getDocumentationEventHandler() {
         return (event) -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initStyle(StageStyle.UTILITY);
-            alert.setTitle("How to develop a plugin ?");
-            alert.setHeaderText("How to develop a plugin ?");
-            String s ="A plugin in MyCast is a JavaFX Pane. You need to develop it and export it to a .jar. Your plugin must respect the following properties :\n" +
-                    "       - be a jar file (.jar extension)\n" +
-                    "       - contain the package name \"plugin\"\n" +
-                    "       - contain a main view name \"mainPluginView.fxml\" inside the \"plugin\" package, and with an AnchorPane as root pane\n" +
-                    "       - if you want to add a controller to your .fxml, add a tag fx:controller to your root pane and link it to your controller path";
-            alert.setContentText(s);
-            alert.showAndWait();
+            new AlertManager(PluginController.class, 5);
         };
     }
 
@@ -222,7 +213,6 @@ public class MenuBarController {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open File");
             File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
-            Alert alert;
 
             if(PluginManager.checkPluginValidity(file, true)) {
                 HttpClient httpclient = new DefaultHttpClient();
@@ -241,18 +231,10 @@ public class MenuBarController {
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity resEntity = response.getEntity();
 
-                    alert = new Alert(Alert.AlertType.INFORMATION);
                     if(response.getStatusLine().getStatusCode() != 500) {
-                        alert.initStyle(StageStyle.UTILITY);
-                        alert.setTitle("Plugin");
-                        alert.setHeaderText("Plugin load success");
-                        alert.setContentText("The plugin has been validated ! Well done !");
+                        new AlertManager(PluginController.class, 4);
                     } else {
-                        alert.setAlertType(Alert.AlertType.ERROR);
-                        alert.initStyle(StageStyle.UTILITY);
-                        alert.setTitle("Plugin");
-                        alert.setHeaderText("Plugin load error");
-                        alert.setContentText("The plugin could not be uploaded. Maybe a plugin with the same name already exists in the server.");
+                        new AlertManager(PluginController.class, -2);
                     }
 
                     if (resEntity != null) {
@@ -260,7 +242,6 @@ public class MenuBarController {
                     }
 
                     httpclient.getConnectionManager().shutdown();
-                    alert.showAndWait();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

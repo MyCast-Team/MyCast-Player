@@ -1,28 +1,21 @@
 package sample.controller;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.FileChooser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
@@ -32,18 +25,19 @@ import org.json.simple.parser.ParseException;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
 import sample.model.Suggestion;
+import sample.utility.Utility;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Pierre on 30/05/2016.
  */
 @DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the controller for the suggestion panel. The application will give to the user some ideas about movies to watch and music to listen.")
 public class SuggestionController {
+
     @FXML
     private TableView<Suggestion> musicTable1;
     @FXML
@@ -69,38 +63,38 @@ public class SuggestionController {
     @FXML
     private TableColumn<Suggestion,String> typeColumn;
 
-    private ArrayList<Suggestion> SuggestionList;
-    private ArrayList<Suggestion> SuggestionMusicList;
+    private ArrayList<Suggestion> suggestionList;
+    private ArrayList<Suggestion> suggestionMusicList;
     private String id;
 
-    public SuggestionController(){
-
+    public SuggestionController() {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         JSONParser parser = new JSONParser();
+        Object obj;
+        JSONObject jsonObject;
 
         try {
-
-            Object obj = parser.parse(new FileReader("./res/id.json"));
-
-            JSONObject jsonObject = (JSONObject) obj;
-
+            obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
+            jsonObject = (JSONObject) obj;
             id = jsonObject.get("id").toString();
         } catch (ParseException | IOException e) {
             e.printStackTrace();
+            id = null;
+        } finally {
+            if (id == null) {
+                id = generateId();
+            }
         }
 
-        if (id == null) {
-            id = generateid();
-        }
-        SuggestionList = new ArrayList<>();
-        SuggestionMusicList=new ArrayList<>();
-        getList("filmuser.json","ListeFilm");
-        getList("musiqueuser.json","ListeMusique");
-        ObservableList<Suggestion> list = FXCollections.observableArrayList(SuggestionList);
-        ObservableList<Suggestion> listMusic = FXCollections.observableArrayList(SuggestionMusicList);
+        suggestionList = new ArrayList<>();
+        suggestionMusicList = new ArrayList<>();
+        getList(Constant.PATH_TO_SUGGESTED_FILM, "ListeFilm");
+        getList(Constant.PATH_TO_SUGGESTED_MUSIC, "ListeMusique");
+        ObservableList<Suggestion> list = FXCollections.observableArrayList(suggestionList);
+        ObservableList<Suggestion> listMusic = FXCollections.observableArrayList(suggestionMusicList);
 
         filmtable1.setItems(list);
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -117,13 +111,17 @@ public class SuggestionController {
         authorColumn1.setCellValueFactory(cellData->cellData.getValue().DirectorProperty());
     }
 
-    public static String generateid(){
+    /**
+     * Generate an id for the current user if it doesn't have one
+     * @return id as String
+     */
+    public static String generateId() {
+
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/addUser");
+        HttpPost httppost = new HttpPost(Constant.SERVER_ADDRESS + "/addUser");
         HttpResponse response1;
         HttpEntity entity1;
 
-        FileOutputStream fos;
         InputStream is;
         JSONParser parser = new JSONParser();
         Object obj;
@@ -134,18 +132,9 @@ public class SuggestionController {
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(Constant.PATH_TO_ID));
+            Utility.writeInFile(is, Constant.PATH_TO_ID);
+            is.close();
 
-            byte[] buffer = new byte[8 * 1024];
-            int bytesRead;
-            if (is != null) {
-                while((bytesRead = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, bytesRead);
-                }
-                is.close();
-            }
-
-            fos.close();
             EntityUtils.consume(entity1);
 
             obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
@@ -160,48 +149,63 @@ public class SuggestionController {
         return null;
     }
 
-    public static void sendData() throws IOException {
-        File file=new File("./res/mediacase.json");
-        if(file.exists()){
-            HttpClient httpclient = new DefaultHttpClient();
+    /**
+     * Send the mediacase file to the server to update it about the music and film of the user
+     */
+    public static void sendData() {
+
+        File file = new File(Constant.PATH_TO_MEDIACASE);
+        HttpClient httpclient;
+        HttpPost httppost;
+        MultipartEntity mpEntity;
+        ContentBody cbFile;
+        HttpResponse response;
+        HttpEntity resEntity;
+
+        if(file.exists()) {
+            httpclient = new DefaultHttpClient();
             httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+            httppost = new HttpPost(Constant.SERVER_ADDRESS + "/mediacase");
+            mpEntity = new MultipartEntity();
+            cbFile = new FileBody(file);
 
-            HttpPost httppost = new HttpPost("http://backoffice-client.herokuapp.com/mediacase");
             try {
-                MultipartEntity mpEntity = new MultipartEntity();
-                ContentBody cbFile = new FileBody(file);
-
                 mpEntity.addPart("mediacase", cbFile);
-
                 httppost.setEntity(mpEntity);
 
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity resEntity = response.getEntity();
+                response = httpclient.execute(httppost);
+                resEntity = response.getEntity();
 
                 if (resEntity != null) {
                     resEntity.consumeContent();
                 }
 
                 httpclient.getConnectionManager().shutdown();
-            } catch (Exception e){
+            } catch (ClientProtocolException e) {
                 e.printStackTrace();
-            }
-            try {
-                Files.delete(Paths.get("./res/mediacase.json"));
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    Files.delete(Paths.get(Constant.PATH_TO_MEDIACASE));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    public void getList(String path,String http){
+    /**
+     * Get a list of suggestion from the server and save it in a local file
+     * @param path
+     * @param http
+     */
+    private void getList(String path, String http) {
+
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://backoffice-client.herokuapp.com/"+id+"/"+http);
+        HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS + "/" + id + "/" + http);
         HttpResponse response1;
         HttpEntity entity1;
-
-        String filePath = "./res/"+path;
-        FileOutputStream fos;
         InputStream is;
 
         try {
@@ -209,49 +213,48 @@ public class SuggestionController {
             entity1 = response1.getEntity();
             is = entity1.getContent();
 
-            fos = new FileOutputStream(new File(filePath));
+            Utility.writeInFile(is, path);
+            is.close();
 
-            byte[] buffer = new byte[8 * 1024];
-            int bytesRead;
-            if (is != null) {
-                while((bytesRead = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, bytesRead);
-                }
-                is.close();
-            }
-
-            fos.close();
             EntityUtils.consume(entity1);
-            readPlugin(path);
+            readSuggestionFile(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void readPlugin(String path) {
+    /**
+     * Read file from the path given in parameter, and fill the appropriate list
+     * @param path
+     */
+    private void readSuggestionFile(String path) {
 
         JSONParser parser = new JSONParser();
         JSONArray jsonArray;
+        JSONObject jsonObject;
+        Suggestion suggestion;
 
         try {
-            jsonArray = (JSONArray) parser.parse(new FileReader("./res/"+path));
+            jsonArray = (JSONArray) parser.parse(new FileReader(path));
 
-            JSONObject jsonObject;
             for (Object JsonItem : jsonArray) {
                 jsonObject = (JSONObject) JsonItem;
-                if (path.equals("filmuser.json")) {
-                    SuggestionList.add(new Suggestion(jsonObject.get("film").toString(), jsonObject.get("date").toString(), jsonObject.get("director").toString(), jsonObject.get("length").toString(),jsonObject.get("type").toString()));
+                suggestion = new Suggestion(null, jsonObject.get("date").toString(), null, jsonObject.get("length").toString(), jsonObject.get("type").toString());
+
+                if (path.equals(Constant.PATH_TO_SUGGESTED_FILM)) {
+                    suggestion.setName(jsonObject.get("film").toString());
+                    suggestion.setDirector(jsonObject.get("director").toString());
+                    suggestionList.add(suggestion);
                 } else {
-                    SuggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), jsonObject.get("date").toString(), jsonObject.get("singer").toString(),jsonObject.get("length").toString(),jsonObject.get("type").toString()));
+                    suggestion.setName(jsonObject.get("title").toString());
+                    suggestion.setDirector(jsonObject.get("singer").toString());
+                    suggestionMusicList.add(suggestion);
                 }
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ParseException | IOException e) {
+            suggestionList.clear();
+            suggestionMusicList.clear();
             e.printStackTrace();
         }
     }
-
 }

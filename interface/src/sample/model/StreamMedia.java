@@ -2,10 +2,11 @@ package sample.model;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
-import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
+import sample.utility.AlertManager;
+import sample.utility.Utility;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -31,8 +32,6 @@ public class StreamMedia extends Thread {
 
     private Socket socket;
     private PrintWriter sendData;
-
-    private boolean isAlreadyStarted;
 
     private CONNECTION_STATUS status;
 
@@ -92,7 +91,7 @@ public class StreamMedia extends Thread {
      * Create and prepare a player for streaming.
      */
     public void prepareStreamingMedia() {
-        String rtspStream = formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.PORT, "demo");
+        String rtspStream = Utility.formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.STREAMING_PORT, "demo");
         playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
@@ -105,35 +104,12 @@ public class StreamMedia extends Thread {
                 this.playlist.addMedia(m.getPath());
             }
         }
-        isAlreadyStarted = false;
-    }
-
-    /**
-     * Return a string representing a RTSP stream URL for the given address, port and id.
-     * @param serverAddress
-     * @param serverPort
-     * @param id
-     * @return String
-     */
-    private String formatRtspStream(String serverAddress, int serverPort, String id) {
-        StringBuilder sb = new StringBuilder(60);
-        sb.append(":sout=#rtp{sdp=rtsp://@");
-        sb.append(serverAddress);
-        sb.append(':');
-        sb.append(serverPort);
-        sb.append('/');
-        sb.append(id);
-        sb.append("}");
-        return sb.toString();
     }
 
     /**
      * Start the streaming at the address and port set with the prepareStreamingMedia function.
      */
-    public void startStreamingMedia() {
-            mediaListPlayer.play();
-            isAlreadyStarted = true;
-    }
+    public void startStreamingMedia() { mediaListPlayer.play(); }
 
     /**
      * Set pause to the player.
@@ -147,22 +123,17 @@ public class StreamMedia extends Thread {
      * @return true if the connection is set, false otherwise.
      */
     public boolean setClientConnection() {
-        status = CONNECTION_STATUS.DISCONNECTED;
 
         ConnectionDialog connectionDialog = new ConnectionDialog();
-        Optional<Pair<String, Integer>> result = connectionDialog.getDialog().showAndWait();
+        Optional<String> result = connectionDialog.getDialog().showAndWait();
+        status = CONNECTION_STATUS.DISCONNECTED;
 
         if (result.isPresent()) {
-            String addr = result.get().getKey();
-            int port = result.get().getValue();
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Connection information");
-            alert.setHeaderText(null);
+            String addr = result.get();
 
             try {
                 socket = new Socket();
-                socket.connect(new InetSocketAddress(addr, port), 1000);
+                socket.connect(new InetSocketAddress(addr, Constant.PORT), 1000);
 
                 sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
                 prepareStreamingMedia();
@@ -171,21 +142,17 @@ public class StreamMedia extends Thread {
                 clientDataReceiver.start();
 
                 status = CONNECTION_STATUS.CONNECTED;
-                alert.setContentText("The connection with '" + socket.getInetAddress().getCanonicalHostName() + "' has been successfully done !");
+                new AlertManager(StreamMedia.class, 1, socket.getInetAddress().getCanonicalHostName());
             } catch (UnknownHostException e) {
-                alert.setContentText("Invalid Address !");
-            } catch (IllegalArgumentException e) {
-                alert.setContentText("Invalid port number !");
+                new AlertManager(StreamMedia.class, -4);
             } catch (SocketTimeoutException | ConnectException e) {
                 try {
                     socket.close();
                 } catch (IOException e1) {
                 }
-                alert.setContentText("The connection to the client has been failed ! Make sure the client is already started !");
+                new AlertManager(StreamMedia.class, -3);
             } catch (IOException e) {
-                alert.setContentText("An error occurred during making the connection to the client ! Please try later !");
-            } finally {
-                alert.showAndWait();
+                new AlertManager(StreamMedia.class, -2);
             }
         }
 

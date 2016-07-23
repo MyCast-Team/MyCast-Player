@@ -3,11 +3,12 @@ package sample.model;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.StageStyle;
 import sample.annotation.DocumentationAnnotation;
 import sample.constant.Constant;
+import sample.controller.PluginController;
+import sample.utility.AlertManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,20 +58,17 @@ public class PluginManager {
             String[] dirContent = jarDir.list();
             File file;
 
-            for(String filepath : dirContent) {
-                file = new File(jarDir.getAbsolutePath() + "/" + filepath);
-                // Add the name of the current file in the list of plugin if it is a valid plugin
-                if (checkPluginValidity(file, false)) {
-                    listPlugin.add(file.getName());
+            if (dirContent != null) {
+                for(String filepath : dirContent) {
+                    file = new File(jarDir.getAbsolutePath() + "/" + filepath);
+                    // Add the name of the current file in the list of plugin if it is a valid plugin
+                    if (checkPluginValidity(file, false)) {
+                        listPlugin.add(file.getName());
+                    }
                 }
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UTILITY);
-            alert.setTitle("Warning");
-            alert.setHeaderText("Path to plugin");
-            alert.setContentText("The path to directory containing all plugins hasn't been found...");
-            alert.showAndWait();
+            new AlertManager(PluginController.class, -3);
         }
 
         return listPlugin;
@@ -116,11 +114,6 @@ public class PluginManager {
         ClassLoader classLoader;
         Pane pane = null;
 
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setTitle("Plugin load");
-        alert.setHeaderText("Load plugin error");
-
         try {
             classLoader = getPluginClassLoader(plugin);
             res = classLoader.getResource(Constant.MAIN_PLUGIN_VIEW_LOCATION);
@@ -129,13 +122,11 @@ public class PluginManager {
                 loader.setClassLoader(classLoader);
                 pane = loader.load();
             } else {
-                alert.setContentText("The main view of the '" + plugin.getName() + "' plugin hasn't could be found.");
-                alert.showAndWait();
+                new AlertManager(PluginController.class, -4, plugin.getName());
             }
 
         } catch (IOException e) {
-            alert.setContentText("The pane hasn't could be load. Check your fxml file or the path to its attached controller.\"");
-            alert.showAndWait();
+            new AlertManager(PluginController.class, -5);
             pane = null;
             e.printStackTrace();
         }
@@ -159,28 +150,24 @@ public class PluginManager {
 
         String filename = file.getName();
         boolean isValid = false;
-
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setTitle("Plugin");
-        alert.setHeaderText("Plugin validity error");
+        int codeError = 0;
 
         if(file.exists()) {
             if (filename.endsWith(".jar")) {
                 if (isMainViewPresent(getPluginClassLoader(file))) {
                     isValid = true;
                 } else {
-                    alert.setContentText("The main view of the '" + file.getName() + "' plugin hasn't could be found.");
+                    codeError = -4;
                 }
             } else {
-                alert.setContentText("The selected file is not a jar file (.jar extension).");
+                codeError = -6;
             }
         } else {
-            alert.setContentText("The selected file doesn't exist.");
+            codeError = -7;
         }
 
         if(!isValid && isAlertShowing) {
-            alert.showAndWait();
+            new AlertManager(PluginController.class, codeError, file.getName());
         }
 
         return isValid;

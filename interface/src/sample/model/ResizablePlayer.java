@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
@@ -19,7 +18,7 @@ import java.nio.ByteBuffer;
 /**
  * Class of creation and control of the vlcj player.
  */
-@DocumentationAnnotation(author = "Thomas Fouan", date = "25/04/2016", description = "The ResizablePlayer class manage the resize of our player. It uses multiple classes like CanvasPlayerComponent or CanvasBufferFormatCallback.")
+@DocumentationAnnotation(author = "Thomas Fouan", date = "25/04/2016", description = "The ResizablePlayer class manage the displaying of our player. It uses multiple classes like CanvasPlayerComponent or CanvasBufferFormatCallback.")
 public class ResizablePlayer {
 
     private DirectMediaPlayerComponent mediaPlayerComponent;
@@ -90,7 +89,7 @@ public class ResizablePlayer {
     }
 
     /**
-     * initialize the type of image (size, ratio) to write in the player, accordingly with :
+     * Initialize the type of image (size, ratio) to write in the player, accordingly with :
      *      - the dimensions of the screen
      *      - and the ratio of the video source
      *
@@ -141,6 +140,12 @@ public class ResizablePlayer {
         });
     }
 
+    /**
+     * Set the album image dimensions to write in the player with the new values width and height.
+     * @param artworkView
+     * @param width
+     * @param height
+     */
     public static void fitArtworkViewSize(ImageView artworkView, double width, double height) {
         if(artworkView.getImage() != null) {
             double ratio =  artworkView.getImage().getHeight() / artworkView.getImage().getWidth();
