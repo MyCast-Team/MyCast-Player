@@ -149,7 +149,7 @@ public class SuggestionController {
         }
         return null;
     }
-    
+
     /**
      * Send the mediacase file to the server to update it about the music and film of the user
      */
@@ -250,7 +250,7 @@ public class SuggestionController {
                 director = (jsonObject.get("director") == null) ? "" : jsonObject.get("director").toString();
                 type = (jsonObject.get("type") == null) ? "" : jsonObject.get("type").toString();
 
-                if (path.equals("filmuser.json")) {
+                if (path.equals(Constant.PATH_TO_SUGGESTED_FILM)) {
                     suggestionList.add(new Suggestion(jsonObject.get("film").toString(), date, director, jsonObject.get("length").toString(),type));
                 } else {
                     suggestionMusicList.add(new Suggestion(jsonObject.get("title").toString(), date, jsonObject.get("singer").toString(), jsonObject.get("length").toString(), type));
