@@ -7,8 +7,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import sample.controller.PlayerController;
+import sample.annotation.DocumentationAnnotation;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -19,6 +18,7 @@ import java.nio.ByteBuffer;
 /**
  * Class of creation and control of the vlcj player.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "25/04/2016", description = "The ResizablePlayer class manage the displaying of our player. It uses multiple classes like CanvasPlayerComponent or CanvasBufferFormatCallback.")
 public class ResizablePlayer {
 
     private DirectMediaPlayerComponent mediaPlayerComponent;
@@ -26,6 +26,7 @@ public class ResizablePlayer {
     private MediaList playlist;
     private MediaPlayer mediaPlayer;
 
+    private ImageView artworkView;
     private ImageView imageView;
     private WritableImage writableImage;
     private WritablePixelFormat<ByteBuffer> pixelFormat;
@@ -33,19 +34,18 @@ public class ResizablePlayer {
     private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
-    public ResizablePlayer(Stage primaryStage, AnchorPane playerContainer) {
+    private Playlist detailedPlaylist;
+
+    /* CONSTRUCTOR */
+    public ResizablePlayer(Pane playerHolder, ImageView imageView, ImageView artworkView) {
 
         // Initialisation of the components
-        playerHolder = new Pane();
         pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
-        // Add the player pane in the playerContainer
-        VBox vBox = (VBox) playerContainer.lookup("#playerContainer");
-        BorderPane playerPane = new BorderPane(playerHolder);
-        playerPane.setStyle("-fx-background-color: black");
-        vBox.getChildren().add(0, playerPane);
-        VBox.setVgrow(playerPane, Priority.ALWAYS);
+        this.playerHolder = playerHolder;
+        this.imageView = imageView;
+        this.artworkView = artworkView;
 
         initializeImageView();
 
@@ -58,12 +58,10 @@ public class ResizablePlayer {
 
         mediaPlayer = mediaPlayerComponent.getMediaPlayer();
         mediaListPlayer.setMediaPlayer(mediaPlayer);
-
-        // Add sample.controller to the mediaPlayer
-        PlayerController playerController = new PlayerController(mediaListPlayer, mediaPlayer, primaryStage, playerContainer);
-        mediaPlayer.addMediaPlayerEventListener(playerController);
     }
 
+
+    /* GETTER */
     public DirectMediaPlayerComponent getMediaPlayerComponent() { return mediaPlayerComponent; }
 
     public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
@@ -74,20 +72,35 @@ public class ResizablePlayer {
 
     public Pane getPlayerHolder() { return playerHolder; }
 
+    public Playlist getDetailedPlaylist() { return detailedPlaylist; }
+
+    /* SETTER */
+    public void setPlaylist(Playlist playlist) {
+        this.detailedPlaylist = playlist;
+        for(Media m : playlist.getPlaylist()) {
+            this.playlist.addMedia(m.getPath());
+        }
+    }
+
+    public void release() {
+        this.mediaPlayerComponent.release(true);
+        this.mediaListPlayer.release();
+        this.mediaPlayer.release();
+    }
+
     /**
-     * initialize the type of image (size, ratio) to write in the player, accordingly with :
+     * Initialize the type of image (size, ratio) to write in the player, accordingly with :
      *      - the dimensions of the screen
      *      - and the ratio of the video source
      *
      * Add listeners on the screen and on the ratio for the current media.
      */
-    private void initializeImageView() {
+    public void initializeImageView() {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
         writableImage = new WritableImage((int) visualBounds.getWidth(), (int) visualBounds.getHeight());
 
         // Add an imageView in the playerHolder to display each frame of the media
-        imageView = new ImageView(writableImage);
-        playerHolder.getChildren().add(imageView);
+        imageView.setImage(writableImage);
 
         playerHolder.widthProperty().addListener((observable, oldValue, newValue) -> {
             fitImageViewSize(newValue.floatValue(), (float) playerHolder.getHeight());
@@ -109,20 +122,44 @@ public class ResizablePlayer {
      */
     private void fitImageViewSize(float width, float height) {
         Platform.runLater(() -> {
-            float fitHeight = videoSourceRatioProperty.get() * width;
+            double fitHeight = videoSourceRatioProperty.get() * width;
             if (fitHeight > height) {
-                imageView.setFitHeight(height);
                 double fitWidth = height / videoSourceRatioProperty.get();
                 imageView.setFitWidth(fitWidth);
+                imageView.setFitHeight(height);
                 imageView.setX((width - fitWidth) / 2);
                 imageView.setY(0);
-            }
-            else {
+            } else {
                 imageView.setFitWidth(width);
                 imageView.setFitHeight(fitHeight);
                 imageView.setY((height - fitHeight) / 2);
                 imageView.setX(0);
             }
+
+            fitArtworkViewSize(artworkView, width, height);
         });
+    }
+
+    /**
+     * Set the album image dimensions to write in the player with the new values width and height.
+     * @param artworkView
+     * @param width
+     * @param height
+     */
+    public static void fitArtworkViewSize(ImageView artworkView, double width, double height) {
+        if(artworkView.getImage() != null) {
+            double ratio =  artworkView.getImage().getHeight() / artworkView.getImage().getWidth();
+            double fitHeight = ratio * width;
+            if(fitHeight > height) {
+                double fitWidth = height / ratio;
+                artworkView.setFitWidth(fitWidth);
+                artworkView.setX((width - fitWidth) / 2);
+                artworkView.setY(0);
+            } else {
+                artworkView.setFitHeight(fitHeight);
+                artworkView.setY((height - fitHeight) / 2);
+                artworkView.setX(0);
+            }
+        }
     }
 }

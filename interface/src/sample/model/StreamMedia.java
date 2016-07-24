@@ -1,6 +1,10 @@
 package sample.model;
 
-import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
+import sample.utility.AlertManager;
+import sample.utility.Utility;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -10,43 +14,58 @@ import uk.co.caprica.vlcj.player.list.MediaListPlayerEventAdapter;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.Socket;
+import java.net.*;
+import java.util.Optional;
 
 /**
  * Created by thomasfouan on 09/03/2016.
  */
-public class StreamMedia {
+@DocumentationAnnotation(author = "Thomas Fouan", date = "09/03/2016", description = "This class is the streaming manager. It creates socket with a client to broadcast medias.")
+public class StreamMedia extends Thread {
 
-    private final MediaPlayerFactory factory;
-
-    private final MediaListPlayer mediaListPlayer;
-
-    private final MediaList playList;
-
-    private final int PORT = 2016;
+    private MediaPlayerFactory factory;
+    private MediaListPlayer mediaListPlayer;
+    private MediaList playlist;
+    private Playlist interfacePlaylist;
 
     private Socket socket;
-
-    private CONNECTION_STATUS status = CONNECTION_STATUS.DISCONNECTED;
-
     private PrintWriter sendData;
 
-    private static final String PATH_TO_VIDEO = "/Users/thomasfouan/Desktop/video.avi";
+    private CONNECTION_STATUS status;
+
+    private ClientDataReceiver clientDataReceiver;
+
+    private MenuItem setConnection;
 
     /**
      * CONSTRUCTOR
      */
-    public StreamMedia() {
+    public StreamMedia(MenuItem setConnection) {
+        this.setConnection = setConnection;
+
         factory = new MediaPlayerFactory();
         mediaListPlayer = factory.newMediaListPlayer();
         mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
             @Override
             public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
-                System.out.println("Playing next item: " + itemMrl + " (" + item + ")");
+                try {
+                    // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
+                    // before client starts receiving data
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED.ordinal());
+                sendData.flush();
             }
         });
-        playList = factory.newMediaList();
+        playlist = factory.newMediaList();
+
+        status = CONNECTION_STATUS.DISCONNECTED;
+        interfacePlaylist = null;
+        clientDataReceiver = null;
+        socket = null;
+        sendData = null;
     }
 
     /**
@@ -56,124 +75,143 @@ public class StreamMedia {
 
     public Socket getSocket() { return socket; }
 
-    public MediaPlayerFactory getFactory() { return factory; }
-
     public MediaListPlayer getMediaListPlayer() { return mediaListPlayer; }
 
-    public MediaList getPlayList() { return playList; }
+    /**
+     * SETTERS
+     */
+    public void setInterfacePlaylist(Playlist playlist) {
+        this.interfacePlaylist = playlist;
+    }
 
     /**
-     * Prepare the player for streaming.
-     * @param addr address of the client
-     * @param port port to use for the streaming
+     * Create and prepare a player for streaming.
      */
-    public void prepareStreamingMedia(String addr, int port) {
-
-        String rtspStream = formatRtspStream(addr, PORT, "demo");
-        System.out.println("Prepare for streaming at : "+rtspStream);
-        playList.setStandardMediaOptions(rtspStream,
+    public void prepareStreamingMedia() {
+        String rtspStream = Utility.formatRtspStream(socket.getLocalAddress().getHostAddress(), Constant.STREAMING_PORT, "demo");
+        playlist.setStandardMediaOptions(rtspStream,
                 ":no-sout-rtp-sap",
                 ":no-sout-standard-sap",
                 ":sout-all",
                 ":sout-keep");
-        mediaListPlayer.setMediaList(playList);
+
+        mediaListPlayer.setMediaList(playlist);
+        if(interfacePlaylist != null) {
+            for (Media m : interfacePlaylist.getPlaylist()) {
+                this.playlist.addMedia(m.getPath());
+            }
+        }
     }
 
     /**
      * Start the streaming at the address and port set with the prepareStreamingMedia function.
      */
-    public void startStreamingMedia() {
-        mediaListPlayer.play();
-        // Wait few milliseconds to make sure the MediaListPlayer is ready for the stream
-        // before client starts receiving data
-        try {
-            Thread.currentThread().sleep(100);
-            System.out.println("Play track 1 of "+mediaListPlayer.getMediaList().size());
-            sendData.println(StreamMedia.REQUEST_CLIENT.STREAMING_STARTED);
-            sendData.flush();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+    public void startStreamingMedia() { mediaListPlayer.play(); }
 
+    /**
+     * Set pause to the player.
+     */
     public void pauseStreamingMedia() {
         mediaListPlayer.pause();
     }
 
-    private String formatRtspStream(String serverAddress, int serverPort, String id) {
-        StringBuilder sb = new StringBuilder(60);
-        sb.append(":sout=#rtp{sdp=rtsp://@");
-        sb.append(serverAddress);
-        sb.append(':');
-        sb.append(serverPort);
-        sb.append('/');
-        sb.append(id);
-        sb.append("}");
-        return sb.toString();
-    }
+    /**
+     * Set a connection with a client to stream media to.
+     * @return true if the connection is set, false otherwise.
+     */
+    public boolean setClientConnection() {
 
-    public boolean setClientConnection(String addr, int port) {
+        ConnectionDialog connectionDialog = new ConnectionDialog();
+        Optional<String> result = connectionDialog.getDialog().showAndWait();
+        status = CONNECTION_STATUS.DISCONNECTED;
 
-        socket = null;
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Connection information");
-        alert.setHeaderText(null);
-        alert.setContentText("The connection to the client has been successfully done !");
+        if (result.isPresent()) {
+            String addr = result.get();
 
-        try {
-            if(port < 0) {
-                alert.setContentText("Invalid port number !");
-            } else {
-                socket = new Socket(addr, port);
-            }
-        } catch (ConnectException e) {
-            alert.setContentText("The connection to the client has been failed ! Make sure the client is already started !");
-        } catch (IOException e) {
-            alert.setContentText("An error occurred during making the connection to the client ! Please try later !");
-        } finally {
-            alert.showAndWait();
+            try {
+                socket = new Socket();
+                socket.connect(new InetSocketAddress(addr, Constant.PORT), 1000);
 
-            if(socket == null) {
-                status = CONNECTION_STATUS.DISCONNECTED;
-                return false;
-            } else {
+                sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
+                prepareStreamingMedia();
+
+                clientDataReceiver = new ClientDataReceiver(socket, setConnection);
+                clientDataReceiver.start();
+
+                status = CONNECTION_STATUS.CONNECTED;
+                new AlertManager(StreamMedia.class, 1, socket.getInetAddress().getCanonicalHostName());
+            } catch (UnknownHostException e) {
+                new AlertManager(StreamMedia.class, -4);
+            } catch (SocketTimeoutException | ConnectException e) {
                 try {
-                    sendData = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
-                    status = CONNECTION_STATUS.CONNECTED;
-                    prepareStreamingMedia(socket.getInetAddress().getHostAddress(), socket.getLocalPort());
-                    return true;
-                } catch (IOException e) {
-                    closeConnection();
-                    return false;
+                    socket.close();
+                } catch (IOException e1) {
                 }
+                new AlertManager(StreamMedia.class, -3);
+            } catch (IOException e) {
+                new AlertManager(StreamMedia.class, -2);
             }
         }
+
+        return status.equals(CONNECTION_STATUS.CONNECTED);
     }
 
+    /**
+     * Close the connection with the current client.
+     */
     public void closeConnection() {
 
-        if(sendData != null) {
-            sendData.println(StreamMedia.REQUEST_CLIENT.DECONNECTION);
-            sendData.flush();
-        }
+        if(status.equals(CONNECTION_STATUS.DISCONNECTED))
+            return;
 
         try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            sendData.println(StreamMedia.REQUEST_CLIENT.DISCONNECTION.ordinal());
+            sendData.flush();
 
-        status = CONNECTION_STATUS.DISCONNECTED;
+            if(clientDataReceiver != null && clientDataReceiver.isAlive()) {
+                clientDataReceiver.interrupt();
+                clientDataReceiver.join(100);
+            }
+
+            socket.close();
+        } catch (InterruptedException e) {
+        } catch (IOException e) {
+        } finally {
+            clientDataReceiver = null;
+            sendData = null;
+            socket = null;
+            status = CONNECTION_STATUS.DISCONNECTED;
+            playlist.clear();
+            mediaListPlayer.stop();
+        }
     }
 
-    public static enum CONNECTION_STATUS {
+    /**
+     * Release all resources.
+     */
+    public void release() {
+        closeConnection();
+
+        playlist.clear();
+        mediaListPlayer.stop();
+        playlist.release();
+        mediaListPlayer.release();
+        factory.release();
+    }
+
+    /**
+     * Enum for the status of the connection.
+     */
+    public enum CONNECTION_STATUS {
         CONNECTED,
         DISCONNECTED
     }
 
-    public static enum REQUEST_CLIENT {
+    /**
+     * Enum for differents possible requests to the client.
+     */
+    public enum REQUEST_CLIENT {
         STREAMING_STARTED,
-        STREAMING_STOPPED,
-        DECONNECTION
+        DISCONNECTION
     }
 }

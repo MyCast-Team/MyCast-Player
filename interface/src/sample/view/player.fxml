@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
@@ -9,36 +8,40 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="player">
-    <VBox fx:id="playerContainer" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-        <BorderPane fx:id="playerPane" VBox.vgrow="ALWAYS">
-        </BorderPane>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="player" fx:controller="sample.controller.PlayerController">
+    <VBox fx:id="playerContainer" alignment="CENTER" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <Pane fx:id="playerHolder" VBox.vgrow="ALWAYS" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <ImageView fx:id="imageView"/>
+            <ImageView fx:id="artworkView"/>
+        </Pane>
         <HBox fx:id="controlBar" alignment="CENTER">
             <Button fx:id="previous">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/previous.png" />
+                        <Image url="icons/previous.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="stop">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/stop.png" />
+                        <Image url="icons/stop.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="play">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/pause.png" />
+                        <Image url="icons/play.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="next">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/next.png" />
+                        <Image url="icons/next.png" />
                     </ImageView>
                 </graphic>
             </Button>
@@ -47,14 +50,14 @@
             <Button fx:id="repeat">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/repeat.png" />
+                        <Image url="icons/repeat.png" />
                     </ImageView>
                 </graphic>
             </Button>
             <Button fx:id="resize">
                 <graphic>
                     <ImageView>
-                        <Image url="@../../img/resize.png" />
+                        <Image url="icons/resize.png" />
                     </ImageView>
                 </graphic>
             </Button>

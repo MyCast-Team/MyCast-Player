@@ -1,18 +1,13 @@
 package sample.controller;
 
-import com.sun.prism.impl.Disposer;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.util.Callback;
+import javafx.scene.control.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,17 +17,22 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import sample.annotation.DocumentationAnnotation;
+import sample.constant.Constant;
 import sample.model.Plugin;
-import sample.model.StreamMedia;
-import sun.plugin2.util.PluginTrace;
+import sample.model.PluginManager;
+import sample.model.Point;
+import sample.utility.AlertManager;
+import sample.utility.Utility;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Pierre on 30/05/2016.
  */
+@DocumentationAnnotation(author = "Pierre Lochouarn", date = "30/05/2016", description = "This is the controller for the plugin panel. You can manage multiple things like search, download or uninstall plugins.")
 public class PluginController {
     @FXML
     private TableView<Plugin> pluginTable;
@@ -43,215 +43,267 @@ public class PluginController {
     @FXML
     private TableColumn<Plugin, String> dateColumn1;
     @FXML
-    private TableColumn<Plugin,String> downloadColumn1;
+    private TableColumn<Plugin,String> idColumn1;
     @FXML
     private Button refresh;
+    @FXML
+    private Button download;
+    @FXML
+    private Button remove;
+    @FXML
+    private Button search;
+    @FXML
+    private Button reset;
+    @FXML
+    private TextField filter;
 
     private ArrayList<Plugin> pluginList;
-    final String path = "./PluginsList/plugin.json";
+
+    private ArrayList<Plugin> filteredPluginList;
+
     public PluginController(){
-
     }
-
 
     @FXML
     public void initialize(){
         pluginList = new ArrayList<>();
-        getList();
-        ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
-        pluginTable.setItems(list);
-        nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        filteredPluginList = new ArrayList<>();
 
+        getList();
+
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
+        pluginTable.setItems(list);
+
+        nameColumn1.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         authorColumn1.setCellValueFactory(cellData -> cellData.getValue().AuthorProperty());
         dateColumn1.setCellValueFactory(cellData -> cellData.getValue().DateProperty());
+        idColumn1.setCellValueFactory(cellData->cellData.getValue().IdProperty());
 
-        downloadColumn1.setCellFactory(new Callback<TableColumn<Plugin,String>, TableCell<Plugin,String>>() {
-
-            @Override
-            public TableCell<Plugin,String> call(TableColumn<Plugin,String> p) {
-                    p.setCellValueFactory(cellData->cellData.getValue().IdProperty());
-                   return new ButtonCell();
-            }
-        });
-        downloadColumn1.setCellValueFactory(cellData->cellData.getValue().IdProperty());
         refresh.setOnAction(getRefreshEventHandler());
+        download.setOnAction(getDownloadEventHandler());
+        remove.setOnAction(getRemoveEventHandler());
+        pluginTable.getSelectionModel().selectedItemProperty().addListener(getSelectedItemChangeListener());
+
+        search.setOnAction(getSearchEventHandler());
+        reset.setOnAction(getResetEventHandler());
+
+        installTooltips();
     }
 
-    public EventHandler<ActionEvent> getRefreshEventHandler() {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pluginList.clear();
-                getList();
-                ObservableList<Plugin> list = FXCollections.observableArrayList(pluginList);
-
-                pluginTable.setItems(list);
+    /**
+     * Return an EventHandler for the Search button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getSearchEventHandler() {
+        return (event) -> {
+            if (!filter.getText().equals("")) {
+                String filterString = filter.getText().toLowerCase();
+                filteredPluginList.clear();
+                for (Plugin p : pluginList) {
+                    if (p.getAuthor().toLowerCase().contains(filterString) ||
+                            p.getDate().toLowerCase().contains(filterString) ||
+                            p.getName().toLowerCase().contains(filterString)) {
+                        filteredPluginList.add(p);
+                    }
+                }
+                refreshPlugin();
             }
         };
     }
 
-    public void getList(){
+    /**
+     * Return an EventHandler for the Reset button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getResetEventHandler() {
+        return (event) -> {
+            filteredPluginList.clear();
+            filteredPluginList.addAll(pluginList);
+            refreshPlugin();
+        };
+    }
+
+    /**
+     * Return an EventHandler for the Refresh button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getRefreshEventHandler() {
+        return (event) -> {
+            pluginList.clear();
+            getList();
+            ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
+
+            pluginTable.setItems(list);
+        };
+    }
+
+    /**
+     * Return an EventHandler for the Download button
+     * @return EventHandler
+     */
+    public EventHandler<ActionEvent> getDownloadEventHandler() {
+        return (event) -> {
+            if(pluginTable.getSelectionModel().selectedItemProperty().getValue() == null)
+                return;
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
+            httpGet.setHeader("token",Constant.TOKEN_SERVER);
+            HttpResponse response1;
+            HttpEntity entity1;
+            InputStream is;
+            String pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+            String path = Constant.PATH_TO_PLUGIN + "/" + pluginName;
+            File file = new File(path);
+
+            try {
+                response1 = httpclient.execute(httpGet);
+
+                if(response1.getStatusLine().getStatusCode() == 200) {
+                    entity1 = response1.getEntity();
+                    is = entity1.getContent();
+
+                    Utility.writeInFile(is, path);
+                    is.close();
+
+                    EntityUtils.consume(entity1);
+                    if (PluginManager.checkPluginValidity(file, true)) {
+                        MainFrameController.availableComponents.put(pluginName, new Point(-1, -1));
+                        new AlertManager(PluginController.class, 1);
+                    } else {
+                        if (file.delete()) {
+                            new AlertManager(PluginController.class, 3);
+                        }
+                    }
+                } else {
+                    new AlertManager(PluginController.class, -8);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+    }
+
+    /**
+     * Return an EventHandler for the Remove button
+     * @return EventHandler
+     */
+    private EventHandler<ActionEvent> getRemoveEventHandler() {
+        return (event) -> {
+            String pluginName;
+            File file;
+
+            if(pluginTable.getSelectionModel().selectedItemProperty().getValue() != null) {
+                pluginName = pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
+                file = new File(Constant.PATH_TO_PLUGIN + "/" + pluginName);
+
+                if (!file.delete()) {
+                    new AlertManager(PluginController.class, -1);
+                } else {
+                    MainFrameController.availableComponents.remove(pluginName);
+                    new AlertManager(PluginController.class, 2);
+                }
+                getRefreshEventHandler();
+            }
+        };
+    }
+
+    /**
+     * Return a ChangeListener on the plugin table
+     * @return ChangeListener
+     */
+    private ChangeListener<Plugin> getSelectedItemChangeListener() {
+        return (ObservableValue<? extends Plugin> observable, Plugin oldValue, Plugin newValue) -> {
+            if(newValue == null)
+                return;
+
+            String path = Constant.PATH_TO_PLUGIN + "/" + newValue.getName();
+            File theDir = new File(path);
+
+            // if the directory does not exist, set download on true and remove on false
+            if (theDir.exists()) {
+                remove.setDisable(false);
+                download.setDisable(true);
+            } else {
+                download.setDisable(false);
+                remove.setDisable(true);
+            }
+        };
+    }
+
+    /**
+     * Set tooltips on each button
+     */
+    private void installTooltips(){
+        this.refresh.setTooltip(new Tooltip("Refresh the plugin list"));
+        this.remove.setTooltip(new Tooltip("Remove the selected plugin if it's installed"));
+        this.download.setTooltip(new Tooltip("Download the selected plugin if it's not installed"));
+    }
+
+    /**
+     * Get the list of plugin from the server
+     */
+    private void getList(){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://localhost:3000/Listepluginjava");
-        HttpResponse response1 = null;
+        HttpGet httpGet = new HttpGet(Constant.SERVER_ADDRESS+"/Listepluginjava");
+        httpGet.setHeader("token",Constant.TOKEN_SERVER);
+        HttpResponse response1;
+        HttpEntity entity1;
+        InputStream is;
+
         try {
             response1 = httpclient.execute(httpGet);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            if(response1.getStatusLine().getStatusCode() == 200) {
+                entity1 = response1.getEntity();
+                is = entity1.getContent();
 
-        HttpEntity entity1 = response1.getEntity();
-
-        InputStream is = null;
-        try {
-            is = entity1.getContent();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String filePath = "Pluginslist/plugin.json";
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(new File(filePath));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int inByte;
-        try {
-            if (is != null) {
-                while((inByte = is.read()) != -1) {
-                    try {
-                        if (fos != null) {
-                            fos.write(inByte);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if (is != null) {
+                Utility.writeInFile(is, Constant.PATH_TO_PLUGIN_FILE);
                 is.close();
+
+                EntityUtils.consume(entity1);
+
+                readPlugin();
             }
-
-            if (fos != null) {
-                fos.close();
-            }
-
-
-            EntityUtils.consume(entity1);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            readPlugin();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        filteredPluginList.clear();
+        filteredPluginList.addAll(pluginList);
     }
 
-    public void readPlugin() throws IOException {
+    /**
+     * Add each plugin received from the server in the table view
+     */
+    private void readPlugin() {
         JSONParser parser = new JSONParser();
+        Object obj;
+        JSONArray jsonArray;
 
         try {
+            obj = parser.parse(new FileReader(Constant.PATH_TO_PLUGIN_FILE));
+            jsonArray = (JSONArray) obj;
 
-            Object obj = parser.parse(new FileReader(
-                    path));
-
-            JSONArray jsonArray = (JSONArray) obj;
-
+            JSONObject jsonObject;
             for (Object JsonItem : jsonArray) {
-                JSONObject jsonObject = (JSONObject) JsonItem;
+                jsonObject = (JSONObject) JsonItem;
                 pluginList.add(new Plugin(jsonObject.get("name").toString(), jsonObject.get("author").toString(), jsonObject.get("created_at").toString(),jsonObject.get("id").toString()));
             }
-
-            for (Plugin plugin : pluginList) {
-                System.out.println(plugin.getName());
-            }
-
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private class ButtonCell extends TableCell<Plugin,String> {
-        final Button cellButton = new Button("Download");
 
-        ButtonCell(){
-
-            //Action when the button is pressed
-            cellButton.setOnAction(new EventHandler<ActionEvent>(){
-
-                @Override
-                public void handle(ActionEvent t) {
-                    System.out.println( pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpGet httpGet = new HttpGet("http://localhost:3000/getpluginjava/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getId());
-                    HttpResponse response1 = null;
-                    try {
-                        response1 = httpclient.execute(httpGet);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    HttpEntity entity1 = response1.getEntity();
-
-                    InputStream is = null;
-                    try {
-                        is = entity1.getContent();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    String filePath = "Pluginslist/"+ pluginTable.getSelectionModel().selectedItemProperty().getValue().getName();
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(new File(filePath));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    int inByte;
-                    try {
-                        if (is != null) {
-                            while((inByte = is.read()) != -1) {
-                                try {
-                                    if (fos != null) {
-                                        fos.write(inByte);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        if (is != null) {
-                            is.close();
-                        }
-
-                        if (fos != null) {
-                            fos.close();
-                        }
-
-
-                        EntityUtils.consume(entity1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            });
-        }
-
-        //Display button if the row is not empty
-        @Override
-        protected void updateItem(String t, boolean empty) {
-            super.updateItem(t, empty);
-            if(!empty){
-                setGraphic(cellButton);
-            }
-        }
+    /**
+     * Refresh the plugin table view
+     */
+    private void refreshPlugin(){
+        ObservableList<Plugin> list = FXCollections.observableArrayList(filteredPluginList);
+        pluginTable.setItems(list);
     }
 }

@@ -1,7 +1,355 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../TestClient/src/sample/view/icons/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/resource/background.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/resource/background.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/fonts/glyphicons-halflings-regular.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/fonts/glyphicons-halflings-regular.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/fonts/glyphicons-halflings-regular.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/icons/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/icons/noRepeat.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/icons/pause.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/icons/repeat.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/icons/resize.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/fonts/glyphicons-halflings-regular.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/fonts/glyphicons-halflings-regular.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/fonts/glyphicons-halflings-regular.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../TestClient/src/sample/Main.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../TestClient/src/sample/constant/Constant.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../TestClient/src/sample/controller/MainFrameController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../TestClient/src/sample/model/ThreadConnection.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../TestClient/src/sample/view/mainFrame.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/packages/Constant.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/packages/Controller.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/packages/Main.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/packages/Model.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap-theme.css.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap-theme.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap.css.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/fonts/glyphicons-halflings-regular.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/bootstrap/js/bootstrap.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/doc/style/sorttable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/annotation/DocumentationAnnotation.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/constant/Constant.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/controller/MediacaseController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/controller/PlaylistController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/controller/StatusBarController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/controller/SuggestionController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/model/ClientDataReceiver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/model/InterfaceDialog.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/model/PluginManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/model/Suggestion.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/utility/AlertManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/utility/Utility.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/interfaceDialog.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/menuBar.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sample/view/statusBar.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/compile.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/css/bootstrap-theme.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/css/bootstrap-theme.css.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/css/bootstrap-theme.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/css/bootstrap.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/css/bootstrap.css.map" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/css/bootstrap.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/fonts/glyphicons-halflings-regular.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/js/bootstrap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/resource/bootstrap/js/bootstrap.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/src/sample/ClassTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/src/sample/InterfaceTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/src/sample/Main.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/src/sample/annotation/DocumentationAnnotation.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../testAnnotation/src/sample/processor/MyHTMLProcessor.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/.idea/workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/CanvasBufferFormatCallback.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/CanvasPlayerComponent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/ConnectionDialog$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/ConnectionDialog$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/ConnectionDialog$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/ConnectionDialog.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/JavaFXDirectRendering$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/JavaFXDirectRendering$TestBufferFormatCallback$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/JavaFXDirectRendering$TestBufferFormatCallback.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/JavaFXDirectRendering$TestMediaPlayerComponent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/JavaFXDirectRendering.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$CONNECTION_STATUS.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp$REQUEST_CLIENT.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/MyApp.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$6.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$7.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController$8.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerJavaFX$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/PlayerJavaFX.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/ResizablePlayer.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/StreamMedia$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/StreamMedia$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/StreamMedia$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/StreamMedia.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/next.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/pause.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/play.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/previous.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/random.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/repeat.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/resize.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/stop2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/views/connection.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/views/player.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/.name" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/copyright/profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/libraries/jna_3_5_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/uiDesigner.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/.idea/workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/TestClient.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/CanvasBufferFormatCallback.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/CanvasPlayerComponent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/ResizablePlayer.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/TestClient$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/TestClient.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/ThreadConnection$REQUEST_CLIENT.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/out/production/TestClient/com/test/ThreadConnection.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/src/com/test/TestClient.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../TestClient/src/com/test/ThreadConnection.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/description.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jna_3_5_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/platform_3_5_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_7_18.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_jdk14_1_7_18.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/vlcj_3_8_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/vlcj_3_8_0_sources.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/code.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/libvlc.dll" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/libvlccore.dll" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/next.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/pause.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/play.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/previous.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/random.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/repeat.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/resize.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/stop.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/img/stop2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/Main.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/ConnectionController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/ConnectionController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/MainFrameController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/MenuBarController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/MenuBarController$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/MenuBarController$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/MenuBarController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/MusicController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$6.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$7.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController$8.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/controller/PlayerController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/CanvasBufferFormatCallback.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/CanvasPlayerComponent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/ConnectionDialog$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/ConnectionDialog$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/ConnectionDialog.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/Media.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/ResizablePlayer.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/StreamMedia$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/StreamMedia$CONNECTION_STATUS.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/StreamMedia$REQUEST_CLIENT.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/StreamMedia.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/model/Video.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/MusicController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/details.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/album.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/download.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/fullscreen.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/information.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/next.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/play.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/previous.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/reset.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/search.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/select.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/icons/stop.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/mainFrame.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/mediacase.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/player.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/playlist.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/plugin.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/suggestions.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/examples.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/httpclient-4.2.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/httpclient-osgi-4.2.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/httpcore-4.2.3.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/next.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/pause.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/play.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/previous.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/random.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/repeat.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/resize.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/stop.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/img/stop2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/jna-3.5.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/json-simple-1.1.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__10_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__11_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__2_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__2___2_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__3_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__4_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__5_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__6_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__7_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__8_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/lib__9_.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/libvlc.dll" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/libvlccore.dll" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/org-apache-commons-logging.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/platform-3.5.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/Main.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/ConnectionController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/ConnectionController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/MainFrameController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/MenuBarController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/MenuBarController$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/MenuBarController$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/MenuBarController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$6.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$7.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController$8.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlayerController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/controller/PlaylistController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/CanvasBufferFormatCallback.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/CanvasPlayerComponent.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/ConnectionDialog$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/ConnectionDialog$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/ConnectionDialog.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/Media.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/Mediacase.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/Music.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/Playlist.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/Point.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/ResizablePlayer.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/StreamMedia$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/StreamMedia$CONNECTION_STATUS.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/StreamMedia$REQUEST_CLIENT.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/StreamMedia.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/model/Video.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/connection.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/details.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/album.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/download.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/fullscreen.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/information.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/next.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/play.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/previous.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/reset.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/search.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/select.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/icons/stop.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/mainFrame.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/mediacase.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/menubar.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/playlist.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/plugin.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/sample/view/suggestions.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/slf4j-api-1.7.18.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/slf4j-jdk14-1.7.18.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/vlcj-3.8.0-sources.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/vlcj-3.8.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/next.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/pause.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/play.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/previous.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/random.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/repeat.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/resize.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/stop.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/img/stop2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/controller/MusicController.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/model/Music.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/model/Video.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/album.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/download.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/fullscreen.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/information.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/reset.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/search.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sample/view/icons/select.png" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../PlayerJavaFX/out/production/PlayerJavaFX/img/stop.png" afterPath="$PROJECT_DIR$/src/sample/view/icons/stop.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../TestClient/src/com/test/CanvasBufferFormatCallback.java" afterPath="$PROJECT_DIR$/../TestClient/src/sample/model/CanvasBufferFormatCallback.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../TestClient/src/com/test/CanvasPlayerComponent.java" afterPath="$PROJECT_DIR$/../TestClient/src/sample/model/CanvasPlayerComponent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../TestClient/src/com/test/ResizablePlayer.java" afterPath="$PROJECT_DIR$/../TestClient/src/sample/model/ResizablePlayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/out/production/code/sample/view/connection.fxml" afterPath="$PROJECT_DIR$/src/sample/view/connection.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/playlist.ser" afterPath="$PROJECT_DIR$/res/playlist.ser" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/icons/next.png" afterPath="$PROJECT_DIR$/src/sample/view/icons/next.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/icons/play.png" afterPath="$PROJECT_DIR$/src/sample/view/icons/play.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/icons/previous.png" afterPath="$PROJECT_DIR$/src/sample/view/icons/previous.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.gitignore" afterPath="$PROJECT_DIR$/../.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/lib__2_.xml" afterPath="$PROJECT_DIR$/.idea/libraries/lib__2_.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap-theme.css" afterPath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap-theme.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap.css" afterPath="$PROJECT_DIR$/doc/style/bootstrap/css/bootstrap.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/doc/style/bootstrap/js/bootstrap.js" afterPath="$PROJECT_DIR$/doc/style/bootstrap/js/bootstrap.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/interface.csv" afterPath="$PROJECT_DIR$/res/interface.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Main.java" afterPath="$PROJECT_DIR$/src/sample/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/controller/ConnectionController.java" afterPath="$PROJECT_DIR$/src/sample/controller/ConnectionController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/controller/MainFrameController.java" afterPath="$PROJECT_DIR$/src/sample/controller/MainFrameController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/controller/MenuBarController.java" afterPath="$PROJECT_DIR$/src/sample/controller/MenuBarController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/controller/PlayerController.java" afterPath="$PROJECT_DIR$/src/sample/controller/PlayerController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/controller/PluginController.java" afterPath="$PROJECT_DIR$/src/sample/controller/PluginController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/CanvasBufferFormatCallback.java" afterPath="$PROJECT_DIR$/src/sample/model/CanvasBufferFormatCallback.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/CanvasPlayerComponent.java" afterPath="$PROJECT_DIR$/src/sample/model/CanvasPlayerComponent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/ConnectionDialog.java" afterPath="$PROJECT_DIR$/src/sample/model/ConnectionDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/Media.java" afterPath="$PROJECT_DIR$/src/sample/model/Media.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/Mediacase.java" afterPath="$PROJECT_DIR$/src/sample/model/Mediacase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/Playlist.java" afterPath="$PROJECT_DIR$/src/sample/model/Playlist.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/Plugin.java" afterPath="$PROJECT_DIR$/src/sample/model/Plugin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/Point.java" afterPath="$PROJECT_DIR$/src/sample/model/Point.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/ResizablePlayer.java" afterPath="$PROJECT_DIR$/src/sample/model/ResizablePlayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/model/StreamMedia.java" afterPath="$PROJECT_DIR$/src/sample/model/StreamMedia.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/details.fxml" afterPath="$PROJECT_DIR$/src/sample/view/details.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/mainFrame.fxml" afterPath="$PROJECT_DIR$/src/sample/view/mainFrame.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/mediacase.fxml" afterPath="$PROJECT_DIR$/src/sample/view/mediacase.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/menubar.fxml" afterPath="$PROJECT_DIR$/src/sample/view/menubar.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/player.fxml" afterPath="$PROJECT_DIR$/src/sample/view/player.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/playlist.fxml" afterPath="$PROJECT_DIR$/src/sample/view/playlist.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/plugin.fxml" afterPath="$PROJECT_DIR$/src/sample/view/plugin.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/view/suggestions.fxml" afterPath="$PROJECT_DIR$/src/sample/view/suggestions.fxml" />
+    </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -12,7 +360,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -60,43 +407,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ConnectionController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/controller/ConnectionController.java">
+      <file leaf-file-name="Plugin.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/model/Plugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MenuBarController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/controller/MenuBarController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="plugin.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pluginslist/plugin.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="61" selection-start-line="0" selection-start-column="61" selection-end-line="0" selection-end-column="61" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PluginController.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/sample/controller/PluginController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9166667">
-              <caret line="207" column="129" selection-start-line="207" selection-start-column="129" selection-end-line="207" selection-end-column="129" />
+            <state relative-caret-position="544">
+              <caret line="44" column="37" selection-start-line="44" selection-start-column="37" selection-end-line="44" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -104,12 +419,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Plugin.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/model/Plugin.java">
+      <file leaf-file-name="Point.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/model/Point.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="54" column="25" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
+            <state relative-caret-position="578">
+              <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResizablePlayer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/model/ResizablePlayer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1496">
+              <caret line="88" column="5" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -117,8 +444,8 @@
       <file leaf-file-name="plugin.fxml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/view/plugin.fxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.0181818">
-              <caret line="20" column="60" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="60" />
+            <state relative-caret-position="199">
+              <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -127,40 +454,36 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PlayerController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/controller/PlayerController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#9387#9388#0" expanded="false" />
-                <element signature="e#9440#9441#0" expanded="false" />
-                <element signature="e#11037#11038#0" expanded="false" />
-                <element signature="e#11109#11110#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MusicController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/controller/MusicController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="StreamMedia.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/model/StreamMedia.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="90" column="46" selection-start-line="90" selection-start-column="46" selection-end-line="90" selection-end-column="46" />
+            <state relative-caret-position="1581">
+              <caret line="98" column="39" selection-start-line="98" selection-start-column="39" selection-end-line="98" selection-end-column="39" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlayerController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/controller/PlayerController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="35" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="687">
+              <caret line="149" column="25" selection-start-line="149" selection-start-column="23" selection-end-line="149" selection-end-column="27" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -168,8 +491,34 @@
       <file leaf-file-name="mainFrame.fxml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="50" selection-start-line="3" selection-start-column="50" selection-end-line="3" selection-end-column="50" />
+            <state relative-caret-position="68">
+              <caret line="4" column="35" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="player.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/view/player.fxml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="612">
+              <caret line="36" column="54" selection-start-line="36" selection-start-column="54" selection-end-line="36" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="playlist.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/view/playlist.fxml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -195,6 +544,9 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
       <projects_view />
@@ -208,41 +560,51 @@
         <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/sample/model/Music.java" />
         <option value="$PROJECT_DIR$/src/sample/model/Video.java" />
-        <option value="$PROJECT_DIR$/src/sample/model/Media.java" />
         <option value="$PROJECT_DIR$/src/sample/model/MP3Music.java" />
         <option value="$PROJECT_DIR$/src/sample/view/MusicController.java" />
         <option value="$PROJECT_DIR$/code.iml" />
         <option value="$PROJECT_DIR$/src/sample/model/DragableAnchorPane.java" />
         <option value="$PROJECT_DIR$/src/sample/view/details.fxml" />
         <option value="$PROJECT_DIR$/src/sample/view/test.css" />
-        <option value="$PROJECT_DIR$/src/sample/view/playlist.fxml" />
         <option value="$PROJECT_DIR$/src/sample/view/mediacase.fxml" />
         <option value="$PROJECT_DIR$/src/sample/view/suggestions.fxml" />
-        <option value="$PROJECT_DIR$/src/sample/controller/PlayerController.java" />
-        <option value="$PROJECT_DIR$/src/sample/view/player.fxml" />
         <option value="$PROJECT_DIR$/src/sample/controller/MusicController.java" />
-        <option value="$PROJECT_DIR$/src/sample/controller/MainFrameController.java" />
-        <option value="$PROJECT_DIR$/src/sample/model/ResizablePlayer.java" />
         <option value="$PROJECT_DIR$/src/sample/controller/ConnectionController.java" />
-        <option value="$PROJECT_DIR$/src/sample/Main.java" />
         <option value="$PROJECT_DIR$/src/sample/view/connection.fxml" />
-        <option value="$PROJECT_DIR$/src/sample/model/ConnectionDialog.java" />
-        <option value="$PROJECT_DIR$/src/sample/view/mainFrame.fxml" />
-        <option value="$PROJECT_DIR$/src/sample/model/StreamMedia.java" />
-        <option value="$PROJECT_DIR$/src/sample/controller/MenuBarController.java" />
-        <option value="$PROJECT_DIR$/src/sample/view/plugin.fxml" />
         <option value="$PROJECT_DIR$/Pluginslist/plugin.json" />
-        <option value="$PROJECT_DIR$/src/sample/model/Plugin.java" />
         <option value="$PROJECT_DIR$/src/sample/controller/PluginController.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/Plugin.java" />
+        <option value="$PROJECT_DIR$/src/sample/view/plugin.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/controller/MenuBarController.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/StreamMedia.java" />
+        <option value="$PROJECT_DIR$/src/sample/controller/MainFrameController.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/ConnectionDialog.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/Media.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/Mediacase.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/Playlist.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/Point.java" />
+        <option value="$PROJECT_DIR$/src/sample/model/ResizablePlayer.java" />
+        <option value="$PROJECT_DIR$/src/sample/Main.java" />
+        <option value="$PROJECT_DIR$/src/sample/view/mainFrame.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/view/player.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/view/playlist.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/controller/PlayerController.java" />
       </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -275,8 +637,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -392,18 +752,12 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="interface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="interface" />
+              <option name="myItemId" value="sample" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
+              <option name="myItemId" value="constant" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -417,7 +771,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Pluginslist" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sample" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="annotation" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -431,12 +793,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -451,7 +815,7 @@
     <property name="dynamic.classpath" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -479,6 +843,59 @@
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
       <option name="PROGRAM_PARAMETERS" />
       <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="GAPID_DISABLE_PCS" value="false" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method>
+        <option name="Make" enabled="true" />
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="GAPID_DISABLE_PCS" value="false" />
+      </Profilers>
+      <method>
+        <option name="Make" enabled="true" />
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module />
@@ -596,6 +1013,18 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <envs />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -684,15 +1113,15 @@
         </pattern>
       </extension>
       <option name="MAIN_CLASS_NAME" value="sample.Main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="code" />
+      <module name="interface" />
       <envs />
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
@@ -706,7 +1135,9 @@
       <Port>5050</Port>
     </configuration>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -715,6 +1146,7 @@
       <changelist id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="" />
       <created>1359379246138</created>
       <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
       <updated>1359379246138</updated>
       <workItem from="1359379250712" duration="1302000" />
     </task>
@@ -724,25 +1156,28 @@
     <option name="totallyTimeSpent" value="1302000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3267974" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3264865" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289597" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28648648" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2875817" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2473525" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23081024" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3264865" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -754,7 +1189,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32755905" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -779,44 +1213,9 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/sample/controller/MenuBarController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/StreamMedia.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="46" selection-start-line="90" selection-start-column="46" selection-end-line="90" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="50" selection-start-line="3" selection-start-column="50" selection-end-line="3" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="13" column="52" selection-start-line="13" selection-start-column="52" selection-end-line="13" selection-end-column="52" />
           <folding />
         </state>
@@ -824,14 +1223,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/model/Video.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -842,7 +1241,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="57" column="40" selection-start-line="57" selection-start-column="40" selection-end-line="57" selection-end-column="40" />
           <folding />
         </state>
@@ -850,21 +1249,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/model/Media.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/model/Video.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -875,7 +1274,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -883,7 +1282,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -894,7 +1293,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -902,7 +1301,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -911,87 +1310,33 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/Media.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/Video.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/view/icons/download.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/view/icons/download.png" />
     <entry file="file://$PROJECT_DIR$/src/sample/model/CanvasPlayerComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/model/CanvasBufferFormatCallback.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/next.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/play.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/stop.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/pause.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/stop2.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/random.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/repeat.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/resize.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/img/previous.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/img/next.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/play.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/stop.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/pause.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/stop2.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/random.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/repeat.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/resize.png" />
+    <entry file="file://$PROJECT_DIR$/src/img/previous.png" />
     <entry file="file://$PROJECT_DIR$/src/sample/view/details.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="10" column="86" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="86" />
           <folding />
         </state>
@@ -1002,19 +1347,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/mediacase.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/view/playlist.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -1024,25 +1358,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/code.iml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state relative-caret-position="0">
           <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/view/player.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3465909">
-          <caret line="45" column="35" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/suggestions.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14204545">
+        <state relative-caret-position="0">
           <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
           <folding />
         </state>
@@ -1051,70 +1374,16 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/ResizablePlayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28399312">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/controller/MainFrameController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="94" column="17" selection-start-line="94" selection-start-column="17" selection-end-line="94" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#5285#5286#0" expanded="false" />
-            <element signature="e#5342#5343#0" expanded="false" />
-            <element signature="e#5381#5382#0" expanded="false" />
-            <element signature="e#5445#5446#0" expanded="false" />
-            <element signature="e#6680#6681#0" expanded="false" />
-            <element signature="e#6711#6712#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/vlcj-3.8.0.jar!/uk/co/caprica/vlcj/player/list/MediaListPlayerEventAdapter.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34837544">
+        <state relative-caret-position="0">
           <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/ConnectionDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="38" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2103#2104#0" expanded="false" />
-            <element signature="e#2132#2133#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="50" selection-start-line="3" selection-start-column="50" selection-end-line="3" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/view/connection.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.056818184">
+        <state relative-caret-position="0">
           <caret line="2" column="41" selection-start-line="2" selection-start-column="41" selection-end-line="2" selection-end-column="41" />
           <folding />
         </state>
@@ -1123,68 +1392,166 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/controller/ConnectionController.java">
+    <entry file="file://$PROJECT_DIR$/Pluginslist/plugin.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="45" selection-start-line="25" selection-start-column="45" selection-end-line="25" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/StreamMedia.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="46" selection-start-line="90" selection-start-column="46" selection-end-line="90" selection-end-column="46" />
+        <state relative-caret-position="0">
+          <caret line="0" column="61" selection-start-line="0" selection-start-column="61" selection-end-line="0" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/controller/PlayerController.java">
+    <entry file="file://$PROJECT_DIR$/src/sample/controller/ConnectionController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#9387#9388#0" expanded="false" />
-            <element signature="e#9440#9441#0" expanded="false" />
-            <element signature="e#11037#11038#0" expanded="false" />
-            <element signature="e#11109#11110#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="119">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/controller/MusicController.java">
+    <entry file="file://$PROJECT_DIR$/src/sample/controller/MainFrameController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
+        <state relative-caret-position="446">
+          <caret line="334" column="100" selection-start-line="334" selection-start-column="100" selection-end-line="334" selection-end-column="100" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1880#1881#0" expanded="true" />
+            <element signature="e#1928#1929#0" expanded="true" />
+            <element signature="e#1981#1982#0" expanded="true" />
+            <element signature="e#2020#2021#0" expanded="true" />
+            <element signature="e#2079#2080#0" expanded="true" />
+            <element signature="e#2121#2122#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/controller/MenuBarController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+        <state relative-caret-position="290">
+          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2379#2380#0" expanded="true" />
+            <element signature="e#2425#2426#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/controller/MusicController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pluginslist/plugin.json">
+    <entry file="file://$PROJECT_DIR$/src/sample/controller/PluginController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="61" selection-start-line="0" selection-start-column="61" selection-end-line="0" selection-end-column="61" />
+        <state relative-caret-position="34">
+          <caret line="131" column="31" selection-start-line="131" selection-start-column="31" selection-end-line="131" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/ConnectionDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="37" column="87" selection-start-line="37" selection-start-column="87" selection-end-line="37" selection-end-column="87" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Media.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="721">
+          <caret line="106" column="5" selection-start-line="106" selection-start-column="5" selection-end-line="106" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Mediacase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1285">
+          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/view/plugin.fxml">
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Playlist.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.0181818">
-          <caret line="20" column="60" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="60" />
+        <state relative-caret-position="721">
+          <caret line="81" column="5" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2247#2248#0" expanded="true" />
+            <element signature="e#2284#2285#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Plugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="44" column="37" selection-start-line="44" selection-start-column="37" selection-end-line="44" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Point.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/ResizablePlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1496">
+          <caret line="88" column="5" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/StreamMedia.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1581">
+          <caret line="98" column="39" selection-start-line="98" selection-start-column="39" selection-end-line="98" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Music.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/model/Video.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/view/mainFrame.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="35" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -1192,18 +1559,51 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/model/Plugin.java">
+    <entry file="file://$PROJECT_DIR$/src/sample/view/player.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="54" column="25" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
+        <state relative-caret-position="612">
+          <caret line="36" column="54" selection-start-line="36" selection-start-column="54" selection-end-line="36" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/view/playlist.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/view/plugin.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/controller/PlayerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="35" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/controller/PluginController.java">
+    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9166667">
-          <caret line="207" column="129" selection-start-line="207" selection-start-column="129" selection-end-line="207" selection-end-column="129" />
+        <state relative-caret-position="687">
+          <caret line="149" column="25" selection-start-line="149" selection-start-column="23" selection-end-line="149" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1216,10 +1616,12 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
+          <last-edited>interface:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -1262,12 +1664,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>code</last-edited>
+          <last-edited>interface</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -1286,7 +1687,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>jna-3.5.2</last-edited>
+          <last-edited>lib</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

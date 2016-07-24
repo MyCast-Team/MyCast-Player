@@ -6,6 +6,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.WritablePixelFormat;
+import sample.annotation.DocumentationAnnotation;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.direct.BufferFormat;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
@@ -17,6 +18,7 @@ import java.nio.ByteBuffer;
  *
  * Control the writing of images in the player : update the writableImage which is link to the player pane.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "24/04/2016", description = "This class control the writing of images in the player.")
 public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
 
     private PixelWriter pixelWriter = null;
@@ -39,16 +41,25 @@ public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
         return pixelWriter;
     }
 
+    /**
+     * Write the current image of the media in the buffer
+     * @param mediaPlayer
+     * @param nativeBuffers
+     * @param bufferFormat
+     */
     @Override
     public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, BufferFormat bufferFormat) {
         if (writableImage == null) {
             return;
         }
         Platform.runLater(() -> {
-            Memory nativeBuffer = mediaPlayer.lock()[0];
             try {
-                ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
-                getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                Memory[] memories = mediaPlayer.lock();
+                if(memories != null) {
+                    Memory nativeBuffer = memories[0];
+                    ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
+                    getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                }
             }
             finally {
                 mediaPlayer.unlock();

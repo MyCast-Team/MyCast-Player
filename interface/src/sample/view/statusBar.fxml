@@ -1,0 +1,11 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<HBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:id="statusBar" fx:controller="sample.controller.StatusBarController" style="-fx-border-color: #B0B0B0; -fx-border-width: 1 0 0 0; -fx-border-style: solid; -fx-background-color: #DBDBDB;">
+    <padding>
+        <Insets top="0.0" bottom="0.0" left="5.0" right="5.0" />
+    </padding>
+    <Label fx:id="leftContent" text="" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_LEFT"/>
+    <Label fx:id="centerContent" text="No playing item" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="ALWAYS" alignment="CENTER"/>
+    <Label fx:id="rightContent" text="Not connected" maxWidth="Infinity" minHeight="25" prefHeight="25" maxHeight="25" HBox.hgrow="NEVER" alignment="CENTER_RIGHT"/>
+</HBox>
