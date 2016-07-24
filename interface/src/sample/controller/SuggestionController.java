@@ -75,11 +75,15 @@ public class SuggestionController {
         JSONParser parser = new JSONParser();
         Object obj;
         JSONObject jsonObject;
+        File file = new File(Constant.PATH_TO_ID);
+        id = null;
 
         try {
-            obj = parser.parse(new FileReader(Constant.PATH_TO_ID));
-            jsonObject = (JSONObject) obj;
-            id = jsonObject.get("id").toString();
+            if(file.exists()) {
+                obj = parser.parse(new FileReader(file));
+                jsonObject = (JSONObject) obj;
+                id = jsonObject.get("id").toString();
+            }
         } catch (ParseException | IOException e) {
             e.printStackTrace();
             id = null;
