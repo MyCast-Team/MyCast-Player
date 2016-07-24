@@ -162,7 +162,6 @@ public class PlaylistController {
                     if(Utility.audioExtensionIsSupported(Utility.getExtension(file.getPath()))
                             || Utility.videoExtensionIsSupported(Utility.getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
-                        System.out.println(file.getPath());
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         if(this.mediaListPlayer != null) {
                             this.mediaListPlayer.getMediaList().addMedia(file.getPath());
@@ -180,7 +179,6 @@ public class PlaylistController {
                 if(dataFormat != null){
                     ArrayList<Media> list = (ArrayList<Media>) db.getContent(dataFormat);
                     for (Media m: list){
-                        System.out.println(m.getPath());
                         this.playlist.addMedia(m);
                         if(this.mediaListPlayer != null && this.mediaListPlayer.getMediaList() != null) {
                             this.mediaListPlayer.getMediaList().addMedia(m.getPath());

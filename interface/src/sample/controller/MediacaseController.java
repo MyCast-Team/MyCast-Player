@@ -105,9 +105,6 @@ public class MediacaseController {
                 SelectionMode.MULTIPLE
         );
 
-        musiccaseTable.setColumnResizePolicy(p -> true);
-        videocaseTable.setColumnResizePolicy(p -> true);
-
         installTooltips();
 
         setSearchManagement();
@@ -119,10 +116,12 @@ public class MediacaseController {
      * Add EventHandler for drag'n'drop music/video in the mediacase
      */
     public void setDragAndDrop(){
+
         musiccaseTable.setOnDragOver(event -> {
             event.acceptTransferModes(TransferMode.ANY);
             event.consume();
         });
+
 
         musiccaseTable.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
@@ -176,20 +175,20 @@ public class MediacaseController {
                 }
                 refreshMediacase(1);
                 event.setDropCompleted(success);
+                event.consume();
             }
-            event.consume();
         });
 
         musiccaseTable.setOnDragDetected(event -> {
             ArrayList<Media> list = new ArrayList<>();
-            for(Media m: musiccaseTable.getSelectionModel().getSelectedItems()){
-                list.add(m);
+            list.addAll(musiccaseTable.getSelectionModel().getSelectedItems());
+            if(!list.isEmpty()) {
+                Dragboard db = musiccaseTable.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.put(dataFormat, list);
+                db.setContent(content);
+                event.consume();
             }
-            Dragboard db = musiccaseTable.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.put(dataFormat, list);
-            db.setContent(content);
-            event.consume();
         });
 
         videocaseTable.setOnDragOver(event -> {
@@ -249,20 +248,20 @@ public class MediacaseController {
                 }
                 refreshMediacase(2);
                 event.setDropCompleted(success);
+                event.consume();
             }
-            event.consume();
         });
 
         videocaseTable.setOnDragDetected(event -> {
             ArrayList<Media> list = new ArrayList<>();
-            for(Media m: videocaseTable.getSelectionModel().getSelectedItems()){
-                list.add(m);
+            list.addAll(videocaseTable.getSelectionModel().getSelectedItems());
+            if(!list.isEmpty()) {
+                Dragboard db = videocaseTable.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.put(dataFormat, list);
+                db.setContent(content);
+                event.consume();
             }
-            Dragboard db = videocaseTable.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            content.put(dataFormat, list);
-            db.setContent(content);
-            event.consume();
         });
     }
 

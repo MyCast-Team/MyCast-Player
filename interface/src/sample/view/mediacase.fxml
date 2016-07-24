@@ -40,13 +40,13 @@
                      <Button fx:id="searchButton">Search</Button>
                      <Button fx:id="resetButton" layoutX="324.0" layoutY="15.0" mnemonicParsing="false">Reset</Button>
                   </HBox>
-                  <TableView fx:id="musiccaseTable" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="musiccaseTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="titleMusic" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Title" />
-                        <TableColumn fx:id="authorMusic" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Author" />
-                        <TableColumn fx:id="lengthMusic" editable="false" minWidth="50.0" prefWidth="75.0" sortable="false" text="Length" />
-                        <TableColumn fx:id="genreMusic" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Musical genre" />
-                        <TableColumn fx:id="dateMusic" editable="false" minWidth="50.0" prefWidth="160.0" sortable="false" text="Release date" />
+                        <TableColumn fx:id="titleMusic" editable="false" minWidth="50.0" prefWidth="75.0" sortable="true" text="Title" />
+                        <TableColumn fx:id="authorMusic" editable="false" minWidth="50.0" prefWidth="75.0" sortable="true" text="Author" />
+                        <TableColumn fx:id="lengthMusic" editable="false" minWidth="50.0" prefWidth="75.0" sortable="true" text="Length" />
+                        <TableColumn fx:id="genreMusic" editable="false" minWidth="50.0" prefWidth="160.0" sortable="true" text="Musical genre" />
+                        <TableColumn fx:id="dateMusic" editable="false" minWidth="50.0" prefWidth="160.0" sortable="true" text="Release date" />
                      </columns>
                   </TableView>
                </VBox>
