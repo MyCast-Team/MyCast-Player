@@ -19,22 +19,16 @@ public class MainFrameController {
     @FXML
     private ImageView imageView;
 
-    @FXML
-    private ImageView artworkView;
-
     private ResizablePlayer resizablePlayer;
 
     private Thread threadConnections;
 
     @FXML
     public void initialize() {
-        this.resizablePlayer = new ResizablePlayer(this.playerHolder, this.imageView, this.artworkView);
-
-        this.artworkView.setPreserveRatio(true);
-        this.artworkView.setSmooth(true);
+        this.resizablePlayer = new ResizablePlayer(this.playerHolder, this.imageView);
 
         try {
-            threadConnections = new ThreadConnection(resizablePlayer.getMediaPlayer(), playerHolder, imageView, artworkView);
+            threadConnections = new ThreadConnection(resizablePlayer.getMediaPlayer(), playerHolder);
             threadConnections.start();
         } catch (IOException e) {
             System.out.println("Impossible to create the server socket.");

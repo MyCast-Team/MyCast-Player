@@ -22,7 +22,6 @@ public class ResizablePlayer {
     private DirectMediaPlayerComponent mediaPlayerComponent;
     private MediaPlayer mediaPlayer;
 
-    private ImageView artworkView;
     private ImageView imageView;
     private WritableImage writableImage;
     private WritablePixelFormat<ByteBuffer> pixelFormat;
@@ -31,7 +30,7 @@ public class ResizablePlayer {
     private FloatProperty videoSourceRatioProperty;
 
     /* CONSTRUCTOR */
-    public ResizablePlayer(Pane playerHolder, ImageView imageView, ImageView artworkView) {
+    public ResizablePlayer(Pane playerHolder, ImageView imageView) {
 
         // Initialisation of the components
         pixelFormat = PixelFormat.getByteBgraPreInstance();
@@ -39,7 +38,6 @@ public class ResizablePlayer {
 
         this.playerHolder = playerHolder;
         this.imageView = imageView;
-        this.artworkView = artworkView;
 
         initializeImageView();
 

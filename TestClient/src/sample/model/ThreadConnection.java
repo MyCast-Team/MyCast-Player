@@ -10,8 +10,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 
 /**
  * Created by thomasfouan on 22/04/2016.
@@ -25,17 +24,13 @@ public class ThreadConnection extends Thread {
 
     private MediaPlayer mediaPlayer;
     private Pane playerHolder;
-    private ImageView imageView;
-    private ImageView artworkView;
 
     private String mrl;
 
-    public ThreadConnection(MediaPlayer mediaPlayer, Pane playerHolder, ImageView imageView, ImageView artworkView) throws IOException {
+    public ThreadConnection(MediaPlayer mediaPlayer, Pane playerHolder) throws IOException {
 
         this.mediaPlayer = mediaPlayer;
         this.playerHolder = playerHolder;
-        this.imageView = imageView;
-        this.artworkView = artworkView;
 
         this.serverSocket = new ServerSocket(Constant.PORT);
         System.out.println("Server is listening on port : "+serverSocket.getLocalPort());
@@ -48,12 +43,7 @@ public class ThreadConnection extends Thread {
             mediaPlayer.stop();
             // This will throw an IOException to end the accept() method
             serverSocket.close();
-            if(socket != null && !socket.isClosed()) {
-                System.out.println("Send disconnection request to server");
-                printWriter.println(REQUEST_CLIENT.DISCONNECTION.ordinal());
-                printWriter.flush();
-                socket.close();
-            }
+            sendExitRequest();
         } catch (IOException e) {
         }
     }
@@ -83,7 +73,6 @@ public class ThreadConnection extends Thread {
                     if(receivedData == REQUEST_CLIENT.STREAMING_STARTED.ordinal()) {
                         //Start receiving data from client application and play it
                         mediaPlayer.playMedia(mrl);
-                        //computeImageView();
                     } else if(receivedData == REQUEST_CLIENT.DISCONNECTION.ordinal()) {
                         break;
                     }
@@ -94,6 +83,10 @@ public class ThreadConnection extends Thread {
                 Thread.currentThread().interrupt();
             } catch (NullPointerException e) {
                 System.out.println("The current socket thrown a NullPointerException...");
+                try {
+                    sendExitRequest();
+                } catch (IOException e1) {
+                }
             } finally {
                 //Disconnection requested, close the socket, and wait for another connection...
                 mediaPlayer.stop();
@@ -107,35 +100,16 @@ public class ThreadConnection extends Thread {
         }
     }
 
-    private void computeImageView() {
-
-        boolean isMusic = false;
-        MediaMeta metaInfo = mediaPlayer.getMediaMeta();
-        String url = metaInfo.getUrl();
-        url = url.replaceAll("%20", " ");
-
-        for(String ext : Constant.EXTENSIONS_AUDIO) {
-            if(ext.equals(url.substring(url.lastIndexOf(".")+1))) {
-                isMusic = true;
-                break;
-            }
-        }
-
-        // Print the album image of the current media if it is a music
-        if(isMusic) {
-            metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
-            String artworkUrl = metaInfo.getArtworkUrl();
-
-            if (artworkUrl != null) {
-                artworkView.setImage(new Image(artworkUrl));
-                Pane pane = (Pane) artworkView.getParent();
-                ResizablePlayer.fitArtworkViewSize(artworkView, pane.getWidth(), pane.getHeight());
-            }
-            imageView.setVisible(false);
-            artworkView.setVisible(true);
-        } else {
-            artworkView.setVisible(false);
-            imageView.setVisible(true);
+    /**
+     * Send a disconnection request to the main application
+     * @throws IOException
+     */
+    private void sendExitRequest() throws IOException {
+        if(socket != null && !socket.isClosed()) {
+            System.out.println("Send disconnection request to server");
+            printWriter.println(REQUEST_CLIENT.DISCONNECTION.ordinal());
+            printWriter.flush();
+            socket.close();
         }
     }
 
