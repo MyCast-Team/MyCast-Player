@@ -12,13 +12,21 @@ import sample.annotation.DocumentationAnnotation;
 import sample.model.Media;
 import sample.model.Playlist;
 import sample.utility.Utility;
+import uk.co.caprica.vlcj.medialist.MediaList;
+import uk.co.caprica.vlcj.medialist.MediaListItem;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 /**
  * Class of control of the music.
@@ -95,6 +103,10 @@ public class PlaylistController {
                 this.mediaListPlayer.stop();
                 this.mediaListPlayer.getMediaList().clear();
             }
+            if(this.streamingPlayer != null && this.streamingPlayer.getMediaList() != null) {
+                this.streamingPlayer.stop();
+                this.streamingPlayer.getMediaList().clear();
+            }
             refreshPlaylist();
         });
 
@@ -104,16 +116,14 @@ public class PlaylistController {
         MenuItem delete = new MenuItem("Delete from playlist");
         delete.setOnAction(event1 -> {
             ObservableList<Media> listToDelete = musicTable.getSelectionModel().getSelectedItems();
-            for(Media mToDelete : listToDelete){
-                Iterator<Media> iter = playlist.getPlaylist().iterator();
+            playlist.getPlaylist().removeAll(listToDelete);
+            ArrayList<String> pathToDelete = listToDelete.stream().map(Media::getPath).collect(Collectors.toCollection(ArrayList::new));
 
-                while (iter.hasNext()) {
-                    Media m = iter.next();
-
-                    if (m == mToDelete){
-                        iter.remove();
-                    }
-                }
+            if(mediaListPlayer != null) {
+                deleteItemFromMediaList(mediaListPlayer.getMediaList(), pathToDelete);
+            }
+            if(streamingPlayer != null && streamingPlayer.getMediaList() != null) {
+                deleteItemFromMediaList(streamingPlayer.getMediaList(), pathToDelete);
             }
 
             this.refreshPlaylist();
@@ -152,6 +162,7 @@ public class PlaylistController {
                     if(Utility.audioExtensionIsSupported(Utility.getExtension(file.getPath()))
                             || Utility.videoExtensionIsSupported(Utility.getExtension(file.getPath()))){
                         metaInfo = mpf.getMediaMeta(file.getPath(), true);
+                        System.out.println(file.getPath());
                         this.playlist.addMedia(new Media(file.getPath(), metaInfo.getTitle(), metaInfo.getArtist(), metaInfo.getLength(), metaInfo.getDate(), metaInfo.getGenre()));
                         if(this.mediaListPlayer != null) {
                             this.mediaListPlayer.getMediaList().addMedia(file.getPath());
@@ -169,6 +180,7 @@ public class PlaylistController {
                 if(dataFormat != null){
                     ArrayList<Media> list = (ArrayList<Media>) db.getContent(dataFormat);
                     for (Media m: list){
+                        System.out.println(m.getPath());
                         this.playlist.addMedia(m);
                         if(this.mediaListPlayer != null && this.mediaListPlayer.getMediaList() != null) {
                             this.mediaListPlayer.getMediaList().addMedia(m.getPath());
@@ -192,5 +204,40 @@ public class PlaylistController {
         ObservableList<Media> list = FXCollections.observableArrayList(playlist.getPlaylist());
         musicTable.setItems(list);
         this.playlist.writePlaylist();
+    }
+
+    /**
+     * Delete all item present in list of path in the medialist of the player (vlcj)
+     */
+    private void deleteItemFromMediaList(MediaList mediaList, ArrayList<String> paths) {
+        URL url;
+        File file1;
+        File file2;
+        MediaListItem item;
+
+        if(mediaList == null || paths == null)
+            return;
+
+        for (int i = 0; i < mediaList.items().size(); i++) {
+            item = mediaList.items().get(i);
+            for (String path : paths) {
+                try {
+                    url = new URL(item.mrl());
+                    file1 = new File(url.toURI());
+                    file2 = new File(path);
+                    if (file1.getPath().equals(file2.getPath())) {
+                        mediaList.removeMedia(i);
+                        i--;
+                        break;
+                    }
+                } catch (IOException | URISyntaxException e) {
+                    if (item.mrl().equals(path)) {
+                        mediaList.removeMedia(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
