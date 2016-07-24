@@ -182,16 +182,25 @@ public class InterfaceDialog {
     private void updateInterface() {
         Label name;
         ChoiceBox pos;
-        for(int i = 0; i < MainFrameController.availableComponents.size(); i++) {
-            name = (Label) getNodeByIndex(i+1, 0);
-            pos = (ChoiceBox) getNodeByIndex(i+1, 1);
-            if(MainFrameController.availableComponents.get(name.getId()) != null) {
-                MainFrameController.availableComponents.replace(name.getId(), getPointFromPosition((Position) pos.getSelectionModel().getSelectedItem()));
+        Point newPoint;
+        boolean isChanged = false;
+
+        for (int i = 0; i < MainFrameController.availableComponents.size(); i++) {
+            name = (Label) getNodeByIndex(i + 1, 0);
+            pos = (ChoiceBox) getNodeByIndex(i + 1, 1);
+            if (name != null && pos != null && MainFrameController.availableComponents.get(name.getId()) != null) {
+                newPoint = getPointFromPosition((Position) pos.getSelectionModel().getSelectedItem());
+                if (!newPoint.equals(MainFrameController.availableComponents.get(name.getId()))) {
+                    MainFrameController.availableComponents.replace(name.getId(), newPoint);
+                    isChanged = true;
+                }
             }
         }
 
-        MainFrameController.saveInterface();
-        Main.loadMainFrameController();
+        if (isChanged) {
+            MainFrameController.saveInterface();
+            Main.loadMainFrameController();
+        }
     }
 
     /**
