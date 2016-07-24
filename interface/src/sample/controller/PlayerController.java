@@ -25,6 +25,9 @@ import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 import uk.co.caprica.vlcj.player.list.MediaListPlayerMode;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Control the player and bind the buttons of the player with functions
@@ -263,20 +266,31 @@ public class PlayerController implements MediaPlayerEventListener {
     @Override
     public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
 
-        File file = new File(mrl);
-        String url = file.getPath().replaceAll("%20", " ");
+        URL url;
+        File file = null;
+        String path;
         MediaMeta metaInfo;
         String artworkUrl;
 
-        if(url.startsWith("file:")) {
-            url = url.substring(5);
+        try {
+            url = new URL(mrl);
+            file = new File(url.toURI());
+        } catch (MalformedURLException | URISyntaxException e) {
+            e.printStackTrace();
+            file = new File(mrl);
+        } finally {
+            path = (file == null) ? mrl : file.getPath();
+            if(path.startsWith("file:")) {
+                path = path.substring(5);
+            }
         }
 
-        metaInfo = new MediaPlayerFactory().getMediaMeta(url, true);
-        artworkUrl = metaInfo.getArtworkUrl();
+        metaInfo = new MediaPlayerFactory().getMediaMeta(path, true);
 
         // Print the album image of the current media if it is a music
-        if(Utility.audioExtensionIsSupported(url.substring(url.lastIndexOf(".")+1))) {
+        if(Utility.audioExtensionIsSupported(path.substring(path.lastIndexOf(".")+1))) {
+            artworkUrl = metaInfo.getArtworkUrl();
+
             if (artworkUrl != null) {
                 artworkView.setImage(new Image(artworkUrl));
                 Pane pane = (Pane) artworkView.getParent();
