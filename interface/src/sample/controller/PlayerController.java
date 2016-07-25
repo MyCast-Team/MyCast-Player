@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.annotation.DocumentationAnnotation;
 import sample.model.ResizablePlayer;
 import sample.utility.Utility;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
@@ -33,6 +34,7 @@ import java.net.URL;
 /**
  * Control the player and bind the buttons of the player with functions
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "03/03/2016", description = "This is the main class that manage our player. It manages buttons and events.")
 public class PlayerController implements MediaPlayerEventListener {
 
     private ResizablePlayer resizablePlayer;
