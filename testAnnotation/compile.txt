@@ -1,1 +1,0 @@
-javac -cp out/artifacts/testAnnotation_jar/testAnnotation.jar -processor MyHTMLProcessor src/com/test/*.java
