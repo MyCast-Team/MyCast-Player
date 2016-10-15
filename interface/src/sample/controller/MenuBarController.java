@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import org.apache.http.HttpEntity;
@@ -33,6 +34,8 @@ import java.io.File;
 @DocumentationAnnotation(author = "Thomas Fouan", date = "10/03/2016", description = "This is the controller to manage the MenuBar. It defines functions to call on events.")
 public class MenuBarController {
 
+    @FXML
+    private MenuBar menuBar;
     @FXML
     private MenuItem setConnection;
     @FXML
@@ -199,7 +202,7 @@ public class MenuBarController {
         return (event) -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Open File");
-            File file = chooser.showOpenDialog(add.getParentPopup().getScene().getWindow());
+            File file = chooser.showOpenDialog(menuBar.getScene().getWindow());
 
             if(PluginManager.checkPluginValidity(file, true)) {
                 HttpClient httpclient = new DefaultHttpClient();
