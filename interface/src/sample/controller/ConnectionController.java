@@ -4,10 +4,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import javafx.util.Pair;
+import sample.annotation.DocumentationAnnotation;
 
 /**
  * Class of control of the connection dialog box.
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "05/05/2016", description = "This is the controller for the streaming connection. It checks the IP adress.")
 public class ConnectionController {
 
     private TextField addr1;

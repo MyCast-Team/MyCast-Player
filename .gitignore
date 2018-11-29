@@ -1,8 +1,12 @@
 /*/out/
 /*/*.iml
-/*/.idea/
+*.idea
 /*/res
 /interface/plugin/*
 /backoffice/node_modules
 /testAnnotation/src/*.class
 /*/src/META-INF/*
+*/target
+
+# Mac files
+*.DS_Store

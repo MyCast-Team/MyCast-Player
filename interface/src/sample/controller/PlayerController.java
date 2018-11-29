@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sample.annotation.DocumentationAnnotation;
 import sample.model.ResizablePlayer;
 import sample.utility.Utility;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
@@ -33,6 +34,7 @@ import java.net.URL;
 /**
  * Control the player and bind the buttons of the player with functions
  */
+@DocumentationAnnotation(author = "Thomas Fouan", date = "03/03/2016", description = "This is the main class that manage our player. It manages buttons and events.")
 public class PlayerController implements MediaPlayerEventListener {
 
     private ResizablePlayer resizablePlayer;
@@ -211,11 +213,11 @@ public class PlayerController implements MediaPlayerEventListener {
             if(mediaPlayer.getRepeat()) {
                 mediaPlayer.setRepeat(false);
                 mediaListPlayer.setMode(MediaListPlayerMode.DEFAULT);
-                repeat.setGraphic(new ImageView(new Image("icons/noRepeat.png")));
+                repeat.setGraphic(new ImageView(new Image("/sample/view/icons/noRepeat.png")));
             } else {
                 mediaPlayer.setRepeat(true);
                 mediaListPlayer.setMode(MediaListPlayerMode.LOOP);
-                repeat.setGraphic(new ImageView(new Image("icons/repeat.png")));
+                repeat.setGraphic(new ImageView(new Image("/sample/view/icons/repeat.png")));
             }
         };
     }
@@ -238,7 +240,7 @@ public class PlayerController implements MediaPlayerEventListener {
                 stage.setFullScreen(isFullscreenStage);
             } else {
                 mediaListPlayer.play();
-                play.setGraphic(new ImageView(new Image("icons/pause.png")));
+                play.setGraphic(new ImageView(new Image("/sample/view/icons/pause.png")));
                 lastScene = stage.getScene();
                 stage.setScene(new Scene(new AnchorPane(playerContainer)));
                 stage.show();
@@ -324,12 +326,12 @@ public class PlayerController implements MediaPlayerEventListener {
 
     @Override
     public void playing(MediaPlayer mediaPlayer) {
-        Platform.runLater(()-> play.setGraphic(new ImageView(new Image("icons/pause.png"))));
+        Platform.runLater(()-> play.setGraphic(new ImageView(new Image("/sample/view/icons/pause.png"))));
     }
 
     @Override
     public void paused(MediaPlayer mediaPlayer) {
-        Platform.runLater(()-> play.setGraphic(new ImageView(new Image("icons/play.png"))));
+        Platform.runLater(()-> play.setGraphic(new ImageView(new Image("/sample/view/icons/play.png"))));
     }
 
     @Override
@@ -338,7 +340,7 @@ public class PlayerController implements MediaPlayerEventListener {
             timeSlider.setValue(0.0);
             timeLabel.setText(Utility.formatTime(mediaPlayer.getTime()) + " / " + fullTime);
             setLastTimeDisplayed(0);
-            play.setGraphic(new ImageView(new Image("icons/play.png")));
+            play.setGraphic(new ImageView(new Image("/sample/view/icons/play.png")));
 
             statusLabel.setText("No playing item");
         });
