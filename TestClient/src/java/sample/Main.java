@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import sample.constant.Constant;
 import sample.controller.MainFrameController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
@@ -18,6 +17,8 @@ import java.io.IOException;
  */
 public class Main extends Application {
 
+    static final String PATH_TO_MAIN_VIEW = "view/mainFrame.fxml";
+
     private MainFrameController mainFrameController;
 
     @Override
@@ -25,26 +26,19 @@ public class Main extends Application {
         try {
             super.stop();
             if(mainFrameController != null) {
-                if(mainFrameController.getThreadConnections() != null) {
-                    if (mainFrameController.getThreadConnections().isAlive()) {
-                        mainFrameController.getThreadConnections().interrupt();
-                    }
-                    mainFrameController.getThreadConnections().join();
-                }
-                mainFrameController.getResizablePlayer().release();
+                mainFrameController.release();
             }
         } catch (Exception e) {
             System.out.println("An error occurred when the application tried to exit. Send the following report to the dev team.");
             e.printStackTrace();
         } finally {
             Platform.exit();
-            System.exit(0);
         }
     }
 
     @Override
     public void start(Stage primaryStage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constant.PATH_TO_MAIN_VIEW));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(PATH_TO_MAIN_VIEW));
         AnchorPane rootPane;
         Scene scene;
 
@@ -57,9 +51,7 @@ public class Main extends Application {
             primaryStage.setScene(scene);
 
             // Control the close button of the window
-            primaryStage.setOnCloseRequest((event) -> {
-                stop();
-            });
+            primaryStage.setOnCloseRequest((event) -> stop());
 
             primaryStage.setTitle("MyCast");
             primaryStage.setMinWidth(800);

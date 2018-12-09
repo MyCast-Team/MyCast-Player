@@ -24,16 +24,13 @@ public class ResizablePlayer {
 
     private ImageView imageView;
     private WritableImage writableImage;
-    private WritablePixelFormat<ByteBuffer> pixelFormat;
 
     private Pane playerHolder;
     private FloatProperty videoSourceRatioProperty;
 
-    /* CONSTRUCTOR */
     public ResizablePlayer(Pane playerHolder, ImageView imageView) {
 
         // Initialisation of the components
-        pixelFormat = PixelFormat.getByteBgraPreInstance();
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
         this.playerHolder = playerHolder;
@@ -42,17 +39,17 @@ public class ResizablePlayer {
         initializeImageView();
 
         // Set the different component of the player (mediaPlayer)
-        mediaPlayerComponent = new CanvasPlayerComponent(writableImage, pixelFormat, videoSourceRatioProperty);
+        mediaPlayerComponent = new CanvasPlayerComponent(writableImage, PixelFormat.getByteBgraPreInstance(), videoSourceRatioProperty);
         mediaPlayer = mediaPlayerComponent.getMediaPlayer();
     }
 
+    void playMedia(String mrl) {
+        mediaPlayer.playMedia(mrl);
+    }
 
-    /* GETTER */
-    public MediaPlayer getMediaPlayer() { return mediaPlayer; }
-
-    public Pane getPlayerHolder() { return playerHolder; }
-
-    /* SETTER */
+    void stop() {
+        mediaPlayer.stop();
+    }
 
     public void release() {
         this.mediaPlayerComponent.release(true);
@@ -66,30 +63,28 @@ public class ResizablePlayer {
      *
      * Add listeners on the screen and on the ratio for the current media.
      */
-    public void initializeImageView() {
+    private void initializeImageView() {
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
         writableImage = new WritableImage((int) visualBounds.getWidth(), (int) visualBounds.getHeight());
 
         // Add an imageView in the playerHolder to display each frame of the media
         imageView.setImage(writableImage);
 
-        playerHolder.widthProperty().addListener((observable, oldValue, newValue) -> {
-            fitImageViewSize(newValue.floatValue(), (float) playerHolder.getHeight());
-        });
+        playerHolder.widthProperty().addListener((observable, oldValue, newValue) ->
+                fitImageViewSize(newValue.floatValue(), (float) playerHolder.getHeight())
+        );
 
-        playerHolder.heightProperty().addListener((observable, oldValue, newValue) -> {
-            fitImageViewSize((float) playerHolder.getWidth(), newValue.floatValue());
-        });
+        playerHolder.heightProperty().addListener((observable, oldValue, newValue) ->
+                fitImageViewSize((float) playerHolder.getWidth(), newValue.floatValue())
+        );
 
-        videoSourceRatioProperty.addListener((observable, oldValue, newValue) -> {
-            fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight());
-        });
+        videoSourceRatioProperty.addListener((observable, oldValue, newValue) ->
+                fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight())
+        );
     }
 
     /**
      * Set image dimensions to write in the player with the new values width and height.
-     * @param width
-     * @param height
      */
     private void fitImageViewSize(float width, float height) {
         Platform.runLater(() -> {
@@ -111,9 +106,6 @@ public class ResizablePlayer {
 
     /**
      * Set the album image dimensions to write in the player with the new values width and height.
-     * @param artworkView
-     * @param width
-     * @param height
      */
     public static void fitArtworkViewSize(ImageView artworkView, double width, double height) {
         if(artworkView.getImage() != null) {

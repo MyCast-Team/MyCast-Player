@@ -16,9 +16,9 @@ import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
  */
 public class CanvasBufferFormatCallback implements BufferFormatCallback {
 
-    FloatProperty videoSourceRatioProperty;
+    private FloatProperty videoSourceRatioProperty;
 
-    public CanvasBufferFormatCallback(FloatProperty videoSourceRatioProperty) {
+    CanvasBufferFormatCallback(FloatProperty videoSourceRatioProperty) {
         super();
         this.videoSourceRatioProperty = videoSourceRatioProperty;
     }

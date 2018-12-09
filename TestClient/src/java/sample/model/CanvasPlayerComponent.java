@@ -19,24 +19,15 @@ import java.nio.ByteBuffer;
  */
 public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
 
-    private PixelWriter pixelWriter = null;
-
     private WritableImage writableImage;
 
     private WritablePixelFormat<ByteBuffer> pixelFormat;
 
-    public CanvasPlayerComponent(WritableImage writableImage, WritablePixelFormat<ByteBuffer> pixelFormat, FloatProperty videoSourceRatioProperty) {
+    CanvasPlayerComponent(WritableImage writableImage, WritablePixelFormat<ByteBuffer> pixelFormat, FloatProperty videoSourceRatioProperty) {
         super(new CanvasBufferFormatCallback(videoSourceRatioProperty));
 
         this.writableImage = writableImage;
         this.pixelFormat = pixelFormat;
-    }
-
-    private PixelWriter getPW() {
-        if (pixelWriter == null) {
-            pixelWriter = writableImage.getPixelWriter();
-        }
-        return pixelWriter;
     }
 
     @Override
@@ -50,7 +41,9 @@ public class CanvasPlayerComponent extends DirectMediaPlayerComponent {
                 if (memories != null) {
                     Memory nativeBuffer = memories[0];
                     ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
-                    getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                    writableImage
+                            .getPixelWriter()
+                            .setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
                 }
             } finally {
                 mediaPlayer.unlock();
