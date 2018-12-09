@@ -1,8 +1,9 @@
-package sample.controller;
+package sample;
 
 import org.junit.Test;
-import sample.model.ResizablePlayer;
-import sample.model.ThreadConnection;
+import sample.MainFrameController;
+import sample.player.ResizablePlayer;
+import sample.connection.ThreadConnection;
 
 import static org.mockito.Mockito.*;
 

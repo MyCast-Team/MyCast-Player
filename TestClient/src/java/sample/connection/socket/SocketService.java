@@ -1,4 +1,7 @@
-package sample.model;
+package sample.connection.socket;
+
+import sample.connection.ClientRequest;
+import sample.connection.StopServerException;
 
 import java.io.IOException;
 

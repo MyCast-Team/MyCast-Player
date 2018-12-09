@@ -1,13 +1,16 @@
-package sample.model;
+package sample.connection;
 
-import sample.model.ServerSocketService.StopReason;
+import sample.connection.socket.ServerSocketService.StopReason;
+import sample.connection.socket.SocketService;
+import sample.output.OutputPrinterService;
+import sample.player.ResizablePlayer;
 import uk.co.caprica.vlcj.mrl.RtspMrl;
 
-import java.io.*;
+import java.io.IOException;
 
-import static sample.model.ClientRequest.DISCONNECTION;
-import static sample.model.ClientRequest.STREAMING_STARTED;
-import static sample.model.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
+import static sample.connection.ClientRequest.DISCONNECTION;
+import static sample.connection.ClientRequest.STREAMING_STARTED;
+import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
 
 public class ConnectionHandler {
 
@@ -41,7 +44,7 @@ public class ConnectionHandler {
                     }
                 }
 
-                // Disconnection requested, tryClose the socket, and wait for another connection...
+                // Disconnection requested, close the socket, and wait for another connection...
                 resizablePlayer.stop();
                 socketService.tryCloseSocket();
             } catch (IOException e) {

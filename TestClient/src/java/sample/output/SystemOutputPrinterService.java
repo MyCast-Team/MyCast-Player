@@ -1,4 +1,4 @@
-package sample.model;
+package sample.output;
 
 public class SystemOutputPrinterService implements OutputPrinterService {
     @Override

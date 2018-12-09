@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.image.ImageView?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.MainFrameController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainFrameController">
     <Pane fx:id="playerHolder" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <ImageView fx:id="imageView"/>
     </Pane>

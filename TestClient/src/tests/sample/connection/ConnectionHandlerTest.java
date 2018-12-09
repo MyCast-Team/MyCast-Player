@@ -1,12 +1,17 @@
-package sample.model;
+package sample.connection;
 
 import org.junit.Before;
 import org.junit.Test;
+import sample.connection.*;
+import sample.connection.socket.ServerSocketService;
+import sample.connection.socket.SocketService;
+import sample.output.OutputPrinterService;
+import sample.player.ResizablePlayer;
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
-import static sample.model.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
+import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
 
 public class ConnectionHandlerTest {
 

@@ -1,11 +1,14 @@
-package sample.model;
+package sample.connection.socket;
+
+import sample.connection.ClientRequest;
+import sample.connection.StopServerException;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static sample.model.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
-import static sample.model.ServerSocketService.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
+import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
+import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
 
 public class ServerSocketService implements SocketService {
 

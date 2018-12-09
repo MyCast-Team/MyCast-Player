@@ -1,6 +1,6 @@
-package sample.model;
+package sample.connection;
 
-enum ClientRequest {
+public enum ClientRequest {
     STREAMING_STARTED,
     DISCONNECTION,
     UNKNOWN_REQUEST;

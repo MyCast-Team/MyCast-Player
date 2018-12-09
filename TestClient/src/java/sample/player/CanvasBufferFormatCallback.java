@@ -1,4 +1,4 @@
-package sample.model;
+package sample.player;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
@@ -14,7 +14,7 @@ import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
  * Get a BufferFormat accordingly to the dimensions of the screen.
  * Update the videoSourceRatioProperty variable with the dimensions of the source (media).
  */
-public class CanvasBufferFormatCallback implements BufferFormatCallback {
+class CanvasBufferFormatCallback implements BufferFormatCallback {
 
     private FloatProperty videoSourceRatioProperty;
 

@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
-import sample.controller.MainFrameController;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 import static org.assertj.core.api.Assertions.assertThat;

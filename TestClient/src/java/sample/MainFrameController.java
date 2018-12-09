@@ -1,9 +1,13 @@
-package sample.controller;
+package sample;
 
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import sample.model.*;
+import sample.connection.ConnectionHandler;
+import sample.connection.socket.ServerSocketService;
+import sample.connection.ThreadConnection;
+import sample.output.*;
+import sample.player.ResizablePlayer;
 
 import java.io.IOException;
 
@@ -60,7 +64,7 @@ public class MainFrameController {
         threadConnection.start();
     }
 
-    public void release() throws InterruptedException {
+    void release() throws InterruptedException {
         threadConnection.stop();
         resizablePlayer.release();
     }

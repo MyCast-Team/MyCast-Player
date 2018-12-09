@@ -1,4 +1,4 @@
-package sample.model;
+package sample.player;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
@@ -8,11 +8,7 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
-import uk.co.caprica.vlcj.medialist.MediaList;
 import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.list.MediaListPlayer;
-
-import java.nio.ByteBuffer;
 
 /**
  * Class of creation and control of the vlcj player.
@@ -30,7 +26,6 @@ public class ResizablePlayer {
 
     public ResizablePlayer(Pane playerHolder, ImageView imageView) {
 
-        // Initialisation of the components
         videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
 
         this.playerHolder = playerHolder;
@@ -38,16 +33,16 @@ public class ResizablePlayer {
 
         initializeImageView();
 
-        // Set the different component of the player (mediaPlayer)
-        mediaPlayerComponent = new CanvasPlayerComponent(writableImage, PixelFormat.getByteBgraPreInstance(), videoSourceRatioProperty);
+        CanvasBufferFormatCallback bufferFormatCallback = new CanvasBufferFormatCallback(videoSourceRatioProperty);
+        mediaPlayerComponent = new CanvasPlayerComponent(writableImage, PixelFormat.getByteBgraPreInstance(), bufferFormatCallback);
         mediaPlayer = mediaPlayerComponent.getMediaPlayer();
     }
 
-    void playMedia(String mrl) {
+    public void playMedia(String mrl) {
         mediaPlayer.playMedia(mrl);
     }
 
-    void stop() {
+    public void stop() {
         mediaPlayer.stop();
     }
 
