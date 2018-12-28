@@ -5,7 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class Main extends Application {
 
-    static final String PATH_TO_MAIN_VIEW = "view/mainFrame.fxml";
+    static final String PATH_TO_MAIN_VIEW = "/fxml/mainFrame.fxml";
 
     private MainFrameController mainFrameController;
 

@@ -1,11 +1,11 @@
 package sample;
 
 import org.junit.Test;
-import sample.MainFrameController;
-import sample.player.ResizablePlayer;
 import sample.connection.ThreadConnection;
+import sample.player.ResizablePlayer;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class MainFrameControllerTest {
 

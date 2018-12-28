@@ -71,7 +71,8 @@ public class ConnectionHandler {
         String mrl = new RtspMrl()
                 .host(socketService.getClientHostAddress())
                 .port(STREAMING_PORT)
-                .path("/demo").value();
+                .path("/demo")
+                .value();
 
         resizablePlayer.playMedia(mrl);
     }

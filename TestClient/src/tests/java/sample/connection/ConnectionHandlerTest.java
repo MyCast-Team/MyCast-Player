@@ -2,7 +2,6 @@ package sample.connection;
 
 import org.junit.Before;
 import org.junit.Test;
-import sample.connection.*;
 import sample.connection.socket.ServerSocketService;
 import sample.connection.socket.SocketService;
 import sample.output.OutputPrinterService;
