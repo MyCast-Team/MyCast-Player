@@ -9,7 +9,7 @@ public interface SocketService {
 
     int getServerLocalPort();
 
-    void tryClose(ServerSocketService.StopReason stopReason);
+    void tryClose(StopReason stopReason);
 
     boolean isClosed();
 

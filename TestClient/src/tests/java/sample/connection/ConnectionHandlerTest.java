@@ -2,15 +2,15 @@ package sample.connection;
 
 import org.junit.Before;
 import org.junit.Test;
-import sample.connection.socket.ServerSocketService;
 import sample.connection.socket.SocketService;
+import sample.connection.socket.StopReason;
 import sample.output.OutputPrinterService;
 import sample.player.ResizablePlayer;
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
-import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
+import static sample.connection.socket.StopReason.STOP_DUE_TO_EXCEPTION;
 
 public class ConnectionHandlerTest {
 
@@ -175,7 +175,7 @@ public class ConnectionHandlerTest {
         verify(socketServiceMock).getClientHostName();
         verify(socketServiceMock, never()).getClientHostAddress();
         verify(socketServiceMock).getNextClientRequest();
-        verify(socketServiceMock, never()).tryClose(any(ServerSocketService.StopReason.class));
+        verify(socketServiceMock, never()).tryClose(any(StopReason.class));
         verify(socketServiceMock).sendExitRequest();
         verify(socketServiceMock, never()).tryCloseSocket();
         verify(outputPrinterServiceMock).print("Server is listening on port : " + port);

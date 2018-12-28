@@ -7,8 +7,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
-import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
+import static sample.connection.socket.StopReason.STOP_DUE_TO_EXCEPTION;
+import static sample.connection.socket.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
 
 public class ServerSocketService implements SocketService {
 
@@ -99,10 +99,5 @@ public class ServerSocketService implements SocketService {
     private void writeExitRequestInSocket() {
         printWriter.println(ClientRequest.DISCONNECTION.ordinal());
         printWriter.flush();
-    }
-
-    public enum StopReason {
-        STOP_DUE_TO_EXCEPTION,
-        STOP_DUE_TO_NOMINAL_EXIT
     }
 }

@@ -1,6 +1,6 @@
 package sample.connection;
 
-import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
+import static sample.connection.socket.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
 
 /**
  * Created by thomasfouan on 22/04/2016.

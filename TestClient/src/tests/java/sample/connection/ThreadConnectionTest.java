@@ -3,7 +3,7 @@ package sample.connection;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
-import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
+import static sample.connection.socket.StopReason.STOP_DUE_TO_NOMINAL_EXIT;
 
 public class ThreadConnectionTest {
 

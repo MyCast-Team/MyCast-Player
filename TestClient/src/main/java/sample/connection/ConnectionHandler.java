@@ -1,7 +1,7 @@
 package sample.connection;
 
-import sample.connection.socket.ServerSocketService.StopReason;
 import sample.connection.socket.SocketService;
+import sample.connection.socket.StopReason;
 import sample.output.OutputPrinterService;
 import sample.player.ResizablePlayer;
 import uk.co.caprica.vlcj.mrl.RtspMrl;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static sample.connection.ClientRequest.DISCONNECTION;
 import static sample.connection.ClientRequest.STREAMING_STARTED;
-import static sample.connection.socket.ServerSocketService.StopReason.STOP_DUE_TO_EXCEPTION;
+import static sample.connection.socket.StopReason.STOP_DUE_TO_EXCEPTION;
 
 public class ConnectionHandler {
 
