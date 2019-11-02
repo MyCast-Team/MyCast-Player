@@ -17,6 +17,7 @@ import java.io.IOException;
 public class Main extends Application {
 
     static final String PATH_TO_MAIN_VIEW = "/fxml/mainFrame.fxml";
+    private static final String PATH_TO_ICON = "/icons/icon.png";
 
     private MainFrameController mainFrameController;
 
@@ -55,7 +56,7 @@ public class Main extends Application {
             primaryStage.setTitle("MyCast");
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
-            primaryStage.getIcons().add(new Image(getClass().getResource("view/icons/icon.png").toString()));
+            primaryStage.getIcons().add(new Image(getClass().getResource(PATH_TO_ICON).toString()));
             primaryStage.setFullScreen(false);
             primaryStage.show();
         } catch (IOException e) {

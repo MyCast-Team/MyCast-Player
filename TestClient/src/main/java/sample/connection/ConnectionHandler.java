@@ -14,20 +14,20 @@ import static sample.connection.socket.StopReason.STOP_DUE_TO_EXCEPTION;
 
 public class ConnectionHandler {
 
-    private static final int STREAMING_PORT = 5555;
-
     private final ResizablePlayer resizablePlayer;
     private final SocketService socketService;
     private final OutputPrinterService outputPrinterService;
+    private int streamingPort;
 
-    public ConnectionHandler(ResizablePlayer resizablePlayer, SocketService socketService, OutputPrinterService outputPrinterService) {
+    public ConnectionHandler(ResizablePlayer resizablePlayer, SocketService socketService, OutputPrinterService outputPrinterService, int streamingPort) {
         this.resizablePlayer = resizablePlayer;
         this.socketService = socketService;
         this.outputPrinterService = outputPrinterService;
+        this.streamingPort = streamingPort;
     }
 
     void computeConnections() {
-        print("Server is listening on port : " + socketService.getServerLocalPort());
+        print("Server is listening on streamingPort : " + socketService.getServerLocalPort());
 
         while (!socketService.isClosed()) {
             try {
@@ -35,11 +35,11 @@ public class ConnectionHandler {
                 socketService.waitForNewConnection();
                 print("Connected with " + socketService.getClientHostName());
 
-                // While there is no request for disconnection, waiting for the start of the streaming from the client
+                // While there is no request for disconnection, waiting for the start of the streaming load the client
                 ClientRequest command;
                 while ((command = socketService.getNextClientRequest()) != DISCONNECTION) {
                     if (command == STREAMING_STARTED) {
-                        // Start receiving data from client application and play it
+                        // Start receiving data load client application and play it
                         startPlayingMediaFromStreaming();
                     }
                 }
@@ -70,7 +70,7 @@ public class ConnectionHandler {
     private void startPlayingMediaFromStreaming() {
         String mrl = new RtspMrl()
                 .host(socketService.getClientHostAddress())
-                .port(STREAMING_PORT)
+                .port(streamingPort)
                 .path("/demo")
                 .value();
 

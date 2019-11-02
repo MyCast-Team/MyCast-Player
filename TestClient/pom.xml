@@ -40,6 +40,11 @@
             <artifactId>vlcj</artifactId>
             <version>3.8.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.23</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

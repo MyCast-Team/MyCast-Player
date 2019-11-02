@@ -3,6 +3,8 @@ package sample;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import sample.config.Config;
+import sample.config.PropertiesLoader;
 import sample.connection.ConnectionHandler;
 import sample.connection.ThreadConnection;
 import sample.connection.socket.ServerSocketService;
@@ -15,8 +17,6 @@ import java.io.IOException;
  * Created by thomasfouan on 18/07/2016.
  */
 public class MainFrameController {
-
-    private static final int SERVER_PORT = 12345;
 
     @FXML
     private Pane playerHolder;
@@ -31,31 +31,26 @@ public class MainFrameController {
     public MainFrameController() {
     }
 
-    MainFrameController(ResizablePlayer player, ThreadConnection threadConnection) {
-        resizablePlayer = player;
+    MainFrameController(ResizablePlayer resizablePlayer, ThreadConnection threadConnection) {
+        this.resizablePlayer = resizablePlayer;
         this.threadConnection = threadConnection;
 
         startThreadConnection();
     }
 
     @FXML
-    public void initialize() {
-        resizablePlayer = new ResizablePlayer(playerHolder, imageView);
+    public void initialize() throws IOException {
+        Config config = PropertiesLoader.from("/config.yml").load();
 
-        try {
-            threadConnection = new ThreadConnection(
-                    new ConnectionHandler(
-                            resizablePlayer,
-                            new ServerSocketService(SERVER_PORT),
-                            new SystemOutputPrinterService()
-                    )
-            );
-        } catch (IOException e) {
-            System.out.println("Impossible to create the server socket.");
-            e.printStackTrace();
-            threadConnection = null;
-            resizablePlayer.release();
-        }
+        resizablePlayer = new ResizablePlayer(playerHolder, imageView);
+        threadConnection = new ThreadConnection(
+                new ConnectionHandler(
+                        resizablePlayer,
+                        new ServerSocketService(config.ports.server),
+                        new SystemOutputPrinterService(),
+                        config.ports.streaming
+                )
+        );
 
         startThreadConnection();
     }

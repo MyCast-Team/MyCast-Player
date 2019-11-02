@@ -24,8 +24,9 @@ public class ConnectionHandlerTest {
         resizablePlayerMock = mock(ResizablePlayer.class);
         socketServiceMock = mock(SocketService.class);
         outputPrinterServiceMock = mock(OutputPrinterService.class);
+        int portMock = mock(Integer.class);
 
-        connectionHandler = new ConnectionHandler(resizablePlayerMock, socketServiceMock, outputPrinterServiceMock);
+        connectionHandler = new ConnectionHandler(resizablePlayerMock, socketServiceMock, outputPrinterServiceMock, portMock);
     }
 
     @Test

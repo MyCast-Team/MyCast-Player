@@ -1,0 +1,3 @@
+ports:
+  server: 12345
+  streaming: 5555
